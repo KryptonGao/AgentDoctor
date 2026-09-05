@@ -20,12 +20,35 @@ It runs without an LLM, API key, dependency installation, or network access duri
 ## Quick start
 
 ```bash
-npx @gaochenkai/agentdoctor scan
+npx @gaochenkai/agentdoctor web        # Launch local interactive Web UI DevTools
+npx @gaochenkai/agentdoctor scan       # Fast terminal scan
 npx @gaochenkai/agentdoctor scan --json
 npx @gaochenkai/agentdoctor check --baseline main --min-score 75 --max-regression 0 --fail-on high
 ```
 
-Node.js 20 or newer is required. `npx @gaochenkai/agentdoctor` opens the interactive dashboard in a terminal and falls back to a scan in non-interactive environments.
+Node.js 20 or newer is required. `npx @gaochenkai/agentdoctor` opens the interactive TUI dashboard in a terminal and falls back to a scan in non-interactive environments.
+
+## Local Web UI DevTools
+
+Launch a high-density, real-time diagnostic dashboard directly in your browser:
+
+```bash
+agentdoctor web
+agentdoctor web --baseline main            # Side-by-side regression comparison
+agentdoctor web --session path/to/trace.json # Inspect runtime agent session trace
+agentdoctor web --port 4000 --no-open      # Custom port without opening browser
+```
+
+Key capabilities:
+- **Zero Configuration & Privacy-First**: 100% local server, runs offline, zero telemetry, no external accounts, SaaS, or LLM required.
+- **5 Focused Views**:
+  - **Overview**: Overall Agent Efficiency Score, signal density gauge, verification loop health, and priority remediation issues.
+  - **Context**: Breakdown of `AGENTS.md`, Cursor rules, and Copilot instructions with token bloat metrics and concrete wasteful snippet inspector.
+  - **Regression**: Side-by-side diff comparison between current branch and baseline ref with regression gate status.
+  - **Findings**: Searchable, filterable issue workbench with diagnostic rationale, multi-file evidence, unified patch diff, and single-click copyable Fix Prompts.
+  - **Sessions**: Execution trace stream, duration/token KPIs, and automated detection of interaction loops (repeated searches, file re-reads, and command retry failures).
+- **Keyboard Shortcuts**: `1`-`5` for instant view switching, `R` to rescan repository on demand, `P` to batch copy all fix prompts.
+- **Bilingual & Themes**: One-click toggle between English and 中文, as well as Dark and Light themes.
 
 ## What it understands
 
@@ -167,6 +190,7 @@ The benchmark command is intentionally separate from `npm test` so ordinary pull
 ## Commands
 
 ```text
+agentdoctor web [-p <port>] [-c <path>] [--baseline <ref>] [-s <path>] [--no-open]
 agentdoctor scan [--json] [--cwd <path>] [--session <path>]
 agentdoctor check [--baseline <ref>] [--min-score <0-100>]
                    [--max-regression <0-100>] [--fail-on <severity>]
@@ -176,7 +200,7 @@ agentdoctor init
 agentdoctor prompt [finding-id] [--all]
 ```
 
-`fix` and `prompt` remain review-first workflows. This release does not add a Web UI, SaaS account, marketplace, or new agent.
+`fix` and `prompt` remain review-first workflows. The Web UI runs entirely locally on your machine with zero cloud dependencies, accounts, or telemetry.
 
 ## Development
 

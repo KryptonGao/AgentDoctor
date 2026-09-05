@@ -5,6 +5,7 @@ import { CheckConfigurationError } from "../core/regression/check.js";
 import { runFixCommand } from "./commands/fix.js";
 import { runInitCommand } from "./commands/init.js";
 import { runPromptCommand } from "./commands/prompt.js";
+import { runWebCommand } from "./commands/web.js";
 import { launchTui } from "../tui/index.js";
 
 export function createCli(): Command {
@@ -88,6 +89,18 @@ export function createCli(): Command {
     .option("--all", "Generate fix prompts for all qualified issues")
     .action(async (findingId, options) => {
       await runPromptCommand(findingId, options);
+    });
+
+  program
+    .command("web")
+    .description("Launch the local AgentDoctor DevTools Web UI")
+    .option("-p, --port <port>", "Port to run web server on", "4000")
+    .option("-c, --cwd <path>", "Repository working directory")
+    .option("--baseline <ref>", "Git ref to compare against for regressions")
+    .option("-s, --session <path>", "Path to agent session JSON trace")
+    .option("--no-open", "Do not open browser automatically")
+    .action(async (options) => {
+      await runWebCommand(options);
     });
 
   return program;
