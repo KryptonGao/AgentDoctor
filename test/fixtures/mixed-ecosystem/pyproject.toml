@@ -1,0 +1,4 @@
+[project]
+name = "mixed-backend"
+version = "0.1.0"
+dependencies = ["pytest"]

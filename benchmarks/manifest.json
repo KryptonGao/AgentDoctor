@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "repositories": [
+    {
+      "id": "expressjs-express",
+      "repository": "expressjs/express",
+      "url": "https://github.com/expressjs/express.git",
+      "commit": "023767fe9872e029271df1418f73401bff20ff40",
+      "ecosystem": "node",
+      "kind": "single-package"
+    },
+    {
+      "id": "eslint-eslint",
+      "repository": "eslint/eslint",
+      "url": "https://github.com/eslint/eslint.git",
+      "commit": "3f20a57c6293371b6193d3fb6746c2b7b2ac2689",
+      "ecosystem": "node",
+      "kind": "single-package"
+    },
+    {
+      "id": "vitejs-vite",
+      "repository": "vitejs/vite",
+      "url": "https://github.com/vitejs/vite.git",
+      "commit": "8492422b8f110625a90c702f42f30784e8cf19dc",
+      "ecosystem": "node",
+      "kind": "monorepo"
+    },
+    {
+      "id": "nestjs-nest",
+      "repository": "nestjs/nest",
+      "url": "https://github.com/nestjs/nest.git",
+      "commit": "39fbddae51281ca56bf2fed9123d98e61509066c",
+      "ecosystem": "node",
+      "kind": "monorepo"
+    },
+    {
+      "id": "pnpm-pnpm",
+      "repository": "pnpm/pnpm",
+      "url": "https://github.com/pnpm/pnpm.git",
+      "commit": "3c1af785c2cd3cbc6ab6e38b3d2fee294c087a96",
+      "ecosystem": "node",
+      "kind": "monorepo"
+    },
+    {
+      "id": "open-telemetry-opentelemetry-js",
+      "repository": "open-telemetry/opentelemetry-js",
+      "url": "https://github.com/open-telemetry/opentelemetry-js.git",
+      "commit": "d898a551c2b335deb17d42711650cb173f4acbd8",
+      "ecosystem": "node",
+      "kind": "monorepo"
+    },
+    {
+      "id": "psf-requests",
+      "repository": "psf/requests",
+      "url": "https://github.com/psf/requests.git",
+      "commit": "dae7ef63b4df6eded86637f251fc4e3a06c3b479",
+      "ecosystem": "python",
+      "kind": "single-package"
+    },
+    {
+      "id": "pallets-flask",
+      "repository": "pallets/flask",
+      "url": "https://github.com/pallets/flask.git",
+      "commit": "d318b683471101618febed18996405ad26462110",
+      "ecosystem": "python",
+      "kind": "single-package"
+    },
+    {
+      "id": "pytest-dev-pytest",
+      "repository": "pytest-dev/pytest",
+      "url": "https://github.com/pytest-dev/pytest.git",
+      "commit": "51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7",
+      "ecosystem": "python",
+      "kind": "single-package"
+    },
+    {
+      "id": "pydantic-pydantic",
+      "repository": "pydantic/pydantic",
+      "url": "https://github.com/pydantic/pydantic.git",
+      "commit": "c23cb86ef197693fc016437614f174252a3d189a",
+      "ecosystem": "python",
+      "kind": "monorepo"
+    },
+    {
+      "id": "rust-lang-cargo",
+      "repository": "rust-lang/cargo",
+      "url": "https://github.com/rust-lang/cargo.git",
+      "commit": "3c0b534756e166d12eb9fd2e1abfe5b42ac6101e",
+      "ecosystem": "rust",
+      "kind": "single-package"
+    },
+    {
+      "id": "tokio-rs-tokio",
+      "repository": "tokio-rs/tokio",
+      "url": "https://github.com/tokio-rs/tokio.git",
+      "commit": "dc9f6ede1922c6c7541d20f8149ef62969de1ad0",
+      "ecosystem": "rust",
+      "kind": "monorepo"
+    },
+    {
+      "id": "burntsushi-ripgrep",
+      "repository": "BurntSushi/ripgrep",
+      "url": "https://github.com/BurntSushi/ripgrep.git",
+      "commit": "3fce3b5bb0236da2df6d99672afb8a719642eca7",
+      "ecosystem": "rust",
+      "kind": "single-package"
+    },
+    {
+      "id": "spf13-cobra",
+      "repository": "spf13/cobra",
+      "url": "https://github.com/spf13/cobra.git",
+      "commit": "adbc8813901bba65827259daa8e22ff94ec1f30e",
+      "ecosystem": "go",
+      "kind": "single-package"
+    },
+    {
+      "id": "prometheus-prometheus",
+      "repository": "prometheus/prometheus",
+      "url": "https://github.com/prometheus/prometheus.git",
+      "commit": "575ab169c7c1ad882823cb9692daa1fe9eb043e5",
+      "ecosystem": "go",
+      "kind": "monorepo"
+    },
+    {
+      "id": "jupyterlab-jupyterlab",
+      "repository": "jupyterlab/jupyterlab",
+      "url": "https://github.com/jupyterlab/jupyterlab.git",
+      "commit": "fcd2ffd7ba26449ed8dfc2b61dc3378deac40e83",
+      "ecosystem": "mixed",
+      "kind": "mixed-monorepo"
+    }
+  ]
+}

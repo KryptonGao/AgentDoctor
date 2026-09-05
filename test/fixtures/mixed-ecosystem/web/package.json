@@ -1,0 +1,7 @@
+{
+  "name": "mixed-frontend",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "vitest run"
+  }
+}

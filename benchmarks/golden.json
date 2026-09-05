@@ -1,0 +1,1095 @@
+{
+  "version": 1,
+  "repositories": {
+    "expressjs-express": {
+      "reviewedRules": [],
+      "expected": []
+    },
+    "eslint-eslint": {
+      "reviewedRules": [
+        "repo/oversized-source-files",
+        "verification/command-consistency"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:015d40e7c16bbb5179a9"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:037f3ff5b9c896204efb"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:0f64044b727a90714205"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:137ceb76186074d211bc"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:2a27659d0877cd365f57"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:34493ba9c8472be9586f"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:3ecfa7f5fa89cd10ef10"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:4701a7c8c9d9a300d007"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5593205f893c0f8a3484"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:573a66694d40016bb041"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:58f877553dd92e302960"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:67998e7475a22f7836c2"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:68d80afb50d905d9a4b8"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:70acfb65c55b8afbe572"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:76f897ace2c1f7c36aa5"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:95723b2f2b72d6810f29"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:96c6c09b910578a6b802"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9b5357110a431f280e80"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9c2ba6e3ce70c3133cfb"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9cb7a63b48c73730ae09"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:a28354b6f7af588ac445"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:a863f9780b353b10ac48"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:ab153ad5eb22fa63fbc6"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:afbf18c6f85851f64bae"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:b0a6b6c5ebc665316d99"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:cbd1b82ebb3f0400e0f3"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:d48a1efe4cdb48596f2b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e23f3c9e0cf07eec5283"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:ea9ecf67af0652fd5707"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:eb46773569ef4a269c36"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:ed149a0462ffff83a769"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:faa90cd93b70b6971431"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:ffeca69cd7080d33e43b"
+        },
+        {
+          "ruleId": "verification/command-consistency",
+          "fingerprint": "v1:ab2ca7f9634e3f6e8520"
+        }
+      ]
+    },
+    "vitejs-vite": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:481d0bb97cdfd56b5cee"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:55db84375cdb13145005"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:8b1d36e25cc17e7299a5"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:a38d73591dd68744c8a2"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:f0666cd5f574748d2964"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:fb1f9e771847de200c12"
+        }
+      ]
+    },
+    "nestjs-nest": {
+      "reviewedRules": [],
+      "expected": []
+    },
+    "pnpm-pnpm": {
+      "reviewedRules": [
+        "context/duplicate-instruction",
+        "context/oversized-context",
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "context/duplicate-instruction",
+          "fingerprint": "v1:043ac3fee5a8591ae213"
+        },
+        {
+          "ruleId": "context/duplicate-instruction",
+          "fingerprint": "v1:3bb7c8ebc19a436a9342"
+        },
+        {
+          "ruleId": "context/duplicate-instruction",
+          "fingerprint": "v1:a01febfa84bdf0bbd459"
+        },
+        {
+          "ruleId": "context/duplicate-instruction",
+          "fingerprint": "v1:b2915fcb3efe39f9d40d"
+        },
+        {
+          "ruleId": "context/oversized-context",
+          "fingerprint": "v1:2b0611985a9e09286abb"
+        },
+        {
+          "ruleId": "context/oversized-context",
+          "fingerprint": "v1:35e221430fdd5a3abcf5"
+        },
+        {
+          "ruleId": "context/oversized-context",
+          "fingerprint": "v1:bbd6515bef99984ba7ce"
+        },
+        {
+          "ruleId": "context/oversized-context",
+          "fingerprint": "v1:f67fb04234dc440eed0c"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:0194d12bf441358780c2"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:033e4ccc89ccbebcf025"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:05148a6ce7b2458d4309"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:053021657a4cfc8ad675"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:17d4615a92f61ee16044"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:1dd2092c588d15d95b1b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:1fb52c75c9e3bc29f892"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:2b1595c573cdb2cab2c6"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:2ffea3ef893c61a81375"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:313f34acdfbd3f774780"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:339d2c66f09b0f6403a5"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:37f0c19792bc7b3c077b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:3e003c2199a044a6ebe6"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:408c9ce619d114890c05"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:488e4909299f42f4e83b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:4b15c4c45c3ddca32030"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:500db68b629bd981102f"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:51777069aff2006dde1b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5921cb8bd1f07a45547c"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5a905cf1f15e19c921df"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5a9d8735e3ea94539d18"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5d10fd25caea5b97f24d"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5eac1be6c24971c74cb8"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:652611d839cb453d1b57"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:6b7e7c603a9b27af21e0"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:6ef116965b9e43ff156b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:7136b26476ed0daeb2a1"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:7696198759490dc4264f"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:76c02097709b629e5637"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:77ca0963b479b6ed210b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:7e6693d34c02bed1e527"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:82353cbd9d2d92c893fd"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:833f902060a31337779f"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:87be43ca65568dee6342"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:8cabb74f54468fffb76e"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:8d19acafa06a5eb270f0"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:90829f296f21fda26bca"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:95ec83889d8b1ec9581b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:970e30bafb6aa3baba43"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9c333030eb6fa742b5f2"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9d6a42765d686ca93de1"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:a44b0fc4505f0c0566e7"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:aa019c5fe708c7dd2ef7"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:bec2a883b654c0bab9d5"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:c9e827f06b5c0b4d8e01"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:caa5b2c7fb433f9fa9c4"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:cbbcf5246ee83cf2a02e"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:d3732b25a4ab82e92618"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e0f4f9cace9406c164b9"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e20e549a5be197e74225"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e7f09eaa8fc34e95619f"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e85c4f352e97a5b6629f"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:f06df9cb7d2a941e2618"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:f724da6ce1de429163f0"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:f8dfb8be05d6a102db67"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:fb017fb335ace36c2f9d"
+        }
+      ]
+    },
+    "open-telemetry-opentelemetry-js": {
+      "reviewedRules": [],
+      "expected": []
+    },
+    "psf-requests": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:010ac2146749f525659c"
+        }
+      ]
+    },
+    "pallets-flask": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:569284c08a8adf3ba855"
+        }
+      ]
+    },
+    "pytest-dev-pytest": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:00fd0a0886a61cc65c79"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:09c201cc3add8b5ff621"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:330150be96c95eb0eaa2"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:558d53c51ecbe154d28b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:6c3045db20ea71792a2a"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:ba04fb3cbd4b1dbc77a7"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e5620148332fe096696c"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:f9c87daabff1371f4854"
+        }
+      ]
+    },
+    "pydantic-pydantic": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:0af68da1ad6f4d29115f"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:27cb7dd167989f3527c7"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:3e89ed784284d88a45cd"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:434b18b429d4d6bf3310"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:7f00ccc4845baa835ab2"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:8f705cfbbbbfce6b705b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:994b9cd38c39bcc13e92"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:a4a978ce12242f01f9e9"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:aeadda390a2ba0e4e681"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:be93a741dc8fe658e7da"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:d527d2683d1cfa3ac4e1"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e51502ecdae170bcc6b1"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:edc739421951312eb9a6"
+        }
+      ]
+    },
+    "rust-lang-cargo": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:0255ba94194b8c9f0471"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:07c6c0d2d3dbc053d796"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:1a54c2c9ea6ec513a943"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:1fe288e2240960b8a1f9"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:29c9eac8454bac1cc0bf"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:33676f90c15a49e3949d"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:3bd7e84a41b116c9a405"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:409fc92df6cae8b68999"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:4121fdeffae1b389b70c"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:4baa09bf3e8adf213db0"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5ce9719d67f36a4bd3d3"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5e71b995ee145c7f5e8f"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5fff967e303bb3d7c978"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:6938afe433959ab564de"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:6affc84cb389835571cb"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:731a2359c10a91d91612"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:8294ae8988935225974a"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:84fd2aa5ff12c29955bf"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:b05ef7da9240ac0538b5"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:bd9307c585b6d6c7a34d"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:c3e56ceddb67bdbc5247"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:d449e7a9fdd81576c60a"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:ebf6dd739122ccd1c4f3"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:ee24565181b2201d8a77"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:f4d1d5555dea2889d53a"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:f9d6ac9c92c9ba43f1b0"
+        }
+      ]
+    },
+    "tokio-rs-tokio": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:2031c3722efb09a59840"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:620699a306772d2660d6"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:64431fce0724fde24966"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:7ad48bcaec1a8e160d51"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:92ec153b9eb96acbe6d5"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9575fb26c4792d8a4d2b"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9b3b0ff81224666bf8fa"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:a0aa0097a9e7e3ae162a"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:c52becb94301f1b07182"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:c61a34300a8519995681"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:c92542caec8a725f71a0"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:d926914503f71d76ced5"
+        }
+      ]
+    },
+    "burntsushi-ripgrep": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:008eaba9f82827d1880e"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:1969070e78098f9ff532"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5f6ed2e3671900da44f4"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:7ae307cb7076c0b12538"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:8f5ae6cb69b662ab9ca8"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:c5df23c5d30ffb99aa68"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:f072cfc649ca07dbd351"
+        }
+      ]
+    },
+    "spf13-cobra": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:03eb8947891ad90bb570"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:dfbcf47000aa31096923"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e6dcc3c443e6a50a8c07"
+        }
+      ]
+    },
+    "prometheus-prometheus": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:1603de5dcde4638c9ffd"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:19210f10b55f65d2fe72"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:287a9101660dc35cac6d"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:321ae6a6ffc2928dc343"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:325f20dbb7dcbbc9e48c"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:335e2a434173501fe147"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:41e2b5316b3b24180782"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:447097d2199bfe557b17"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:45aed7f0c35724f29c50"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:45dca3fd88b922d7ca7e"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:498847dbbd3277c45992"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:4a06f5941b9956f3d016"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:4d2d3f4761dc4ec41dd0"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:587373c1b44aa39501f7"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:5a7ef7d312450dfc4429"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:65441e9c94aaf6ccdd5a"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:69fd5d6acf1f7aaacddb"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:6dcafd154b7b5a50debc"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:900569ac2b6003664507"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9057b41465b8cdc5bca7"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:927da673b24a5f2bf02d"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:947f1ea29ddc127555ff"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:96022cbb4b3018d88680"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:994c8dd4007b7c55e877"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9ba150f9fd65d8573f2f"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9c88eb43b37e2607eb98"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9cdff3e8af46cad19124"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:9fde0286ebd29a27bb95"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:a8a9d91d38fecf40b1d8"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:aa9358b2858cb048cae9"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:b00a05207b8cd6c3ed6d"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:b560f920f61abd888cae"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:b62af348c7f2452c3ca6"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:bd053ead958ed81593c3"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:bd28791e48ead775c264"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:be1edba92ae911cdf3ba"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:bf8484be2e2f63e217a5"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:c96b168bb5272ed548cd"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:dedf03b3d9352a27489d"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:df30f4f658a9cb1ca43d"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e36ccafade75f81852a4"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e8e94891fbd8ad308611"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:f26ae06daf9b0626f349"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:faaebc841739c0683ae1"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:fe1a7f5a9fb10b75f18c"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:fe88951e4a2bae241407"
+        }
+      ]
+    },
+    "jupyterlab-jupyterlab": {
+      "reviewedRules": [
+        "repo/oversized-source-files"
+      ],
+      "expected": [
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:07eca0aac8454da16d5e"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:0acaa7a8304c360c2f56"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:14042e88b1b6c45af9da"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:1b7c6b77e99347df7cf6"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:274a8cfbf5ad7b1bcd9f"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:4621a4d9482250a1be02"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:46b053038066f1099f4c"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:4bc95d4d31eafdd6b89c"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:8640252fff649d83819a"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:8dbcb4384855ce5f3bd5"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:8f04618bb7666856a845"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:939e184a4c1405750d85"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:97e652770387898bad95"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:98d1a69a3b26a9f428ee"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:a0e62a2e6cfd8472ca38"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:ab814cd800794e55f5d8"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:bbcf2e1ce01493957e36"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:bd65708cf80078691216"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:c250f646378b0f51ae55"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:c79548442eb398238d27"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:cf746b42a44645963e14"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:d8b5d8d07c619253954c"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e928b9679a38788705e8"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:e9f7c0f67bb8ac56f682"
+        },
+        {
+          "ruleId": "repo/oversized-source-files",
+          "fingerprint": "v1:f63391a08f51b5f669db"
+        }
+      ]
+    }
+  }
+}

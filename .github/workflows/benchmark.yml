@@ -1,0 +1,31 @@
+name: AgentDoctor benchmark
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out AgentDoctor
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install AgentDoctor dependencies
+        run: npm ci
+
+      - name: Run pinned real-repository benchmark
+        run: npm run benchmark -- --runs 3 --strict

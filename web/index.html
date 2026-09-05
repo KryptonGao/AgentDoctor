@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentDoctor DevTools</title>
+  <style>
+    /* ==========================================================================
+       AgentDoctor DevTools · Minimal & High-Density Design System
+       Unified Single Header · Soft Contrast · Zero Clutter · Sane Typography
+       ========================================================================== */
+
+    :root {
+      /* Dark Theme (Calm Matte Slate & Charcoal, no neon) */
+      --bg-canvas: #0c0f14;
+      --bg-surface: #141820;
+      --bg-surface-hover: #1b212c;
+      --bg-surface-active: #222a38;
+      --bg-card: #141820;
+      --bg-code: #090c10;
+
+      --border-subtle: #1e2532;
+      --border-muted: #2a3446;
+      --border-focus: #3b82f6;
+
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --text-dim: #475569;
+
+      --status-crit: #f87171;
+      --status-crit-bg: rgba(239, 68, 68, 0.12);
+      --status-crit-border: rgba(239, 68, 68, 0.25);
+
+      --status-high: #fb923c;
+      --status-high-bg: rgba(249, 115, 22, 0.12);
+      --status-high-border: rgba(249, 115, 22, 0.25);
+
+      --status-med: #fbbf24;
+      --status-med-bg: rgba(245, 158, 11, 0.12);
+      --status-med-border: rgba(245, 158, 11, 0.25);
+
+      --status-low: #60a5fa;
+      --status-low-bg: rgba(59, 130, 246, 0.10);
+      --status-low-border: rgba(59, 130, 246, 0.25);
+
+      --status-pass: #4ade80;
+      --status-pass-bg: rgba(34, 197, 94, 0.12);
+      --status-pass-border: rgba(34, 197, 94, 0.25);
+
+      --status-purple: #c084fc;
+      --status-purple-bg: rgba(168, 85, 247, 0.12);
+
+      --diff-add: #4ade80;
+      --diff-add-bg: rgba(34, 197, 94, 0.12);
+      --diff-remove: #f87171;
+      --diff-remove-bg: rgba(239, 68, 68, 0.12);
+
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+      --radius-sm: 3px;
+    }
+
+    /* Light Theme (Softer, Low-Fatigue, Muted Stone & Zinc) */
+    html[data-theme="light"] {
+      --bg-canvas: #f8f9fa;
+      --bg-surface: #ffffff;
+      --bg-surface-hover: #f1f3f5;
+      --bg-surface-active: #e9ecef;
+      --bg-card: #ffffff;
+      --bg-code: #f3f4f6;
+
+      --border-subtle: #e2e5e9;
+      --border-muted: #cbd2d9;
+      --border-focus: #2563eb;
+
+      --text-primary: #2d333b;
+      --text-secondary: #59636e;
+      --text-muted: #808b96;
+      --text-dim: #9ea7b0;
+
+      --status-crit: #b91c1c;
+      --status-crit-bg: #fef2f2;
+      --status-crit-border: #fecaca;
+
+      --status-high: #c2410c;
+      --status-high-bg: #fff7ed;
+      --status-high-border: #fed7aa;
+
+      --status-med: #b45309;
+      --status-med-bg: #fffbeb;
+      --status-med-border: #fde68a;
+
+      --status-low: #1d4ed8;
+      --status-low-bg: #eff6ff;
+      --status-low-border: #bfdbfe;
+
+      --status-pass: #15803d;
+      --status-pass-bg: #f0fdf4;
+      --status-pass-border: #bbf7d0;
+
+      --status-purple: #7e22ce;
+      --status-purple-bg: #faf5ff;
+
+      --diff-add: #15803d;
+      --diff-add-bg: #f0fdf4;
+      --diff-remove: #b91c1c;
+      --diff-remove-bg: #fef2f2;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.45;
+      letter-spacing: -0.01em;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      min-height: 100vh;
+      transition: background-color 0.15s, color 0.15s;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: inherit;
+      border: none;
+      background: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-muted);
+      border-radius: var(--radius-sm);
+    }
+
+    /* ==========================================================================
+       UNIFIED SINGLE HEADER (Sleek 44px Bar)
+       ========================================================================== */
+    .app-header {
+      height: 44px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-title {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-title svg {
+      width: 14px;
+      height: 14px;
+      fill: var(--text-primary);
+    }
+
+    .repo-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      padding: 2px 7px;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+    }
+
+    /* Center Tabs */
+    .header-center {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      gap: 2px;
+    }
+
+    .nav-tab-btn {
+      height: 100%;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+      border-bottom: 2px solid transparent;
+      transition: all 0.1s;
+    }
+
+    .nav-tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-tab-btn.active {
+      color: var(--text-primary);
+      font-weight: 600;
+      border-bottom-color: var(--text-primary);
+    }
+
+    .tab-badge {
+      font-size: 10px;
+      padding: 0 4px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+
+    .tab-badge.highlight {
+      color: var(--status-med);
+      border-color: var(--status-med-border);
+      background: var(--status-med-bg);
+    }
+
+    .tab-badge.crit {
+      color: var(--status-crit);
+      border-color: var(--status-crit-border);
+      background: var(--status-crit-bg);
+    }
+
+    /* Right Controls */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .score-summary-pill {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 8px;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+    }
+
+    .score-summary-val {
+      font-weight: 700;
+      color: var(--status-med);
+    }
+
+    .score-summary-delta {
+      font-size: 10px;
+      color: var(--status-crit);
+    }
+
+    .btn-icon {
+      height: 26px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      transition: all 0.1s;
+    }
+
+    .btn-icon:hover {
+      color: var(--text-primary);
+      border-color: var(--border-muted);
+    }
+
+    /* ==========================================================================
+       MAIN VIEW CONTAINERS (Clean & De-bloated)
+       ========================================================================== */
+    .view-container {
+      display: none;
+      padding: 16px;
+      max-width: 1480px;
+      margin: 0 auto;
+    }
+
+    .view-container.active {
+      display: block;
+    }
+
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* Clean Card & Panel */
+    .clean-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+
+    .clean-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .clean-panel-header {
+      padding: 8px 12px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .clean-panel-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .clean-panel-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .clean-panel-body {
+      padding: 12px;
+    }
+
+    /* Badges */
+    .badge-sev {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      line-height: 1.4;
+    }
+
+    .badge-sev.critical {
+      background: var(--status-crit-bg);
+      border: 1px solid var(--status-crit-border);
+      color: var(--status-crit);
+    }
+
+    .badge-sev.high {
+      background: var(--status-high-bg);
+      border: 1px solid var(--status-high-border);
+      color: var(--status-high);
+    }
+
+    .badge-sev.medium {
+      background: var(--status-med-bg);
+      border: 1px solid var(--status-med-border);
+      color: var(--status-med);
+    }
+
+    .badge-sev.low {
+      background: var(--status-low-bg);
+      border: 1px solid var(--status-low-border);
+      color: var(--status-low);
+    }
+
+    .badge-sev.pass {
+      background: var(--status-pass-bg);
+      border: 1px solid var(--status-pass-border);
+      color: var(--status-pass);
+    }
+
+    /* Tables */
+    .table-clean {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .table-clean th {
+      text-align: left;
+      padding: 6px 10px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .table-clean td {
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    .table-clean tr:hover td {
+      background: var(--bg-surface-hover);
+      cursor: pointer;
+    }
+
+    /* Stacked Density Bar */
+    .density-stacked-bar {
+      height: 10px;
+      display: flex;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .density-seg {
+      height: 100%;
+    }
+
+    .seg-useful { background: var(--status-pass); }
+    .seg-dup { background: var(--status-med); }
+    .seg-inf { background: var(--status-low); }
+    .seg-stale { background: var(--status-crit); }
+    .seg-lowval { background: var(--status-purple); }
+
+    .density-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text-secondary);
+    }
+
+    .legend-box {
+      width: 7px;
+      height: 7px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Verification Matrix */
+    .verif-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .verif-chip {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 6px 8px;
+      font-family: var(--font-mono);
+    }
+
+    .verif-chip-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .verif-chip-cmd {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ==========================================================================
+       VIEW 3: FINDINGS WORKBENCH (Streamlined Master-Detail)
+       ========================================================================== */
+    .findings-workbench {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 10px;
+      height: calc(100vh - 76px);
+    }
+
+    .findings-sidebar {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .findings-toolbar {
+      padding: 8px 10px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 25px;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-muted);
+      border-radius: var(--radius-sm);
+      padding: 0 8px;
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    .pill-filter {
+      padding: 1px 6px;
+      background: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .pill-filter.active {
+      background: var(--bg-surface-active);
+      border-color: var(--border-muted);
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .findings-scroll-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .finding-row {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      transition: background 0.1s;
+    }
+
+    .finding-row:hover {
+      background: var(--bg-surface-hover);
+    }
+
+    .finding-row.active {
+      background: var(--bg-surface-active);
+      border-left: 2px solid var(--text-primary);
+      padding-left: 8px;
+    }
+
+    .finding-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .finding-row-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .finding-row-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Inspector Panel */
+    .findings-detail {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .inspector-header {
+      padding: 10px 14px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .inspector-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    .code-panel {
+      background: var(--bg-code);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .code-panel-head {
+      padding: 4px 8px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .code-panel-body {
+      padding: 6px 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.45;
+      overflow-x: auto;
+    }
+
+    .diff-line {
+      padding: 1px 6px;
+      display: flex;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .diff-line.del { background: var(--diff-remove-bg); color: var(--status-crit); }
+    .diff-line.add { background: var(--diff-add-bg); color: var(--status-pass); }
+    .diff-line.hunk { color: var(--status-low); background: var(--status-low-bg); }
+
+    .prompt-area {
+      background: var(--bg-code);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      line-height: 1.45;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    /* Toast */
+    .toast-msg {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-muted);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-primary);
+      z-index: 999;
+      transform: translateY(40px);
+      opacity: 0;
+      transition: all 0.15s;
+    }
+
+    .toast-msg.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       UNIFIED SINGLE HEADER (44px)
+       ======================================================================== -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-title">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <span>AGENTDOCTOR</span>
+      </div>
+
+      <div class="repo-pill">
+        <span style="color:var(--text-primary); font-weight:600;">AgentDock</span>
+        <span style="color:var(--text-muted);">feature/auth-refactor</span>
+        <span style="color:var(--text-dim);">(vs main: 3f20a57)</span>
+      </div>
+    </div>
+
+    <!-- Center Navigation Tabs -->
+    <nav class="header-center">
+      <button class="nav-tab-btn active" data-tab="tab-overview">
+        <span data-i18n="tabs.overview">全局总览</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-context">
+        <span data-i18n="tabs.context">上下文</span>
+        <span class="tab-badge highlight">54.7%</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-findings">
+        <span data-i18n="tabs.findings">诊断问题</span>
+        <span class="tab-badge">14</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-regression">
+        <span data-i18n="tabs.regression">回归对比</span>
+        <span class="tab-badge crit">3 Δ</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-sessions">
+        <span data-i18n="tabs.sessions">会话</span>
+        <span class="tab-badge">4</span>
+      </button>
+    </nav>
+
+    <!-- Right Controls -->
+    <div class="header-right">
+      <div class="score-summary-pill">
+        <span style="color:var(--text-muted);" data-i18n="hdr.score">效能</span>
+        <span class="score-summary-val">78</span>
+        <span class="score-summary-delta">▼-6</span>
+      </div>
+
+      <button class="btn-icon" id="btnRescan" title="Rescan (R)">
+        <span data-i18n="hdr.rescan">重新扫描</span>
+      </button>
+
+      <button class="btn-icon" id="btnCopyBatch" title="Copy All Prompts (P)">
+        <span data-i18n="hdr.copyAll">复制 Prompts</span>
+      </button>
+
+      <button class="btn-icon" id="btnLangToggle" onclick="toggleLang()" title="Toggle Language">
+        <span id="langLabel">EN / 中</span>
+      </button>
+
+      <button class="btn-icon" id="btnThemeToggle" onclick="toggleTheme()" title="Toggle Theme">
+        <span id="themeLabel">☀️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       VIEW 1: OVERVIEW
+       ======================================================================== -->
+  <main class="view-container active" id="tab-overview">
+    <!-- Top 4 Metrics Row (Clean, unbloated) -->
+    <div class="grid-4" style="margin-bottom: 12px;">
+      <div class="clean-card">
+        <div class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.c1Title">AGENT 效能综合评分</div>
+        <div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;">
+          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-med);">78</span>
+          <span class="mono" style="color:var(--text-muted);">/ 100</span>
+          <span class="badge-sev critical mono" style="font-size:9px;">-6 vs main</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" data-i18n="ov.c1Sub">四维度全量评估，存在回归退化</div>
+      </div>
+
+      <div class="clean-card">
+        <div class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.c2Title">上下文有效信号密度</div>
+        <div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;">
+          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-med);">54.7%</span>
+          <span class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.target">目标 ≥80%</span>
+        </div>
+        <div style="font-size:11px; color:var(--status-pass); margin-top:4px;" data-i18n="ov.c2Sub">潜在精简空间: 5,658 tokens</div>
+      </div>
+
+      <div class="clean-card">
+        <div class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.c3Title">验证回路可靠性</div>
+        <div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;">
+          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-med);">73</span>
+          <span class="mono" style="color:var(--text-muted);">/ 100</span>
+          <span class="badge-sev medium mono" style="font-size:9px;" data-i18n="ov.mismatchPill">1 项漂移</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" data-i18n="ov.c3Sub">CI 测试命令与 AGENTS.md 冲突</div>
+      </div>
+
+      <div class="clean-card">
+        <div class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.c4Title">运行期交互效能</div>
+        <div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;">
+          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-pass);">88</span>
+          <span class="mono" style="color:var(--text-muted);">/ 100</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" data-i18n="ov.c4Sub">4 个会话中检测到 2 次重复检索</div>
+      </div>
+    </div>
+
+    <!-- Mid 2-Column: Signal Density Breakdown + Verification Matrix -->
+    <div class="grid-2" style="margin-bottom: 12px;">
+      <div class="clean-panel">
+        <div class="clean-panel-header">
+          <span class="clean-panel-title" data-i18n="ov.densityTitle">上下文 Token 分布与构成</span>
+          <span class="clean-panel-sub">12,481 tokens total</span>
+        </div>
+        <div class="clean-panel-body">
+          <div class="density-stacked-bar">
+            <div class="density-seg seg-useful" style="width: 54.7%;" title="Useful: 6,823 (54.7%)"></div>
+            <div class="density-seg seg-dup" style="width: 16.9%;" title="Duplicate: 2,104 (16.9%)"></div>
+            <div class="density-seg seg-inf" style="width: 13.8%;" title="Inferable: 1,721 (13.8%)"></div>
+            <div class="density-seg seg-stale" style="width: 7.2%;" title="Stale: 903 (7.2%)"></div>
+            <div class="density-seg seg-lowval" style="width: 7.4%;" title="Low-value: 930 (7.4%)"></div>
+          </div>
+          <div class="density-legend">
+            <div class="legend-item"><div class="legend-box seg-useful"></div><span data-i18n="leg.useful">高价值 54.7%</span></div>
+            <div class="legend-item"><div class="legend-box seg-dup"></div><span data-i18n="leg.dup">重复 16.9%</span></div>
+            <div class="legend-item"><div class="legend-box seg-inf"></div><span data-i18n="leg.inf">可推断 13.8%</span></div>
+            <div class="legend-item"><div class="legend-box seg-stale"></div><span data-i18n="leg.stale">过时 7.2%</span></div>
+            <div class="legend-item"><div class="legend-box seg-lowval"></div><span data-i18n="leg.lowval">水话 7.4%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="clean-panel">
+        <div class="clean-panel-header">
+          <span class="clean-panel-title" data-i18n="ov.verifTitle">验证反馈回路</span>
+          <span class="clean-panel-sub" data-i18n="ov.verifAlert">⚠️ CI 测试命令与文档不一致</span>
+        </div>
+        <div class="clean-panel-body">
+          <div class="verif-strip">
+            <div class="verif-chip">
+              <div class="verif-chip-head"><span>TEST</span><span style="color:var(--status-pass)">PASS</span></div>
+              <div class="verif-chip-cmd">vitest run</div>
+            </div>
+            <div class="verif-chip">
+              <div class="verif-chip-head"><span>LINT</span><span style="color:var(--status-pass)">PASS</span></div>
+              <div class="verif-chip-cmd">tsc --noEmit</div>
+            </div>
+            <div class="verif-chip">
+              <div class="verif-chip-head"><span>TYPECHECK</span><span style="color:var(--status-pass)">PASS</span></div>
+              <div class="verif-chip-cmd">tsc --noEmit</div>
+            </div>
+            <div class="verif-chip">
+              <div class="verif-chip-head"><span>BUILD</span><span style="color:var(--status-pass)">PASS</span></div>
+              <div class="verif-chip-cmd">tsup</div>
+            </div>
+            <div class="verif-chip" style="border-color:var(--status-med-border); background:var(--status-med-bg);">
+              <div class="verif-chip-head"><span>CI</span><span style="color:var(--status-med)">MISMATCH</span></div>
+              <div class="verif-chip-cmd">pnpm test:ci</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Top 5 Issues -->
+    <div class="clean-panel">
+      <div class="clean-panel-header">
+        <span class="clean-panel-title" data-i18n="ov.issuesTitle">需优先治理的阻断与高危问题</span>
+        <button class="mono" style="font-size:11px; color:var(--text-secondary);" onclick="switchTab('tab-findings')" data-i18n="ov.viewAll">查看全部 14 项问题 →</button>
+      </div>
+      <table class="table-clean">
+        <thead>
+          <tr>
+            <th style="width: 70px;" data-i18n="th.sev">级别</th>
+            <th data-i18n="th.title">问题描述</th>
+            <th style="width: 200px;" data-i18n="th.loc">定位</th>
+            <th style="width: 80px;" data-i18n="th.conf">置信度</th>
+            <th style="width: 140px;" data-i18n="th.waste">损耗 / 影响</th>
+            <th style="width: 100px; text-align: right;" data-i18n="th.act">操作</th>
+          </tr>
+        </thead>
+        <tbody id="overviewIssuesBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       VIEW 2: CONTEXT HEALTH
+       ======================================================================== -->
+  <section class="view-container" id="tab-context">
+    <!-- Context File Inventory -->
+    <div class="clean-panel" style="margin-bottom: 12px;">
+      <div class="clean-panel-header">
+        <span class="clean-panel-title" data-i18n="ctx.filesTitle">Agent 指令源文件盘点 (4 个文件)</span>
+        <span class="clean-panel-sub" data-i18n="ctx.filesSub">总计 12,481 Tokens，5,658 Tokens 为冗余/可推断</span>
+      </div>
+      <table class="table-clean">
+        <thead>
+          <tr>
+            <th data-i18n="th.file">文件路径</th>
+            <th data-i18n="th.role">角色定位</th>
+            <th style="width: 100px;" data-i18n="th.tokens">总 Tokens</th>
+            <th style="width: 100px;" data-i18n="th.useful">有效</th>
+            <th style="width: 100px;" data-i18n="th.waste">浪费</th>
+            <th style="width: 120px;" data-i18n="th.density">信号密度</th>
+            <th style="width: 80px;" data-i18n="th.issues">问题数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code class="mono" style="font-weight:600;">AGENTS.md</code></td>
+            <td style="color:var(--status-pass);" data-i18n="ctx.r1Role">单一事实来源 (Primary)</td>
+            <td class="mono">8,412</td>
+            <td class="mono" style="color:var(--status-pass)">4,912</td>
+            <td class="mono" style="color:var(--status-crit)">3,500</td>
+            <td class="mono" style="color:var(--status-med)">58.4%</td>
+            <td><span class="badge-sev high">4 ISSUES</span></td>
+          </tr>
+          <tr>
+            <td><code class="mono" style="font-weight:600;">CLAUDE.md</code></td>
+            <td style="color:var(--text-secondary);" data-i18n="ctx.r2Role">Claude Code 指令</td>
+            <td class="mono">2,140</td>
+            <td class="mono" style="color:var(--status-pass)">980</td>
+            <td class="mono" style="color:var(--status-crit)">1,160</td>
+            <td class="mono" style="color:var(--status-crit)">45.8%</td>
+            <td><span class="badge-sev high">3 ISSUES</span></td>
+          </tr>
+          <tr>
+            <td><code class="mono" style="font-weight:600;">.cursor/rules/project.mdc</code></td>
+            <td style="color:var(--text-secondary);" data-i18n="ctx.r3Role">Cursor IDE 规则</td>
+            <td class="mono">1,249</td>
+            <td class="mono" style="color:var(--status-pass)">651</td>
+            <td class="mono" style="color:var(--status-crit)">598</td>
+            <td class="mono" style="color:var(--status-med)">52.1%</td>
+            <td><span class="badge-sev medium">2 ISSUES</span></td>
+          </tr>
+          <tr>
+            <td><code class="mono" style="font-weight:600;">.github/copilot-instructions.md</code></td>
+            <td style="color:var(--text-secondary);" data-i18n="ctx.r4Role">Copilot 补充指令</td>
+            <td class="mono">680</td>
+            <td class="mono" style="color:var(--status-pass)">280</td>
+            <td class="mono" style="color:var(--status-crit)">400</td>
+            <td class="mono" style="color:var(--status-crit)">41.2%</td>
+            <td><span class="badge-sev low">2 ISSUES</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Wasteful Snippets -->
+    <div class="clean-panel">
+      <div class="clean-panel-header">
+        <span class="clean-panel-title" data-i18n="ctx.snipTitle">具体发现的冗余与过期片段审查</span>
+        <span class="clean-panel-sub" data-i18n="ctx.snipSub">静态 AST 与模式匹配精确截获</span>
+      </div>
+      <div class="clean-panel-body" style="display:flex; flex-direction:column; gap:8px;">
+        <div class="code-panel">
+          <div class="code-panel-head">
+            <div><span class="badge-sev high">DUPLICATE</span> <span class="mono" style="color:var(--text-primary);">AGENTS.md:12 vs CLAUDE.md:8 vs project.mdc:5</span></div>
+            <span class="mono" style="color:var(--text-muted);" data-i18n="ctx.snip1Waste">浪费 1,482 tokens/会话</span>
+          </div>
+          <div class="code-panel-body" style="color:var(--status-crit);">
+            - "Package manager is strictly pnpm. Never use npm or yarn." (在 3 个独立文件中一字不差重复定义)
+          </div>
+        </div>
+
+        <div class="code-panel">
+          <div class="code-panel-head">
+            <div><span class="badge-sev high">STALE PATH</span> <span class="mono" style="color:var(--text-primary);">CLAUDE.md:24</span></div>
+            <span class="mono" style="color:var(--status-crit);" data-i18n="ctx.snip2Waste">引发 Agent 反复进行失效目录检索</span>
+          </div>
+          <div class="code-panel-body" style="color:var(--status-crit);">
+            - "Frontend code and UI components reside in `/web`" (路径已重命名迁移至 apps/web)
+          </div>
+        </div>
+
+        <div class="code-panel">
+          <div class="code-panel-head">
+            <div><span class="badge-sev medium">LOW VALUE</span> <span class="mono" style="color:var(--text-primary);">AGENTS.md:5-7</span></div>
+            <span class="mono" style="color:var(--text-muted);" data-i18n="ctx.snip3Waste">浪费 491 tokens/会话</span>
+          </div>
+          <div class="code-panel-body" style="color:var(--text-secondary);">
+            - "Always write clean, modular, and readable code. Be extremely careful and avoid regressions." (泛化无信息量指令)
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       VIEW 3: FINDINGS WORKBENCH (Streamlined Master-Detail)
+       ======================================================================== -->
+  <section class="view-container" id="tab-findings">
+    <div class="findings-workbench">
+      <!-- Left: List -->
+      <div class="findings-sidebar">
+        <div class="findings-toolbar">
+          <input type="text" id="findingsSearch" class="search-input" placeholder="搜索问题 (标题, 规则 ID, 路径)...">
+          <div class="filter-row" id="categoryFilterRow">
+            <button class="pill-filter active" data-cat="all" data-i18n="f.all">全部 (14)</button>
+            <button class="pill-filter" data-cat="context" data-i18n="f.ctx">上下文 (7)</button>
+            <button class="pill-filter" data-cat="repository" data-i18n="f.repo">仓库 (2)</button>
+            <button class="pill-filter" data-cat="verification" data-i18n="f.verif">验证 (3)</button>
+            <button class="pill-filter" data-cat="runtime" data-i18n="f.run">运行期 (2)</button>
+          </div>
+        </div>
+        <div class="findings-scroll-list" id="findingsListContainer"></div>
+      </div>
+
+      <!-- Right: Inspector -->
+      <div class="findings-detail" id="findingInspector">
+        <div class="inspector-header">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+              <span class="badge-sev critical" id="inspSeverity">CRITICAL</span>
+              <span class="mono" style="color:var(--text-muted);" id="inspCategory">context</span>
+              <span class="mono" style="color:var(--text-dim);">·</span>
+              <span class="mono" style="color:var(--text-secondary);" id="inspRuleId">context/version-conflict</span>
+              <span class="mono" style="color:var(--text-muted); font-size:10px;" id="inspConfidence">95% 置信度</span>
+            </div>
+            <h2 class="mono" style="font-size:14px; font-weight:700; color:var(--text-primary);" id="inspTitle">Node.js 版本声明冲突</h2>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn-icon" style="background:var(--status-pass-bg); border-color:var(--status-pass-border); color:var(--status-pass); font-weight:600;" id="inspBtnCopyPrompt" data-i18n="insp.copy">复制 Fix Prompt</button>
+          </div>
+        </div>
+
+        <div class="inspector-content">
+          <div>
+            <div class="section-title" data-i18n="insp.rationale">问题诊断与机理说明</div>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.5;" id="inspDescription"></p>
+          </div>
+
+          <div>
+            <div class="section-title" data-i18n="insp.evidence">多源证据定位与跨文件对照</div>
+            <div id="inspEvidenceContainer" style="display:flex; flex-direction:column; gap:6px;"></div>
+          </div>
+
+          <div>
+            <div class="section-title" data-i18n="insp.rec">工程治理建议</div>
+            <div class="code-panel-body" style="background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:var(--radius-sm); color:var(--text-primary);" id="inspRecommendation"></div>
+          </div>
+
+          <div id="inspDiffSection">
+            <div class="section-title" data-i18n="insp.diff">建议的代码补丁 (Unified Diff)</div>
+            <div class="code-panel" id="inspDiffContainer"></div>
+          </div>
+
+          <div>
+            <div class="section-title" data-i18n="insp.prompt">生成给 AI Agent 的执行指令 (Fix Prompt)</div>
+            <div class="prompt-area" id="inspPromptBox"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       VIEW 4: REGRESSION
+       ======================================================================== -->
+  <section class="view-container" id="tab-regression">
+    <!-- Clean Gate Banner -->
+    <div class="clean-card" style="border-color:var(--status-crit-border); background:var(--status-crit-bg); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="mono" style="font-weight:700; color:var(--status-crit);" data-i18n="reg.status">CHECK FAILED (Exit Code: 1)</span>
+        <span style="font-size:12px; color:var(--text-secondary);" data-i18n="reg.desc">基线回归策略拦截: 分数从 84 退化至 78 (-6 pts)。</span>
+      </div>
+      <span class="badge-sev critical" data-i18n="reg.pill">CI BLOCKED</span>
+    </div>
+
+    <!-- Regressions Table -->
+    <div class="clean-panel" style="margin-bottom: 12px;">
+      <div class="clean-panel-header">
+        <span class="clean-panel-title" data-i18n="reg.tableTitle">本次提交引入的退化事件清单 (3 项)</span>
+        <span class="clean-panel-sub" data-i18n="reg.tableSub">按危害等级排序</span>
+      </div>
+      <table class="table-clean">
+        <thead>
+          <tr>
+            <th style="width: 70px;" data-i18n="th.sev">级别</th>
+            <th style="width: 120px;" data-i18n="th.kind">类型</th>
+            <th data-i18n="th.desc">描述与根因</th>
+            <th style="width: 200px;" data-i18n="th.loc">定位</th>
+            <th style="width: 90px; text-align: right;" data-i18n="th.act">操作</th>
+          </tr>
+        </thead>
+        <tbody id="regressionTableBody"></tbody>
+      </table>
+    </div>
+
+    <!-- Side-by-side Diff -->
+    <div class="grid-2">
+      <div class="clean-panel">
+        <div class="clean-panel-header">
+          <span class="clean-panel-title" data-i18n="reg.baseTitle">基线: main (AGENTS.md)</span>
+          <span class="clean-panel-sub">6,592 tokens</span>
+        </div>
+        <div class="code-panel-body" style="max-height: 220px; overflow-y: auto;">
+          <div># Agent Guidelines</div>
+          <div>## Commands</div>
+          <div>- Test: `npm test`</div>
+          <div>- Build: `npm run build`</div>
+          <div>## Architecture</div>
+          <div>- Clean package layout in src/</div>
+        </div>
+      </div>
+
+      <div class="clean-panel">
+        <div class="clean-panel-header">
+          <span class="clean-panel-title" style="color:var(--status-crit);" data-i18n="reg.headTitle">HEAD: feature/auth-refactor (AGENTS.md)</span>
+          <span class="clean-panel-sub" style="color:var(--status-crit);">8,412 tokens (+1,820 膨胀)</span>
+        </div>
+        <div class="code-panel-body" style="max-height: 220px; overflow-y: auto;">
+          <div># Agent Guidelines</div>
+          <div>## Commands</div>
+          <div>- Test: `npm test`</div>
+          <div>- Build: `npm run build`</div>
+          <div class="diff-line add">+ Always write clean and maintainable code. Follow best practices.</div>
+          <div class="diff-line add">+ Package manager is strictly pnpm. Never use npm or yarn.</div>
+          <div class="diff-line add">+ Frontend lives in /web (STALE: actual path is apps/web)</div>
+          <div>## Architecture</div>
+          <div>- Clean package layout in src/</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       VIEW 5: SESSIONS
+       ======================================================================== -->
+  <section class="view-container" id="tab-sessions">
+    <div class="findings-workbench">
+      <!-- Left: Session List -->
+      <div class="findings-sidebar">
+        <div class="clean-panel-header">
+          <span class="clean-panel-title" data-i18n="sess.listTitle">Agent 会话记录 (4)</span>
+          <span class="clean-panel-sub">Score: 88</span>
+        </div>
+        <div class="findings-scroll-list" id="sessionListContainer"></div>
+      </div>
+
+      <!-- Right: Active Session -->
+      <div class="findings-detail" style="padding: 14px; overflow-y: auto;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 12px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span class="badge-sev pass mono" id="sessAgentBadge">CLAUDE CODE</span>
+              <span class="mono" style="font-weight:700;" id="sessId">session-auth-fix-104</span>
+            </div>
+            <div style="font-size:12px; color:var(--text-secondary); margin-top:2px;" id="sessTask"></div>
+          </div>
+          <div class="mono" style="text-align:right;">
+            <span style="font-size:20px; font-weight:800; color:var(--status-pass);" id="sessScore">88/100</span>
+          </div>
+        </div>
+
+        <div class="grid-4" style="margin-bottom: 12px;">
+          <div class="clean-card" style="padding:8px 10px;">
+            <div class="mono" style="font-size:10px; color:var(--text-muted);" data-i18n="sess.kpiDur">耗时</div>
+            <div class="mono" style="font-size:14px; font-weight:700;" id="sessDuration">18m 31s</div>
+          </div>
+          <div class="clean-card" style="padding:8px 10px;">
+            <div class="mono" style="font-size:10px; color:var(--text-muted);" data-i18n="sess.kpiTk">Tokens 消耗</div>
+            <div class="mono" style="font-size:14px; font-weight:700;" id="sessTokens">107k</div>
+          </div>
+          <div class="clean-card" style="padding:8px 10px;">
+            <div class="mono" style="font-size:10px; color:var(--text-muted);" data-i18n="sess.kpiCalls">工具调用</div>
+            <div class="mono" style="font-size:14px; font-weight:700;" id="sessCalls">94</div>
+          </div>
+          <div class="clean-card" style="padding:8px 10px;">
+            <div class="mono" style="font-size:10px; color:var(--text-muted);" data-i18n="sess.kpiCmds">命令执行</div>
+            <div class="mono" style="font-size:14px; font-weight:700;" id="sessCmds">10</div>
+          </div>
+        </div>
+
+        <!-- Inefficiencies Alert -->
+        <div class="clean-card" style="border-color:var(--status-med-border); background:var(--status-med-bg); margin-bottom: 12px;" id="sessIneffBox"></div>
+
+        <!-- Chronological Stream -->
+        <div class="clean-panel">
+          <div class="clean-panel-header">
+            <span class="clean-panel-title" data-i18n="sess.traceTitle">时序工具调用追踪</span>
+          </div>
+          <div class="clean-panel-body" style="padding:6px;">
+            <div style="display:flex; flex-direction:column; gap:4px;" id="sessTimelineContainer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Toast Message -->
+  <div class="toast-msg" id="toast"></div>
+
+  <!-- ========================================================================
+       CLIENT APPLICATION LOGIC
+       ======================================================================== -->
+  <script>
+    const I18N = {
+      zh: {
+        "tabs.overview": "全局总览",
+        "tabs.context": "上下文",
+        "tabs.findings": "诊断问题",
+        "tabs.regression": "回归对比",
+        "tabs.sessions": "会话",
+        "hdr.score": "效能",
+        "hdr.rescan": "重新扫描",
+        "hdr.copyAll": "复制 Prompts",
+        "ov.c1Title": "AGENT 效能综合评分",
+        "ov.c1Sub": "四维度全量评估，存在回归退化",
+        "ov.c2Title": "有效信号密度 (Signal)",
+        "ov.target": "目标 ≥80%",
+        "ov.c2Sub": "潜在精简空间: 5,658 tokens",
+        "ov.c3Title": "验证闭环可靠性",
+        "ov.mismatchPill": "1 项漂移",
+        "ov.c3Sub": "CI 测试命令与 AGENTS.md 冲突",
+        "ov.c4Title": "运行期交互效能",
+        "ov.c4Sub": "4 个会话中检测到 2 次重复检索",
+        "ov.densityTitle": "上下文 Token 分布与构成",
+        "ov.verifTitle": "验证反馈回路",
+        "ov.verifAlert": "⚠️ CI 命令与文档不一致",
+        "ov.issuesTitle": "需优先治理的阻断与高危问题",
+        "ov.viewAll": "查看全部 14 项问题 →",
+        "leg.useful": "高价值 54.7%",
+        "leg.dup": "重复 16.9%",
+        "leg.inf": "可推断 13.8%",
+        "leg.stale": "过时 7.2%",
+        "leg.lowval": "水话 7.4%",
+        "th.sev": "级别",
+        "th.title": "问题描述",
+        "th.loc": "定位",
+        "th.conf": "置信度",
+        "th.waste": "损耗 / 影响",
+        "th.act": "操作",
+        "ctx.filesTitle": "Agent 指令源文件盘点 (4 个文件)",
+        "ctx.filesSub": "总计 12,481 Tokens，5,658 Tokens 为冗余/可推断",
+        "th.file": "文件路径",
+        "th.role": "角色定位",
+        "th.tokens": "总 Tokens",
+        "th.useful": "有效",
+        "th.density": "信号密度",
+        "th.issues": "问题数",
+        "ctx.r1Role": "单一事实来源 (Primary)",
+        "ctx.r2Role": "Claude Code 指令",
+        "ctx.r3Role": "Cursor IDE 规则",
+        "ctx.r4Role": "Copilot 补充指令",
+        "ctx.snipTitle": "具体发现的冗余与过期片段审查",
+        "ctx.snipSub": "静态 AST 与模式匹配精确截获",
+        "ctx.snip1Waste": "浪费 1,482 tokens/会话",
+        "ctx.snip2Waste": "引发 Agent 反复进行失效目录检索",
+        "ctx.snip3Waste": "浪费 491 tokens/会话",
+        "f.all": "全部 (14)",
+        "f.ctx": "上下文 (7)",
+        "f.repo": "仓库 (2)",
+        "f.verif": "验证 (3)",
+        "f.run": "运行期 (2)",
+        "insp.copy": "复制 Fix Prompt",
+        "insp.rationale": "问题诊断与机理说明",
+        "insp.evidence": "多源证据定位与跨文件对照",
+        "insp.rec": "工程治理建议",
+        "insp.diff": "建议的代码补丁 (Unified Diff)",
+        "insp.prompt": "生成给 AI Agent 的执行指令 (Fix Prompt)",
+        "reg.status": "CHECK FAILED (Exit Code: 1)",
+        "reg.desc": "基线回归策略拦截: 分数从 84 退化至 78 (-6 pts)。",
+        "reg.pill": "CI BLOCKED",
+        "reg.tableTitle": "本次提交引入的退化事件清单 (3 项)",
+        "reg.tableSub": "按危害等级排序",
+        "th.kind": "类型",
+        "th.desc": "描述与根因",
+        "reg.baseTitle": "基线: main (AGENTS.md)",
+        "reg.headTitle": "HEAD: feature/auth-refactor (AGENTS.md)",
+        "sess.listTitle": "Agent 会话记录 (4)",
+        "sess.kpiDur": "耗时",
+        "sess.kpiTk": "Tokens 消耗",
+        "sess.kpiCalls": "工具调用",
+        "sess.kpiCmds": "命令执行",
+        "sess.traceTitle": "时序工具调用追踪"
+      },
+      en: {
+        "tabs.overview": "Overview",
+        "tabs.context": "Context",
+        "tabs.findings": "Findings",
+        "tabs.regression": "Regression",
+        "tabs.sessions": "Sessions",
+        "hdr.score": "Score",
+        "hdr.rescan": "Rescan",
+        "hdr.copyAll": "Copy Prompts",
+        "ov.c1Title": "AGENT EFFICIENCY SCORE",
+        "ov.c1Sub": "Evaluated across 4 dimensions with regressions",
+        "ov.c2Title": "CONTEXT SIGNAL DENSITY",
+        "ov.target": "Target ≥80%",
+        "ov.c2Sub": "Potential reduction: 5,658 tokens",
+        "ov.c3Title": "VERIFICATION RELIABILITY",
+        "ov.mismatchPill": "1 Mismatch",
+        "ov.c3Sub": "CI test command conflicts with AGENTS.md",
+        "ov.c4Title": "RUNTIME INTERACTION SCORE",
+        "ov.c4Sub": "2 repeated searches across 4 sessions",
+        "ov.densityTitle": "Context Token Composition",
+        "ov.verifTitle": "Verification Feedback Loop",
+        "ov.verifAlert": "⚠️ CI command differs from instructions",
+        "ov.issuesTitle": "Priority Remediation Issues",
+        "ov.viewAll": "View all 14 findings →",
+        "leg.useful": "Useful 54.7%",
+        "leg.dup": "Duplicate 16.9%",
+        "leg.inf": "Inferable 13.8%",
+        "leg.stale": "Stale 7.2%",
+        "leg.lowval": "Low-val 7.4%",
+        "th.sev": "Severity",
+        "th.title": "Issue Title",
+        "th.loc": "Location",
+        "th.conf": "Confidence",
+        "th.waste": "Waste / Impact",
+        "th.act": "Action",
+        "ctx.filesTitle": "Agent Instruction Source Files (4 Files)",
+        "ctx.filesSub": "12,481 tokens total, 5,658 tokens are redundant",
+        "th.file": "File Path",
+        "th.role": "Role",
+        "th.tokens": "Tokens",
+        "th.useful": "Useful",
+        "th.density": "Density",
+        "th.issues": "Issues",
+        "ctx.r1Role": "Source of Truth (Primary)",
+        "ctx.r2Role": "Claude Code Instructions",
+        "ctx.r3Role": "Cursor IDE Rules",
+        "ctx.r4Role": "Copilot Instructions",
+        "ctx.snipTitle": "Concrete Wasteful Snippets Discovered",
+        "ctx.snipSub": "Captured via deterministic AST and regex rules",
+        "ctx.snip1Waste": "Waste: 1,482 tokens/session",
+        "ctx.snip2Waste": "Causes repeated agent directory traversal",
+        "ctx.snip3Waste": "Waste: 491 tokens/session",
+        "f.all": "All (14)",
+        "f.ctx": "Context (7)",
+        "f.repo": "Repo (2)",
+        "f.verif": "Verif (3)",
+        "f.run": "Runtime (2)",
+        "insp.copy": "Copy Fix Prompt",
+        "insp.rationale": "Diagnostic Rationale",
+        "insp.evidence": "Multi-file Evidence & Locations",
+        "insp.rec": "Remediation Recommendation",
+        "insp.diff": "Proposed Unified Diff",
+        "insp.prompt": "Generated Agent Fix Prompt",
+        "reg.status": "CHECK FAILED (Exit Code: 1)",
+        "reg.desc": "Regression gate violated: Score degraded from 84 to 78 (-6 pts).",
+        "reg.pill": "CI BLOCKED",
+        "reg.tableTitle": "Regressions Introduced in HEAD (3 Items)",
+        "reg.tableSub": "Sorted by severity rank",
+        "th.kind": "Kind",
+        "th.desc": "Description & Root Cause",
+        "reg.baseTitle": "Baseline: main (AGENTS.md)",
+        "reg.headTitle": "HEAD: feature/auth-refactor (AGENTS.md)",
+        "sess.listTitle": "Agent Session Traces (4)",
+        "sess.kpiDur": "Duration",
+        "sess.kpiTk": "Tokens",
+        "sess.kpiCalls": "Tool Calls",
+        "sess.kpiCmds": "Commands",
+        "sess.traceTitle": "Chronological Tool Execution Stream"
+      }
+    };
+
+    const FINDINGS_DATA = [
+      {
+        id: "finding-1",
+        ruleId: "context/version-conflict",
+        category: "context",
+        severity: "critical",
+        confidence: 0.95,
+        title: {
+          zh: "Node.js 版本声明冲突 (AGENTS.md vs package.json vs CI)",
+          en: "Conflicting Node.js version requirement"
+        },
+        description: {
+          zh: "AGENTS.md 指引 AI Coding Agent 采用 Node >= 20.0.0，但 package.json 中定义了 engines >= 22.0.0，且 GitHub Actions CI 环境严格运行在 Node 22.x。Coding Agent 阅读 AGENTS.md 后可能会降级新语法、生成多余的 polyfill，导致 CI 构建阻断。",
+          en: "AGENTS.md instructs AI Coding Agents to target Node >= 20.0.0, but package.json specifies 'engines': { 'node': '>=22.0.0' } and GitHub Actions CI tests run strictly on Node 22.x."
+        },
+        evidence: [
+          { file: "AGENTS.md", line: 14, snippet: "Node.js version: >= 20.0.0" },
+          { file: "package.json", line: 64, snippet: "\"engines\": { \"node\": \">=22.0.0\" }" },
+          { file: ".github/workflows/ci.yml", line: 18, snippet: "node-version: [22.x]" }
+        ],
+        impact: {
+          waste: "140 tokens",
+          risk: { zh: "严重构建阻断风险", en: "High Build Failure Risk" }
+        },
+        recommendation: {
+          zh: "将 AGENTS.md 第 14 行更新为 Node >= 22.0.0，与 package.json 和 CI 配置保持一致。",
+          en: "Update AGENTS.md line 14 to specify Node >= 22.0.0 matching package.json and CI configuration."
+        },
+        diff: [
+          { type: "hunk", text: "@@ -14,1 +14,1 @@ AGENTS.md" },
+          { type: "del", text: "- Node.js version: >= 20.0.0" },
+          { type: "add", text: "+ Node.js version: >= 22.0.0" }
+        ],
+        prompt: {
+          zh: "请修复当前仓库中的以下 AgentDoctor Finding。\n\n## 问题\nNode.js 版本声明冲突\nSeverity: CRITICAL\nConfidence: 95%\n\n## 证据\n- AGENTS.md:14 (Node.js version: >= 20.0.0)\n- package.json:64 (engines >= 22.0.0)\n- ci.yml:18 (node 22)\n\n## 修复目标\n将 AGENTS.md 中的 Node.js 最低版本同步为 >= 22.0.0。",
+          en: "Fix the following AgentDoctor Finding in this repository.\n\n## Issue\nConflicting Node.js version requirement\nSeverity: CRITICAL\nConfidence: 95%\n\n## Evidence\n- AGENTS.md:14 (>= 20.0.0)\n- package.json:64 (>= 22.0.0)\n\n## Remediation Goal\nUpdate AGENTS.md to specify Node >= 22.0.0."
+        }
+      },
+      {
+        id: "finding-2",
+        ruleId: "context/stale-path",
+        category: "context",
+        severity: "high",
+        confidence: 0.98,
+        title: {
+          zh: "指令引用了已不存在的过时路径 \"/web\"",
+          en: "Stale instruction references non-existent path \"/web\""
+        },
+        description: {
+          zh: "CLAUDE.md 指引前端代码位于 '/web'，但该目录在架构迁移中已移动至 'apps/web'。Agent 每次检索该路径均会失败，引发无效重试。",
+          en: "CLAUDE.md instructs the agent that frontend code is located in '/web', but that folder was moved to 'apps/web'."
+        },
+        evidence: [
+          { file: "CLAUDE.md", line: 24, snippet: "Frontend code and UI components reside in `/web`" }
+        ],
+        impact: {
+          waste: "420 tokens",
+          risk: { zh: "反复目录遍历重试", en: "Directory Search Retries" }
+        },
+        recommendation: {
+          zh: "将 CLAUDE.md 中的引用路径从 `/web` 修正为 `apps/web/`。",
+          en: "Update path reference in CLAUDE.md from `/web` to `apps/web/`."
+        },
+        diff: [
+          { type: "hunk", text: "@@ -24,1 +24,1 @@ CLAUDE.md" },
+          { type: "del", text: "- Frontend code and UI components reside in `/web`" },
+          { type: "add", text: "+ Frontend code and UI components reside in `apps/web/`" }
+        ],
+        prompt: {
+          zh: "将 CLAUDE.md 中的过时路径 /web 替换为当前实际有效的 apps/web/。",
+          en: "Update the stale path in CLAUDE.md to current valid path apps/web/."
+        }
+      },
+      {
+        id: "finding-3",
+        ruleId: "verification/command-consistency",
+        category: "verification",
+        severity: "high",
+        confidence: 0.92,
+        title: {
+          zh: "验证指令不一致: AGENTS.md 测试命令与 CI 工作流不符",
+          en: "Verification command mismatch between AGENTS.md and CI"
+        },
+        description: {
+          zh: "AGENTS.md 指引 Agent 执行 'npm test'，而 CI 工作流强制执行 'pnpm test:ci'。导致 Agent 本地自测通过但提 PR 频繁失败。",
+          en: "AGENTS.md instructs the agent to run 'npm test', but CI workflow runs 'pnpm test:ci'."
+        },
+        evidence: [
+          { file: "AGENTS.md", line: 31, snippet: "- Test: `npm test`" },
+          { file: ".github/workflows/ci.yml", line: 22, snippet: "run: pnpm test:ci" }
+        ],
+        impact: {
+          waste: "85 tokens",
+          risk: { zh: "CI 门禁阻断", en: "CI Gate Failure" }
+        },
+        recommendation: {
+          zh: "将 AGENTS.md 中的测试命令同步为实际 CI 验证命令 'pnpm test:ci'。",
+          en: "Align AGENTS.md test instructions to document 'pnpm test:ci'."
+        },
+        diff: [
+          { type: "hunk", text: "@@ -31,1 +31,1 @@ AGENTS.md" },
+          { type: "del", text: "- Test: `npm test`" },
+          { type: "add", text: "- Test: `pnpm test:ci` (Unit & Coverage)" }
+        ],
+        prompt: {
+          zh: "将 AGENTS.md 中的测试验证命令同步为 CI 真实使用的 pnpm test:ci。",
+          en: "Update test command in AGENTS.md to match CI command pnpm test:ci."
+        }
+      },
+      {
+        id: "finding-4",
+        ruleId: "context/duplicate-instruction",
+        category: "context",
+        severity: "high",
+        confidence: 1.0,
+        title: {
+          zh: "包管理器规则在 3 个独立文件中完全重复",
+          en: "Exact duplicate package-manager instructions across 3 files"
+        },
+        description: {
+          zh: "关于禁止 npm、只使用 pnpm 的规则，在 AGENTS.md、CLAUDE.md 和 project.mdc 中重复定义了 3 次，单次交互浪费 1,482 tokens。",
+          en: "Identical instructions regarding pnpm package management are copied verbatim across 3 separate files."
+        },
+        evidence: [
+          { file: "AGENTS.md", line: 12, snippet: "Package manager is strictly pnpm. Never use npm or yarn." },
+          { file: "CLAUDE.md", line: 8, snippet: "Package manager is strictly pnpm. Never use npm or yarn." },
+          { file: ".cursor/rules/project.mdc", line: 5, snippet: "Package manager is strictly pnpm. Never use npm or yarn." }
+        ],
+        impact: {
+          waste: "1,482 tokens",
+          risk: { zh: "上下文膨胀", en: "Context Bloat" }
+        },
+        recommendation: {
+          zh: "以 AGENTS.md 作为单一事实来源，删除其他辅助指令文件中的机械重复。",
+          en: "Maintain AGENTS.md as single source of truth; prune duplicates elsewhere."
+        },
+        diff: [
+          { type: "hunk", text: "@@ -8,2 +8,0 @@ CLAUDE.md" },
+          { type: "del", text: "- Package manager is strictly pnpm. Never use npm or yarn." }
+        ],
+        prompt: {
+          zh: "以 AGENTS.md 为准，删除 CLAUDE.md 与 project.mdc 中的重复包管理器说明。",
+          en: "Remove duplicate package-manager instructions from CLAUDE.md and project.mdc."
+        }
+      },
+      {
+        id: "finding-5",
+        ruleId: "repository/large-file",
+        category: "repository",
+        severity: "high",
+        confidence: 1.0,
+        title: {
+          zh: "单源文件超限: src/auth/AuthService.ts (2,831 行)",
+          en: "Oversized source file: src/auth/AuthService.ts (2,831 lines)"
+        },
+        description: {
+          zh: "AuthService.ts 超过 1,500 行建议上限。超大单文件极易撑爆 Agent 单次工具读取窗口，导致截断并触发反复重载。",
+          en: "File AuthService.ts exceeds the 1,500 lines threshold. Large files inflate reading tokens."
+        },
+        evidence: [
+          { file: "src/auth/AuthService.ts", line: 1, snippet: "2,831 lines (142kb total size)" }
+        ],
+        impact: {
+          waste: "28,400 tokens",
+          risk: { zh: "上下文截断与反复重载", en: "Context Exhaustion" }
+        },
+        recommendation: {
+          zh: "将 AuthService 拆分为子模块（Session 管理、Token 校验、OAuth 服务），保持公开函数签名兼容。",
+          en: "Refactor AuthService.ts into modular sub-services while preserving backward compatibility."
+        },
+        diff: null,
+        prompt: {
+          zh: "请评估并拆分 src/auth/AuthService.ts (2,831 行)，模块化拆分职责。",
+          en: "Modularize src/auth/AuthService.ts (2,831 lines) into focused sub-modules."
+        }
+      }
+    ];
+
+    const REGRESSIONS_DATA = [
+      {
+        sev: "high",
+        kind: "new-finding",
+        title: {
+          zh: "新引入失效路径指令: CLAUDE.md 中引用不存在的 /web",
+          en: "Stale instruction path \"/web\" introduced"
+        },
+        desc: {
+          zh: "CLAUDE.md 中修改指令指向了 /web，但当前分支已将代码移至 apps/web。",
+          en: "CLAUDE.md was modified to point agents to /web, but files were relocated to apps/web."
+        },
+        loc: "CLAUDE.md:24",
+        findingId: "finding-2"
+      },
+      {
+        sev: "high",
+        kind: "verification",
+        title: {
+          zh: "验证闭环退化: 测试从 healthy 变为 broken",
+          en: "Verification status degraded: test changed from healthy to broken"
+        },
+        desc: {
+          zh: "vitest 执行退出码为 1，缺少模块导出导致验证失败。",
+          en: "Local vitest execution failed with exit code 1 due to missing module export."
+        },
+        loc: "package.json (\"test\")",
+        findingId: null
+      },
+      {
+        sev: "medium",
+        kind: "context-bloat",
+        title: {
+          zh: "上下文膨胀: 新增 +1,820 tokens 但有效信号密度仅 22%",
+          en: "+1,820 context tokens added with only 22% signal density"
+        },
+        desc: {
+          zh: "在 AGENTS.md 中新增了大段重复说明文档，未经过滤瘦身。",
+          en: "Large chunk of repetitive documentation pasted into AGENTS.md without trimming."
+        },
+        loc: "AGENTS.md (+1,820 tk)",
+        findingId: null
+      }
+    ];
+
+    const SESSIONS_DATA = [
+      {
+        id: "session-auth-fix-104",
+        agentName: "Claude Code",
+        date: "Today 15:30",
+        score: 88,
+        duration: "18m 31s",
+        tokensTotal: "107k",
+        toolCalls: 94,
+        cmds: 10,
+        task: {
+          zh: "修复认证模块 Token 过期时间竞态问题",
+          en: "Fix token expiration race condition in auth service"
+        },
+        ineff: {
+          zh: "⚠️ <strong>重复搜索 (2 次):</strong> Agent 针对 'scanner' 连续查询 2 次未进入文件，反映 AGENTS.md 缺少导航指引。",
+          en: "⚠️ <strong>Repeated Searches (2 times):</strong> Agent ran query 'scanner' twice without exploring files."
+        },
+        timeline: [
+          { time: "00:02", tool: "grep_search", action: "Query 'scanner'", status: "ok" },
+          { time: "00:04", tool: "view_file", action: "Read src/index.ts (1-80)", status: "ok" },
+          { time: "00:07", tool: "grep_search", action: "Query 'scanner' (repeated)", status: "ok" },
+          { time: "00:10", tool: "view_file", action: "Read src/core/scan/scanner.ts (1-120)", status: "ok" },
+          { time: "00:13", tool: "replace_file", action: "Modify src/core/scan/scanner.ts", status: "ok" },
+          { time: "00:15", tool: "run_command", action: "pnpm test:ci (vitest)", status: "err" },
+          { time: "00:18", tool: "run_command", action: "pnpm test:ci (vitest)", status: "ok" }
+        ]
+      },
+      {
+        id: "session-refactor-103",
+        agentName: "Codex",
+        date: "Today 11:15",
+        score: 64,
+        duration: "24m 12s",
+        tokensTotal: "145k",
+        toolCalls: 112,
+        cmds: 14,
+        task: {
+          zh: "重构 AuthService 会话持久化逻辑",
+          en: "Refactor AuthService session persistence logic"
+        },
+        ineff: {
+          zh: "⚠️ <strong>超大文件反复加载:</strong> AuthService.ts 因 2,800 行截断被全量读取 3 次，浪费超 4 万 tokens。",
+          en: "⚠️ <strong>Repeated File Read:</strong> AuthService.ts read 3 times due to 2,800-line output truncation."
+        },
+        timeline: [
+          { time: "00:01", tool: "view_file", action: "Read src/auth/AuthService.ts (truncated)", status: "ok" },
+          { time: "00:03", tool: "view_file", action: "Read src/auth/AuthService.ts (again)", status: "ok" },
+          { time: "00:11", tool: "run_command", action: "npm test", status: "err" },
+          { time: "00:23", tool: "run_command", action: "npm test", status: "ok" }
+        ]
+      }
+    ];
+
+    // State
+    let currentLang = "zh";
+    let currentTheme = "dark";
+    let currentTab = "tab-overview";
+    let selectedFindingId = FINDINGS_DATA[0].id;
+    let selectedSessionId = SESSIONS_DATA[0].id;
+    let activeCategoryFilter = "all";
+    let searchQuery = "";
+
+    function t(key) {
+      return I18N[currentLang][key] || key;
+    }
+
+    function toggleTheme() {
+      const next = currentTheme === "dark" ? "light" : "dark";
+      setTheme(next);
+    }
+
+    function setTheme(theme) {
+      currentTheme = theme;
+      document.documentElement.setAttribute("data-theme", theme);
+      document.getElementById("themeLabel").innerText = theme === "dark" ? "☀️" : "🌙";
+    }
+
+    function toggleLang() {
+      const next = currentLang === "zh" ? "en" : "zh";
+      setLang(next);
+    }
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.documentElement.setAttribute("lang", lang === "zh" ? "zh-CN" : "en");
+      document.getElementById("langLabel").innerText = lang === "zh" ? "EN" : "中文";
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (I18N[lang][key]) el.innerText = I18N[lang][key];
+      });
+
+      renderOverviewIssues();
+      renderFindings();
+      renderRegressions();
+      renderSessions();
+    }
+
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll(".nav-tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tabId);
+      });
+      document.querySelectorAll(".view-container").forEach(view => {
+        view.classList.toggle("active", view.id === tabId);
+      });
+    }
+
+    document.querySelectorAll(".nav-tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
+    // Overview Table
+    function renderOverviewIssues() {
+      const tbody = document.getElementById("overviewIssuesBody");
+      tbody.innerHTML = "";
+      FINDINGS_DATA.forEach(f => {
+        const tr = document.createElement("tr");
+        tr.onclick = () => {
+          selectedFindingId = f.id;
+          switchTab("tab-findings");
+          renderFindings();
+        };
+
+        const titleText = f.title[currentLang] || f.title.en;
+        const wasteText = f.impact.waste + " · " + (f.impact.risk[currentLang] || f.impact.risk.en);
+
+        tr.innerHTML = `
+          <td><span class="badge-sev ${f.severity}">${f.severity.toUpperCase()}</span></td>
+          <td><strong>${titleText}</strong></td>
+          <td><code class="mono" style="color:var(--text-secondary);">${f.evidence[0]?.file}</code></td>
+          <td><span class="mono">${Math.round(f.confidence * 100)}%</span></td>
+          <td class="mono" style="font-size:11px; color:var(--status-crit);">${wasteText}</td>
+          <td style="text-align:right;">
+            <button class="btn-icon" style="height:22px; padding:0 6px;" onclick="event.stopPropagation(); copyPrompt('${f.id}')">
+              ${currentLang === "zh" ? "复制 Prompt" : "Copy"}
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Findings
+    function renderFindings() {
+      const container = document.getElementById("findingsListContainer");
+      container.innerHTML = "";
+
+      const filtered = FINDINGS_DATA.filter(f => {
+        if (activeCategoryFilter !== "all" && f.category !== activeCategoryFilter) return false;
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          const title = (f.title[currentLang] || f.title.en).toLowerCase();
+          if (!title.includes(q) && !f.ruleId.includes(q)) return false;
+        }
+        return true;
+      });
+
+      filtered.forEach(f => {
+        const row = document.createElement("div");
+        row.className = `finding-row ${f.id === selectedFindingId ? "active" : ""}`;
+        row.onclick = () => {
+          selectedFindingId = f.id;
+          renderFindings();
+        };
+
+        row.innerHTML = `
+          <div class="finding-row-top">
+            <span class="badge-sev ${f.severity}">${f.severity.toUpperCase()}</span>
+            <span class="mono" style="color:var(--text-muted); font-size:10px;">${f.ruleId}</span>
+          </div>
+          <div class="finding-row-title">${f.title[currentLang] || f.title.en}</div>
+          <div class="finding-row-meta">
+            <span>${f.evidence[0]?.file}</span>
+            <span>${Math.round(f.confidence * 100)}%</span>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      updateInspector();
+    }
+
+    function updateInspector() {
+      const f = FINDINGS_DATA.find(x => x.id === selectedFindingId);
+      if (!f) return;
+
+      document.getElementById("inspSeverity").className = `badge-sev ${f.severity}`;
+      document.getElementById("inspSeverity").innerText = f.severity.toUpperCase();
+      document.getElementById("inspCategory").innerText = f.category;
+      document.getElementById("inspRuleId").innerText = f.ruleId;
+      document.getElementById("inspConfidence").innerText = `${Math.round(f.confidence * 100)}% ${currentLang === "zh" ? "置信度" : "confidence"}`;
+      document.getElementById("inspTitle").innerText = f.title[currentLang] || f.title.en;
+      document.getElementById("inspDescription").innerText = f.description[currentLang] || f.description.en;
+      document.getElementById("inspRecommendation").innerText = f.recommendation[currentLang] || f.recommendation.en;
+
+      // Evidence
+      const evBox = document.getElementById("inspEvidenceContainer");
+      evBox.innerHTML = "";
+      f.evidence.forEach(ev => {
+        const p = document.createElement("div");
+        p.className = "code-panel";
+        p.innerHTML = `
+          <div class="code-panel-head">
+            <span style="color:var(--status-med);">${ev.file}${ev.line ? `:${ev.line}` : ""}</span>
+          </div>
+          <div class="code-panel-body" style="color:var(--status-crit);">
+            ${ev.snippet || "[file level detection]"}
+          </div>
+        `;
+        evBox.appendChild(p);
+      });
+
+      // Diff
+      const diffSec = document.getElementById("inspDiffSection");
+      const diffContainer = document.getElementById("inspDiffContainer");
+      if (f.diff) {
+        diffSec.style.display = "block";
+        diffContainer.innerHTML = "";
+        f.diff.forEach(l => {
+          const row = document.createElement("div");
+          row.className = `diff-line ${l.type}`;
+          row.innerText = l.text;
+          diffContainer.appendChild(row);
+        });
+      } else {
+        diffSec.style.display = "none";
+      }
+
+      // Prompt
+      const promptText = f.prompt[currentLang] || f.prompt.en;
+      document.getElementById("inspPromptBox").innerText = promptText;
+      document.getElementById("inspBtnCopyPrompt").onclick = () => {
+        copyToClipboard(promptText, currentLang === "zh" ? "✓ Fix Prompt 已复制" : "✓ Copied fix prompt");
+      };
+    }
+
+    document.querySelectorAll("#categoryFilterRow .pill-filter").forEach(b => {
+      b.addEventListener("click", () => {
+        document.querySelectorAll("#categoryFilterRow .pill-filter").forEach(c => c.classList.remove("active"));
+        b.classList.add("active");
+        activeCategoryFilter = b.dataset.cat;
+        renderFindings();
+      });
+    });
+
+    document.getElementById("findingsSearch").addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderFindings();
+    });
+
+    // Regressions
+    function renderRegressions() {
+      const tbody = document.getElementById("regressionTableBody");
+      tbody.innerHTML = "";
+      REGRESSIONS_DATA.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><span class="badge-sev ${r.sev}">${r.sev.toUpperCase()}</span></td>
+          <td><code class="mono">${r.kind}</code></td>
+          <td>
+            <strong>${r.title[currentLang] || r.title.en}</strong>
+            <div style="font-size:11px; color:var(--text-secondary);">${r.desc[currentLang] || r.desc.en}</div>
+          </td>
+          <td><code class="mono" style="color:var(--status-med);">${r.loc}</code></td>
+          <td style="text-align:right;">
+            ${r.findingId ? `<button class="btn-icon" style="height:20px; padding:0 6px;" onclick="selectedFindingId='${r.findingId}'; switchTab('tab-findings'); renderFindings();">${currentLang === "zh" ? "查看" : "Inspect"}</button>` : "—"}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Sessions
+    function renderSessions() {
+      const list = document.getElementById("sessionListContainer");
+      list.innerHTML = "";
+      SESSIONS_DATA.forEach(s => {
+        const row = document.createElement("div");
+        row.className = `finding-row ${s.id === selectedSessionId ? "active" : ""}`;
+        row.onclick = () => {
+          selectedSessionId = s.id;
+          renderSessions();
+        };
+        row.innerHTML = `
+          <div class="finding-row-top">
+            <strong class="mono">${s.agentName}</strong>
+            <span class="mono" style="color:var(--status-pass);">${s.score}</span>
+          </div>
+          <div style="font-size:11px; color:var(--text-secondary);">${s.task[currentLang] || s.task.en}</div>
+          <div class="finding-row-meta">
+            <span>${s.duration}</span>
+            <span>${s.tokensTotal} tk</span>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+
+      const activeSess = SESSIONS_DATA.find(x => x.id === selectedSessionId) || SESSIONS_DATA[0];
+      document.getElementById("sessAgentBadge").innerText = activeSess.agentName.toUpperCase();
+      document.getElementById("sessId").innerText = activeSess.id;
+      document.getElementById("sessTask").innerText = activeSess.task[currentLang] || activeSess.task.en;
+      document.getElementById("sessScore").innerText = `${activeSess.score}/100`;
+      document.getElementById("sessDuration").innerText = activeSess.duration;
+      document.getElementById("sessTokens").innerText = activeSess.tokensTotal;
+      document.getElementById("sessCalls").innerText = activeSess.toolCalls;
+      document.getElementById("sessCmds").innerText = activeSess.cmds;
+
+      document.getElementById("sessIneffBox").innerHTML = activeSess.ineff[currentLang] || activeSess.ineff.en;
+
+      const tContainer = document.getElementById("sessTimelineContainer");
+      tContainer.innerHTML = "";
+      activeSess.timeline.forEach(event => {
+        const d = document.createElement("div");
+        d.className = "mono";
+        d.style.display = "flex";
+        d.style.justifyContent = "space-between";
+        d.style.fontSize = "11px";
+        d.style.padding = "2px 4px";
+        d.style.background = event.status === "err" ? "var(--status-crit-bg)" : "var(--bg-canvas)";
+        d.style.borderRadius = "var(--radius-sm)";
+        d.innerHTML = `
+          <span><span style="color:var(--text-muted);">${event.time}</span> [${event.tool}] ${event.action}</span>
+          <span style="color:${event.status === 'ok' ? 'var(--status-pass)' : 'var(--status-crit)'};">${event.status.toUpperCase()}</span>
+        `;
+        tContainer.appendChild(d);
+      });
+    }
+
+    // Utilities
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.innerText = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2000);
+    }
+
+    function copyToClipboard(text, msg) {
+      navigator.clipboard.writeText(text).then(() => showToast(msg || "✓ Copied"));
+    }
+
+    function copyPrompt(id) {
+      const f = FINDINGS_DATA.find(x => x.id === id);
+      if (f) copyToClipboard(f.prompt[currentLang] || f.prompt.en, currentLang === "zh" ? "✓ Fix Prompt 已复制" : "✓ Copied prompt");
+    }
+
+    document.getElementById("btnCopyBatch").onclick = () => {
+      const batch = FINDINGS_DATA.map(f => f.prompt[currentLang] || f.prompt.en).join("\n\n---\n\n");
+      copyToClipboard(batch, currentLang === "zh" ? "✓ 全部 Fix Prompts 已复制" : "✓ Copied all prompts");
+    };
+
+    document.getElementById("btnRescan").onclick = () => {
+      showToast(currentLang === "zh" ? "✓ 重新扫描完成 (37ms)" : "✓ Rescan complete (37ms)");
+    };
+
+    window.addEventListener("keydown", (e) => {
+      if (e.target.tagName === "INPUT") return;
+      if (e.key === "1") switchTab("tab-overview");
+      if (e.key === "2") switchTab("tab-context");
+      if (e.key === "3") switchTab("tab-findings");
+      if (e.key === "4") switchTab("tab-regression");
+      if (e.key === "5") switchTab("tab-sessions");
+      if (e.key === "r" || e.key === "R") document.getElementById("btnRescan").click();
+      if (e.key === "P") document.getElementById("btnCopyBatch").click();
+    });
+
+    // Init
+    setLang("zh");
+    setTheme("dark");
+  </script>
+</body>
+</html>

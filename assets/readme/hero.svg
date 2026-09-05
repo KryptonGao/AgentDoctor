@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380" viewBox="0 0 1200 380" role="img" aria-labelledby="title desc">
+  <title id="title">AgentDoctor — trusted CI for AI coding context</title>
+  <desc id="desc">A terminal-style report shows AgentDoctor comparing a baseline, fingerprints, and new regressions.</desc>
+
+  <rect width="1200" height="380" rx="28" fill="#0b0d10"/>
+  <path d="M56 314H1144" stroke="#272d34" stroke-width="1"/>
+  <circle cx="62" cy="42" r="5" fill="#ff7c7c"/>
+  <circle cx="80" cy="42" r="5" fill="#f3c969"/>
+  <circle cx="98" cy="42" r="5" fill="#8df58a"/>
+
+  <g id="title-block" transform="translate(56 84)" fill="#f6f7f2">
+    <text x="0" y="0" fill="#8df58a" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" font-weight="700" letter-spacing="2">TRUST / BENCHMARK / CI</text>
+    <text x="0" y="72" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="58" font-weight="750" letter-spacing="-2">AgentDoctor</text>
+    <text x="0" y="116" fill="#c5ccd3" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="27">Make your repository legible to agents.</text>
+    <text x="0" y="158" fill="#8f99a4" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="20">Fingerprint findings. Compare baselines. Gate real regressions.</text>
+    <text x="0" y="214" fill="#f3c969" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="20">npx agentdoctor check --baseline main</text>
+  </g>
+
+  <g id="terminal-panel" transform="translate(690 60)">
+    <rect width="454" height="250" rx="16" fill="#12161b" stroke="#39434d" stroke-width="2"/>
+    <path d="M0 44H454" stroke="#2b333b" stroke-width="1"/>
+    <text x="22" y="29" fill="#8f99a4" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">agentdoctor / baseline report</text>
+    <g id="terminal-output" transform="translate(24 64)" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18">
+      <text x="0" y="0" fill="#8df58a">$ check --baseline main</text>
+      <text x="0" y="34" fill="#f6f7f2">Agent Efficiency</text>
+      <text x="0" y="64" fill="#aeb7c0">main  86</text>
+      <text x="0" y="91" fill="#f6f7f2">HEAD  79 <tspan fill="#ff7c7c">↓7</tspan></text>
+      <text x="0" y="130" fill="#aeb7c0">New regressions:</text>
+      <text x="0" y="158" fill="#ff7c7c">HIGH</text><text x="70" y="158" fill="#f6f7f2">stale instruction</text>
+      <text x="0" y="185" fill="#f3c969">MED</text><text x="70" y="185" fill="#f6f7f2">verification mismatch</text>
+    </g>
+    <g id="status-pill" transform="translate(324 16)">
+      <rect width="108" height="24" rx="12" fill="#1c3326" stroke="#426e4b"/>
+      <circle cx="17" cy="12" r="4" fill="#8df58a"/>
+      <text x="29" y="17" fill="#b9f7b8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13">SCANNED</text>
+    </g>
+  </g>
+
+  <g id="footer-meta" transform="translate(56 345)" fill="#8f99a4" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15">
+    <text x="0" y="0">NO LLM REQUIRED</text>
+    <text x="180" y="0" fill="#39434d">·</text>
+    <text x="202" y="0">NODE / PYTHON / RUST / GO</text>
+    <text x="916" y="0" fill="#8df58a">schema v1</text>
+  </g>
+</svg>

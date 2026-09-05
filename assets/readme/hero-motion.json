@@ -1,0 +1,26 @@
+{
+  "width": 1200,
+  "fps": 12,
+  "duration": 4.5,
+  "colors": 128,
+  "dither": "none",
+  "transparent_color": "#ff00ff",
+  "clip_to_base_alpha": true,
+  "max_size_mb": 2.0,
+  "reveals": [
+    {
+      "id": "terminal-output",
+      "axis": "y",
+      "start": 0.15,
+      "end": 1.05,
+      "exit": { "start": 4.05, "end": 4.45 }
+    }
+  ],
+  "layers": [
+    {
+      "id": "status-pill",
+      "enter": { "start": 0.55, "end": 1.2, "from": [34, 0] },
+      "exit": { "start": 4.05, "end": 4.45, "to": [18, 0] }
+    }
+  ]
+}

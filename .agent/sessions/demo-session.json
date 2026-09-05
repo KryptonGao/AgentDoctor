@@ -1,0 +1,35 @@
+{
+  "id": "session-auth-fix-42",
+  "agentName": "Claude Code",
+  "date": "Today 15:30",
+  "durationSeconds": 1111,
+  "tokenUsage": {
+    "input": 92000,
+    "output": 15000,
+    "total": 107000
+  },
+  "toolCalls": 94,
+  "failedToolCalls": 3,
+  "commandsExecuted": 8,
+  "filesRead": [
+    "src/index.ts",
+    "src/core/types.ts",
+    "src/core/scan/scanner.ts"
+  ],
+  "filesEdited": [
+    "src/core/scan/scanner.ts"
+  ],
+  "searchOperations": [
+    "scanner",
+    "calculateEfficiencyScore"
+  ],
+  "toolOutputTokens": 8500,
+  "timeline": [
+    { "timeOffset": "00:02", "action": "Search scanner", "status": "success" },
+    { "timeOffset": "00:04", "action": "Read src/index.ts", "status": "success" },
+    { "timeOffset": "00:06", "action": "Read src/core/types.ts", "status": "success" },
+    { "timeOffset": "00:08", "action": "Edit src/core/scan/scanner.ts", "status": "success" },
+    { "timeOffset": "00:10", "action": "Run npm test", "status": "success" },
+    { "timeOffset": "00:14", "action": "Run npm run build", "status": "success" }
+  ]
+}

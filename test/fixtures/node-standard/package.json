@@ -1,0 +1,10 @@
+{
+  "name": "node-standard",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "vitest run",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "build": "tsup"
+  }
+}

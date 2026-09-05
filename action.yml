@@ -1,0 +1,55 @@
+name: AgentDoctor
+description: Diagnose AI coding agent efficiency and guard repository regressions
+author: AgentDoctor contributors
+inputs:
+  min-score:
+    description: Minimum acceptable Agent Efficiency score
+    required: false
+    default: "75"
+  max-regression:
+    description: Maximum allowed score regression when a baseline is available
+    required: false
+    default: "0"
+  fail-on:
+    description: Fail on new or current findings at or above this severity
+    required: false
+    default: ""
+  baseline:
+    description: Git ref used as the baseline; PR base ref is used when omitted
+    required: false
+    default: ""
+  github-token:
+    description: Token used to update the sticky PR report comment
+    required: false
+    default: ""
+outputs:
+  score:
+    description: Current Agent Efficiency score
+    value: ${{ steps.agentdoctor.outputs.score }}
+  baseline-score:
+    description: Baseline Agent Efficiency score, when available
+    value: ${{ steps.agentdoctor.outputs.baseline-score }}
+  regression:
+    description: Absolute score regression, or 0 when there is no regression
+    value: ${{ steps.agentdoctor.outputs.regression }}
+  regression-count:
+    description: Number of detected baseline regressions
+    value: ${{ steps.agentdoctor.outputs.regression-count }}
+  passed:
+    description: Whether all configured gates passed
+    value: ${{ steps.agentdoctor.outputs.passed }}
+  report:
+    description: Markdown AgentDoctor report
+    value: ${{ steps.agentdoctor.outputs.report }}
+runs:
+  using: composite
+  steps:
+    - id: agentdoctor
+      shell: bash
+      env:
+        AGENTDOCTOR_MIN_SCORE: ${{ inputs.min-score }}
+        AGENTDOCTOR_MAX_REGRESSION: ${{ inputs.max-regression }}
+        AGENTDOCTOR_FAIL_ON: ${{ inputs.fail-on }}
+        AGENTDOCTOR_BASELINE: ${{ inputs.baseline }}
+        AGENTDOCTOR_GITHUB_TOKEN: ${{ inputs.github-token || github.token }}
+      run: node "$GITHUB_ACTION_PATH/action-dist/index.mjs"
