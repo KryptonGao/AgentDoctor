@@ -1,6 +1,6 @@
 {
   "name": "@gaochenkai/agentdoctor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "DevTools and efficiency diagnostics for AI Coding Agents",
   "type": "module",
   "bin": {
@@ -22,6 +22,7 @@
   "files": [
     "bin",
     "dist",
+    "web",
     "action.yml",
     "action-dist",
     "assets/readme",

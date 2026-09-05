@@ -764,10 +764,10 @@
         <span>AGENTDOCTOR</span>
       </div>
 
-      <div class="repo-pill">
-        <span style="color:var(--text-primary); font-weight:600;">AgentDock</span>
-        <span style="color:var(--text-muted);">feature/auth-refactor</span>
-        <span style="color:var(--text-dim);">(vs main: 3f20a57)</span>
+      <div class="repo-pill" id="headerRepoPill">
+        <span style="color:var(--text-primary); font-weight:600;" id="hdrRepoName">AgentDock</span>
+        <span style="color:var(--text-muted);" id="hdrBranchName">main</span>
+        <span style="color:var(--text-dim);" id="hdrBaselineName"></span>
       </div>
     </div>
 
@@ -778,19 +778,19 @@
       </button>
       <button class="nav-tab-btn" data-tab="tab-context">
         <span data-i18n="tabs.context">上下文</span>
-        <span class="tab-badge highlight">54.7%</span>
+        <span class="tab-badge highlight" id="badgeContext">54.7%</span>
       </button>
       <button class="nav-tab-btn" data-tab="tab-findings">
         <span data-i18n="tabs.findings">诊断问题</span>
-        <span class="tab-badge">14</span>
+        <span class="tab-badge" id="badgeFindings">14</span>
       </button>
       <button class="nav-tab-btn" data-tab="tab-regression">
         <span data-i18n="tabs.regression">回归对比</span>
-        <span class="tab-badge crit">3 Δ</span>
+        <span class="tab-badge crit" id="badgeRegression">3 Δ</span>
       </button>
       <button class="nav-tab-btn" data-tab="tab-sessions">
         <span data-i18n="tabs.sessions">会话</span>
-        <span class="tab-badge">4</span>
+        <span class="tab-badge" id="badgeSessions">4</span>
       </button>
     </nav>
 
@@ -798,8 +798,8 @@
     <div class="header-right">
       <div class="score-summary-pill">
         <span style="color:var(--text-muted);" data-i18n="hdr.score">效能</span>
-        <span class="score-summary-val">78</span>
-        <span class="score-summary-delta">▼-6</span>
+        <span class="score-summary-val" id="hdrScoreVal">78</span>
+        <span class="score-summary-delta" id="hdrScoreDelta"></span>
       </div>
 
       <button class="btn-icon" id="btnRescan" title="Rescan (R)">
@@ -829,39 +829,39 @@
       <div class="clean-card">
         <div class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.c1Title">AGENT 效能综合评分</div>
         <div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;">
-          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-med);">78</span>
+          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-med);" id="ovScore">78</span>
           <span class="mono" style="color:var(--text-muted);">/ 100</span>
-          <span class="badge-sev critical mono" style="font-size:9px;">-6 vs main</span>
+          <span class="badge-sev critical mono" style="font-size:9px;" id="ovScoreDeltaPill">-6 vs main</span>
         </div>
-        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" data-i18n="ov.c1Sub">四维度全量评估，存在回归退化</div>
+        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" id="ovScoreExplanation" data-i18n="ov.c1Sub">四维度全量评估，存在回归退化</div>
       </div>
 
       <div class="clean-card">
         <div class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.c2Title">上下文有效信号密度</div>
         <div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;">
-          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-med);">54.7%</span>
+          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-med);" id="ovDensity">54.7%</span>
           <span class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.target">目标 ≥80%</span>
         </div>
-        <div style="font-size:11px; color:var(--status-pass); margin-top:4px;" data-i18n="ov.c2Sub">潜在精简空间: 5,658 tokens</div>
+        <div style="font-size:11px; color:var(--status-pass); margin-top:4px;" id="ovWaste" data-i18n="ov.c2Sub">潜在精简空间: 5,658 tokens</div>
       </div>
 
       <div class="clean-card">
         <div class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.c3Title">验证回路可靠性</div>
         <div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;">
-          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-med);">73</span>
+          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-med);" id="ovVerifScore">73</span>
           <span class="mono" style="color:var(--text-muted);">/ 100</span>
-          <span class="badge-sev medium mono" style="font-size:9px;" data-i18n="ov.mismatchPill">1 项漂移</span>
+          <span class="badge-sev medium mono" style="font-size:9px;" id="ovVerifPill" data-i18n="ov.mismatchPill">1 项漂移</span>
         </div>
-        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" data-i18n="ov.c3Sub">CI 测试命令与 AGENTS.md 冲突</div>
+        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" id="ovVerifSub" data-i18n="ov.c3Sub">CI 测试命令与 AGENTS.md 冲突</div>
       </div>
 
       <div class="clean-card">
         <div class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.c4Title">运行期交互效能</div>
         <div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;">
-          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-pass);">88</span>
+          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-pass);" id="ovRuntimeScore">88</span>
           <span class="mono" style="color:var(--text-muted);">/ 100</span>
         </div>
-        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" data-i18n="ov.c4Sub">4 个会话中检测到 2 次重复检索</div>
+        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" id="ovRuntimeSub" data-i18n="ov.c4Sub">4 个会话中检测到 2 次重复检索</div>
       </div>
     </div>
 
@@ -870,17 +870,17 @@
       <div class="clean-panel">
         <div class="clean-panel-header">
           <span class="clean-panel-title" data-i18n="ov.densityTitle">上下文 Token 分布与构成</span>
-          <span class="clean-panel-sub">12,481 tokens total</span>
+          <span class="clean-panel-sub" id="ovDensityTotalSub">12,481 tokens total</span>
         </div>
         <div class="clean-panel-body">
-          <div class="density-stacked-bar">
-            <div class="density-seg seg-useful" style="width: 54.7%;" title="Useful: 6,823 (54.7%)"></div>
-            <div class="density-seg seg-dup" style="width: 16.9%;" title="Duplicate: 2,104 (16.9%)"></div>
-            <div class="density-seg seg-inf" style="width: 13.8%;" title="Inferable: 1,721 (13.8%)"></div>
-            <div class="density-seg seg-stale" style="width: 7.2%;" title="Stale: 903 (7.2%)"></div>
-            <div class="density-seg seg-lowval" style="width: 7.4%;" title="Low-value: 930 (7.4%)"></div>
+          <div class="density-stacked-bar" id="ovDensityStackedBar">
+            <div class="density-seg seg-useful" id="segUseful" style="width: 54.7%;" title="Useful: 6,823 (54.7%)"></div>
+            <div class="density-seg seg-dup" id="segDup" style="width: 16.9%;" title="Duplicate: 2,104 (16.9%)"></div>
+            <div class="density-seg seg-inf" id="segInf" style="width: 13.8%;" title="Inferable: 1,721 (13.8%)"></div>
+            <div class="density-seg seg-stale" id="segStale" style="width: 7.2%;" title="Stale: 903 (7.2%)"></div>
+            <div class="density-seg seg-lowval" id="segLowval" style="width: 7.4%;" title="Low-value: 930 (7.4%)"></div>
           </div>
-          <div class="density-legend">
+          <div class="density-legend" id="ovDensityLegend">
             <div class="legend-item"><div class="legend-box seg-useful"></div><span data-i18n="leg.useful">高价值 54.7%</span></div>
             <div class="legend-item"><div class="legend-box seg-dup"></div><span data-i18n="leg.dup">重复 16.9%</span></div>
             <div class="legend-item"><div class="legend-box seg-inf"></div><span data-i18n="leg.inf">可推断 13.8%</span></div>
@@ -893,10 +893,10 @@
       <div class="clean-panel">
         <div class="clean-panel-header">
           <span class="clean-panel-title" data-i18n="ov.verifTitle">验证反馈回路</span>
-          <span class="clean-panel-sub" data-i18n="ov.verifAlert">⚠️ CI 测试命令与文档不一致</span>
+          <span class="clean-panel-sub" id="ovVerifHeaderAlert" data-i18n="ov.verifAlert">⚠️ CI 测试命令与文档不一致</span>
         </div>
         <div class="clean-panel-body">
-          <div class="verif-strip">
+          <div class="verif-strip" id="ovVerifStrip">
             <div class="verif-chip">
               <div class="verif-chip-head"><span>TEST</span><span style="color:var(--status-pass)">PASS</span></div>
               <div class="verif-chip-cmd">vitest run</div>
@@ -926,7 +926,7 @@
     <div class="clean-panel">
       <div class="clean-panel-header">
         <span class="clean-panel-title" data-i18n="ov.issuesTitle">需优先治理的阻断与高危问题</span>
-        <button class="mono" style="font-size:11px; color:var(--text-secondary);" onclick="switchTab('tab-findings')" data-i18n="ov.viewAll">查看全部 14 项问题 →</button>
+        <button class="mono" id="ovViewAllFindingsBtn" style="font-size:11px; color:var(--text-secondary);" onclick="switchTab('tab-findings')" data-i18n="ov.viewAll">查看全部 14 项问题 →</button>
       </div>
       <table class="table-clean">
         <thead>
@@ -951,8 +951,8 @@
     <!-- Context File Inventory -->
     <div class="clean-panel" style="margin-bottom: 12px;">
       <div class="clean-panel-header">
-        <span class="clean-panel-title" data-i18n="ctx.filesTitle">Agent 指令源文件盘点 (4 个文件)</span>
-        <span class="clean-panel-sub" data-i18n="ctx.filesSub">总计 12,481 Tokens，5,658 Tokens 为冗余/可推断</span>
+        <span class="clean-panel-title" id="ctxFilesTitle" data-i18n="ctx.filesTitle">Agent 指令源文件盘点 (4 个文件)</span>
+        <span class="clean-panel-sub" id="ctxFilesSub" data-i18n="ctx.filesSub">总计 12,481 Tokens，5,658 Tokens 为冗余/可推断</span>
       </div>
       <table class="table-clean">
         <thead>
@@ -966,43 +966,7 @@
             <th style="width: 80px;" data-i18n="th.issues">问题数</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td><code class="mono" style="font-weight:600;">AGENTS.md</code></td>
-            <td style="color:var(--status-pass);" data-i18n="ctx.r1Role">单一事实来源 (Primary)</td>
-            <td class="mono">8,412</td>
-            <td class="mono" style="color:var(--status-pass)">4,912</td>
-            <td class="mono" style="color:var(--status-crit)">3,500</td>
-            <td class="mono" style="color:var(--status-med)">58.4%</td>
-            <td><span class="badge-sev high">4 ISSUES</span></td>
-          </tr>
-          <tr>
-            <td><code class="mono" style="font-weight:600;">CLAUDE.md</code></td>
-            <td style="color:var(--text-secondary);" data-i18n="ctx.r2Role">Claude Code 指令</td>
-            <td class="mono">2,140</td>
-            <td class="mono" style="color:var(--status-pass)">980</td>
-            <td class="mono" style="color:var(--status-crit)">1,160</td>
-            <td class="mono" style="color:var(--status-crit)">45.8%</td>
-            <td><span class="badge-sev high">3 ISSUES</span></td>
-          </tr>
-          <tr>
-            <td><code class="mono" style="font-weight:600;">.cursor/rules/project.mdc</code></td>
-            <td style="color:var(--text-secondary);" data-i18n="ctx.r3Role">Cursor IDE 规则</td>
-            <td class="mono">1,249</td>
-            <td class="mono" style="color:var(--status-pass)">651</td>
-            <td class="mono" style="color:var(--status-crit)">598</td>
-            <td class="mono" style="color:var(--status-med)">52.1%</td>
-            <td><span class="badge-sev medium">2 ISSUES</span></td>
-          </tr>
-          <tr>
-            <td><code class="mono" style="font-weight:600;">.github/copilot-instructions.md</code></td>
-            <td style="color:var(--text-secondary);" data-i18n="ctx.r4Role">Copilot 补充指令</td>
-            <td class="mono">680</td>
-            <td class="mono" style="color:var(--status-pass)">280</td>
-            <td class="mono" style="color:var(--status-crit)">400</td>
-            <td class="mono" style="color:var(--status-crit)">41.2%</td>
-            <td><span class="badge-sev low">2 ISSUES</span></td>
-          </tr>
+        <tbody id="contextFilesTableBody">
         </tbody>
       </table>
     </div>
@@ -1013,36 +977,7 @@
         <span class="clean-panel-title" data-i18n="ctx.snipTitle">具体发现的冗余与过期片段审查</span>
         <span class="clean-panel-sub" data-i18n="ctx.snipSub">静态 AST 与模式匹配精确截获</span>
       </div>
-      <div class="clean-panel-body" style="display:flex; flex-direction:column; gap:8px;">
-        <div class="code-panel">
-          <div class="code-panel-head">
-            <div><span class="badge-sev high">DUPLICATE</span> <span class="mono" style="color:var(--text-primary);">AGENTS.md:12 vs CLAUDE.md:8 vs project.mdc:5</span></div>
-            <span class="mono" style="color:var(--text-muted);" data-i18n="ctx.snip1Waste">浪费 1,482 tokens/会话</span>
-          </div>
-          <div class="code-panel-body" style="color:var(--status-crit);">
-            - "Package manager is strictly pnpm. Never use npm or yarn." (在 3 个独立文件中一字不差重复定义)
-          </div>
-        </div>
-
-        <div class="code-panel">
-          <div class="code-panel-head">
-            <div><span class="badge-sev high">STALE PATH</span> <span class="mono" style="color:var(--text-primary);">CLAUDE.md:24</span></div>
-            <span class="mono" style="color:var(--status-crit);" data-i18n="ctx.snip2Waste">引发 Agent 反复进行失效目录检索</span>
-          </div>
-          <div class="code-panel-body" style="color:var(--status-crit);">
-            - "Frontend code and UI components reside in `/web`" (路径已重命名迁移至 apps/web)
-          </div>
-        </div>
-
-        <div class="code-panel">
-          <div class="code-panel-head">
-            <div><span class="badge-sev medium">LOW VALUE</span> <span class="mono" style="color:var(--text-primary);">AGENTS.md:5-7</span></div>
-            <span class="mono" style="color:var(--text-muted);" data-i18n="ctx.snip3Waste">浪费 491 tokens/会话</span>
-          </div>
-          <div class="code-panel-body" style="color:var(--text-secondary);">
-            - "Always write clean, modular, and readable code. Be extremely careful and avoid regressions." (泛化无信息量指令)
-          </div>
-        </div>
+      <div class="clean-panel-body" id="contextWastefulSnippetsContainer" style="display:flex; flex-direction:column; gap:8px;">
       </div>
     </div>
   </section>
@@ -1057,11 +992,11 @@
         <div class="findings-toolbar">
           <input type="text" id="findingsSearch" class="search-input" placeholder="搜索问题 (标题, 规则 ID, 路径)...">
           <div class="filter-row" id="categoryFilterRow">
-            <button class="pill-filter active" data-cat="all" data-i18n="f.all">全部 (14)</button>
-            <button class="pill-filter" data-cat="context" data-i18n="f.ctx">上下文 (7)</button>
-            <button class="pill-filter" data-cat="repository" data-i18n="f.repo">仓库 (2)</button>
-            <button class="pill-filter" data-cat="verification" data-i18n="f.verif">验证 (3)</button>
-            <button class="pill-filter" data-cat="runtime" data-i18n="f.run">运行期 (2)</button>
+            <button class="pill-filter active" data-cat="all">全部</button>
+            <button class="pill-filter" data-cat="context">上下文</button>
+            <button class="pill-filter" data-cat="repository">仓库</button>
+            <button class="pill-filter" data-cat="verification">验证</button>
+            <button class="pill-filter" data-cat="runtime">运行期</button>
           </div>
         </div>
         <div class="findings-scroll-list" id="findingsListContainer"></div>
@@ -1120,18 +1055,18 @@
        ======================================================================== -->
   <section class="view-container" id="tab-regression">
     <!-- Clean Gate Banner -->
-    <div class="clean-card" style="border-color:var(--status-crit-border); background:var(--status-crit-bg); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+    <div class="clean-card" id="regBannerCard" style="border-color:var(--status-crit-border); background:var(--status-crit-bg); margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
       <div style="display:flex; align-items:center; gap:8px;">
-        <span class="mono" style="font-weight:700; color:var(--status-crit);" data-i18n="reg.status">CHECK FAILED (Exit Code: 1)</span>
-        <span style="font-size:12px; color:var(--text-secondary);" data-i18n="reg.desc">基线回归策略拦截: 分数从 84 退化至 78 (-6 pts)。</span>
+        <span class="mono" style="font-weight:700; color:var(--status-crit);" id="regStatusTitle" data-i18n="reg.status">CHECK FAILED (Exit Code: 1)</span>
+        <span style="font-size:12px; color:var(--text-secondary);" id="regStatusDesc" data-i18n="reg.desc">基线回归策略拦截: 分数从 84 退化至 78 (-6 pts)。</span>
       </div>
-      <span class="badge-sev critical" data-i18n="reg.pill">CI BLOCKED</span>
+      <span class="badge-sev critical" id="regStatusPill" data-i18n="reg.pill">CI BLOCKED</span>
     </div>
 
     <!-- Regressions Table -->
     <div class="clean-panel" style="margin-bottom: 12px;">
       <div class="clean-panel-header">
-        <span class="clean-panel-title" data-i18n="reg.tableTitle">本次提交引入的退化事件清单 (3 项)</span>
+        <span class="clean-panel-title" id="regTableTitle" data-i18n="reg.tableTitle">本次提交引入的退化事件清单 (3 项)</span>
         <span class="clean-panel-sub" data-i18n="reg.tableSub">按危害等级排序</span>
       </div>
       <table class="table-clean">
@@ -1152,34 +1087,19 @@
     <div class="grid-2">
       <div class="clean-panel">
         <div class="clean-panel-header">
-          <span class="clean-panel-title" data-i18n="reg.baseTitle">基线: main (AGENTS.md)</span>
-          <span class="clean-panel-sub">6,592 tokens</span>
+          <span class="clean-panel-title" id="regBasePanelTitle" data-i18n="reg.baseTitle">基线: main (AGENTS.md)</span>
+          <span class="clean-panel-sub" id="regBaseTokensSub">6,592 tokens</span>
         </div>
-        <div class="code-panel-body" style="max-height: 220px; overflow-y: auto;">
-          <div># Agent Guidelines</div>
-          <div>## Commands</div>
-          <div>- Test: `npm test`</div>
-          <div>- Build: `npm run build`</div>
-          <div>## Architecture</div>
-          <div>- Clean package layout in src/</div>
+        <div class="code-panel-body" id="regBaseCodeBody" style="max-height: 220px; overflow-y: auto;">
         </div>
       </div>
 
       <div class="clean-panel">
         <div class="clean-panel-header">
-          <span class="clean-panel-title" style="color:var(--status-crit);" data-i18n="reg.headTitle">HEAD: feature/auth-refactor (AGENTS.md)</span>
-          <span class="clean-panel-sub" style="color:var(--status-crit);">8,412 tokens (+1,820 膨胀)</span>
+          <span class="clean-panel-title" id="regHeadPanelTitle" style="color:var(--status-crit);" data-i18n="reg.headTitle">HEAD: feature/auth-refactor (AGENTS.md)</span>
+          <span class="clean-panel-sub" id="regHeadTokensSub" style="color:var(--status-crit);">8,412 tokens (+1,820 膨胀)</span>
         </div>
-        <div class="code-panel-body" style="max-height: 220px; overflow-y: auto;">
-          <div># Agent Guidelines</div>
-          <div>## Commands</div>
-          <div>- Test: `npm test`</div>
-          <div>- Build: `npm run build`</div>
-          <div class="diff-line add">+ Always write clean and maintainable code. Follow best practices.</div>
-          <div class="diff-line add">+ Package manager is strictly pnpm. Never use npm or yarn.</div>
-          <div class="diff-line add">+ Frontend lives in /web (STALE: actual path is apps/web)</div>
-          <div>## Architecture</div>
-          <div>- Clean package layout in src/</div>
+        <div class="code-panel-body" id="regHeadCodeBody" style="max-height: 220px; overflow-y: auto;">
         </div>
       </div>
     </div>
@@ -1193,8 +1113,8 @@
       <!-- Left: Session List -->
       <div class="findings-sidebar">
         <div class="clean-panel-header">
-          <span class="clean-panel-title" data-i18n="sess.listTitle">Agent 会话记录 (4)</span>
-          <span class="clean-panel-sub">Score: 88</span>
+          <span class="clean-panel-title" id="sessListTitle">Agent 会话记录</span>
+          <span class="clean-panel-sub" id="sessScoreSub"></span>
         </div>
         <div class="findings-scroll-list" id="sessionListContainer"></div>
       </div>
@@ -1309,11 +1229,11 @@
         "ctx.snip1Waste": "浪费 1,482 tokens/会话",
         "ctx.snip2Waste": "引发 Agent 反复进行失效目录检索",
         "ctx.snip3Waste": "浪费 491 tokens/会话",
-        "f.all": "全部 (14)",
-        "f.ctx": "上下文 (7)",
-        "f.repo": "仓库 (2)",
-        "f.verif": "验证 (3)",
-        "f.run": "运行期 (2)",
+        "f.all": "全部",
+        "f.ctx": "上下文",
+        "f.repo": "仓库",
+        "f.verif": "验证",
+        "f.run": "运行期",
         "insp.copy": "复制 Fix Prompt",
         "insp.rationale": "问题诊断与机理说明",
         "insp.evidence": "多源证据定位与跨文件对照",
@@ -1329,7 +1249,13 @@
         "th.desc": "描述与根因",
         "reg.baseTitle": "基线: main (AGENTS.md)",
         "reg.headTitle": "HEAD: feature/auth-refactor (AGENTS.md)",
-        "sess.listTitle": "Agent 会话记录 (4)",
+        "sess.listTitle": "Agent 会话记录",
+        "sess.emptyTitle": "未检测到 Agent 会话记录",
+        "sess.emptyDesc": "支持自动解析: <code>.agent/sessions/*.json</code>、<code>.claude/sessions/*.json</code><br>或在启动时指定: <code>agentdoctor web --session &lt;path&gt;</code>",
+        "sess.noSelection": "未选择会话",
+        "sess.noTraceDesc": "请载入 Agent 执行日志以分析工具调用频率、耗时与死循环搜索问题",
+        "sess.noIneffDesc": "ℹ️ 暂无低效交互警报。载入 Trace 文件后将自动检测重复搜索、重复读取与命令重试。",
+        "sess.noTimeline": "暂无时序工具调用轨迹",
         "sess.kpiDur": "耗时",
         "sess.kpiTk": "Tokens 消耗",
         "sess.kpiCalls": "工具调用",
@@ -1359,7 +1285,7 @@
         "ov.verifTitle": "Verification Feedback Loop",
         "ov.verifAlert": "⚠️ CI command differs from instructions",
         "ov.issuesTitle": "Priority Remediation Issues",
-        "ov.viewAll": "View all 14 findings →",
+        "ov.viewAll": "View all findings →",
         "leg.useful": "Useful 54.7%",
         "leg.dup": "Duplicate 16.9%",
         "leg.inf": "Inferable 13.8%",
@@ -1388,11 +1314,11 @@
         "ctx.snip1Waste": "Waste: 1,482 tokens/session",
         "ctx.snip2Waste": "Causes repeated agent directory traversal",
         "ctx.snip3Waste": "Waste: 491 tokens/session",
-        "f.all": "All (14)",
-        "f.ctx": "Context (7)",
-        "f.repo": "Repo (2)",
-        "f.verif": "Verif (3)",
-        "f.run": "Runtime (2)",
+        "f.all": "All",
+        "f.ctx": "Context",
+        "f.repo": "Repo",
+        "f.verif": "Verification",
+        "f.run": "Runtime",
         "insp.copy": "Copy Fix Prompt",
         "insp.rationale": "Diagnostic Rationale",
         "insp.evidence": "Multi-file Evidence & Locations",
@@ -1408,7 +1334,13 @@
         "th.desc": "Description & Root Cause",
         "reg.baseTitle": "Baseline: main (AGENTS.md)",
         "reg.headTitle": "HEAD: feature/auth-refactor (AGENTS.md)",
-        "sess.listTitle": "Agent Session Traces (4)",
+        "sess.listTitle": "Agent Session Traces",
+        "sess.emptyTitle": "No Agent Sessions Recorded",
+        "sess.emptyDesc": "Supported traces: <code>.agent/sessions/*.json</code>, <code>.claude/sessions/*.json</code><br>Or specify: <code>agentdoctor web --session &lt;path&gt;</code>",
+        "sess.noSelection": "No session selected",
+        "sess.noTraceDesc": "Load agent execution traces to inspect tool calls, token consumption, and search loops",
+        "sess.noIneffDesc": "ℹ️ No inefficiency alerts. Repeated queries, file re-reads, and command loops will appear once traces are loaded.",
+        "sess.noTimeline": "No timeline trace events",
         "sess.kpiDur": "Duration",
         "sess.kpiTk": "Tokens",
         "sess.kpiCalls": "Tool Calls",
@@ -1695,16 +1627,167 @@
     ];
 
     // State
+    let appData = window.__INITIAL_DATA__ || null;
     let currentLang = "zh";
     let currentTheme = "dark";
     let currentTab = "tab-overview";
-    let selectedFindingId = FINDINGS_DATA[0].id;
-    let selectedSessionId = SESSIONS_DATA[0].id;
+    let selectedFindingId = null;
+    let selectedSessionId = null;
     let activeCategoryFilter = "all";
     let searchQuery = "";
 
     function t(key) {
       return I18N[currentLang][key] || key;
+    }
+
+    function getFindings() {
+      if (appData && appData.scanResult && Array.isArray(appData.scanResult.findings)) {
+        return appData.scanResult.findings;
+      }
+      return FINDINGS_DATA;
+    }
+
+    function getSessions() {
+      if (appData && appData.scanResult && Array.isArray(appData.scanResult.sessions)) {
+        return appData.scanResult.sessions;
+      }
+      return SESSIONS_DATA;
+    }
+
+    function getRegressions() {
+      if (appData) {
+        if (appData.baselineComparison && Array.isArray(appData.baselineComparison.regressions)) {
+          return appData.baselineComparison.regressions;
+        }
+        return [];
+      }
+      return REGRESSIONS_DATA;
+    }
+
+    function getContextFiles() {
+      if (appData && Array.isArray(appData.contextFiles)) {
+        return appData.contextFiles;
+      }
+      return [
+        { file: "AGENTS.md", role: { zh: "单一事实来源 (Primary)", en: "Source of Truth (Primary)" }, totalTokens: 8412, usefulTokens: 4912, wastefulTokens: 3500, densityPercent: 58.4, issuesCount: 4 },
+        { file: "CLAUDE.md", role: { zh: "Claude Code 指令", en: "Claude Code Instructions" }, totalTokens: 2140, usefulTokens: 980, wastefulTokens: 1160, densityPercent: 45.8, issuesCount: 3 },
+        { file: ".cursor/rules/project.mdc", role: { zh: "Cursor IDE 规则", en: "Cursor IDE Rules" }, totalTokens: 1249, usefulTokens: 651, wastefulTokens: 598, densityPercent: 52.1, issuesCount: 2 },
+        { file: ".github/copilot-instructions.md", role: { zh: "Copilot 补充指令", en: "Copilot Instructions" }, totalTokens: 680, usefulTokens: 280, wastefulTokens: 400, densityPercent: 41.2, issuesCount: 2 }
+      ];
+    }
+
+    function getWastefulSnippets() {
+      if (appData && Array.isArray(appData.wastefulSnippets) && appData.wastefulSnippets.length > 0) {
+        return appData.wastefulSnippets;
+      }
+      return [
+        { ruleId: "DUPLICATE", severity: "high", locations: "AGENTS.md:12 vs CLAUDE.md:8 vs project.mdc:5", wasteText: "浪费 1,482 tokens/会话", snippet: '- "Package manager is strictly pnpm. Never use npm or yarn." (在 3 个独立文件中一字不差重复定义)' },
+        { ruleId: "STALE PATH", severity: "high", locations: "CLAUDE.md:24", wasteText: "引发 Agent 反复进行失效目录检索", snippet: '- "Frontend code and UI components reside in `/web`" (路径已重命名迁移至 apps/web)' },
+        { ruleId: "LOW VALUE", severity: "medium", locations: "AGENTS.md:5-7", wasteText: "浪费 491 tokens/会话", snippet: '- "Always write clean, modular, and readable code. Be extremely careful and avoid regressions." (泛化无信息量指令)' }
+      ];
+    }
+
+    function getFindingTitle(f) {
+      if (!f) return "";
+      if (typeof f.title === "object" && f.title !== null) return f.title[currentLang] || f.title.en || "";
+      return f.title || "";
+    }
+
+    function getFindingDesc(f) {
+      if (!f) return "";
+      if (typeof f.description === "object" && f.description !== null) return f.description[currentLang] || f.description.en || "";
+      return f.description || "";
+    }
+
+    function getFindingRec(f) {
+      if (!f) return "";
+      if (typeof f.recommendation === "object" && f.recommendation !== null) return f.recommendation[currentLang] || f.recommendation.en || "";
+      return f.recommendation || (currentLang === "zh" ? "根据上述证据分析并消除该问题。" : "Remediate finding according to evidence.");
+    }
+
+    function getFindingPrompt(f) {
+      if (!f) return "";
+      if (f.fixPrompt) return f.fixPrompt;
+      if (typeof f.prompt === "object" && f.prompt !== null) return f.prompt[currentLang] || f.prompt.en || "";
+      return typeof f.prompt === "string" ? f.prompt : "";
+    }
+
+    function getRegressionTitle(r) {
+      if (!r) return "";
+      if (typeof r.title === "object" && r.title !== null) return r.title[currentLang] || r.title.en || "";
+      return r.title || "";
+    }
+
+    function getRegressionDesc(r) {
+      if (!r) return "";
+      if (typeof r.desc === "object" && r.desc !== null) return r.desc[currentLang] || r.desc.en || "";
+      if (typeof r.detail === "object" && r.detail !== null) return r.detail[currentLang] || r.detail.en || "";
+      return r.detail || r.desc || "";
+    }
+
+    function getRegressionLoc(r) {
+      if (!r) return "—";
+      if (r.loc) return r.loc;
+      if (r.evidence && r.evidence[0]) {
+        const ev = r.evidence[0];
+        return ev.file + (ev.line ? `:${ev.line}` : "");
+      }
+      return "—";
+    }
+
+    function getSessionTask(s) {
+      if (!s) return "";
+      if (typeof s.task === "object" && s.task !== null) return s.task[currentLang] || s.task.en || "";
+      return s.task || (currentLang === "zh" ? "代码诊断与自主修复" : "Code diagnostics & remediation");
+    }
+
+    function getSessionDuration(s) {
+      if (!s) return "—";
+      if (s.duration) return s.duration;
+      if (typeof s.durationSeconds === "number") {
+        const m = Math.floor(s.durationSeconds / 60);
+        const sec = s.durationSeconds % 60;
+        return `${m}m ${sec}s`;
+      }
+      return "—";
+    }
+
+    function getSessionTokens(s) {
+      if (!s) return "—";
+      if (s.tokensTotal) return s.tokensTotal;
+      if (s.tokenUsage && typeof s.tokenUsage.total === "number") {
+        return `${Math.round(s.tokenUsage.total / 1000)}k`;
+      }
+      return "—";
+    }
+
+    function getSessionScore(s) {
+      if (!s) return 85;
+      if (typeof s.efficiencyScore === "number") return s.efficiencyScore;
+      if (typeof s.score === "number") return s.score;
+      return 85;
+    }
+
+    function getSessionIneff(s) {
+      if (!s) return "";
+      if (s.ineff) {
+        if (typeof s.ineff === "object") return s.ineff[currentLang] || s.ineff.en;
+        return s.ineff;
+      }
+      const items = [];
+      if (s.repeatedSearches && s.repeatedSearches.length > 0) {
+        items.push(`⚠️ <strong>${currentLang === "zh" ? "重复搜索" : "Repeated search"}:</strong> ${s.repeatedSearches.map(r => `"${r.query}" (${r.count}x)`).join(", ")}`);
+      }
+      if (s.repeatedReads && s.repeatedReads.length > 0) {
+        items.push(`⚠️ <strong>${currentLang === "zh" ? "超大文件重复读取" : "Repeated file read"}:</strong> ${s.repeatedReads.map(r => `${r.file} (${r.count}x)`).join(", ")}`);
+      }
+      if (s.repeatedFailures && s.repeatedFailures.length > 0) {
+        items.push(`⚠️ <strong>${currentLang === "zh" ? "重复失败命令" : "Repeated command failures"}:</strong> ${s.repeatedFailures.map(r => `<code>${r.command}</code> (${r.count}x)`).join(", ")}`);
+      }
+      if (items.length === 0) {
+        return currentLang === "zh" ? "✓ 未检测到高频重复工具调用或无效遍历" : "✓ No severe repeated tool inefficiencies detected";
+      }
+      return items.join("<br>");
     }
 
     function toggleTheme() {
@@ -1733,10 +1816,7 @@
         if (I18N[lang][key]) el.innerText = I18N[lang][key];
       });
 
-      renderOverviewIssues();
-      renderFindings();
-      renderRegressions();
-      renderSessions();
+      renderAll();
     }
 
     function switchTab(tabId) {
@@ -1747,17 +1827,274 @@
       document.querySelectorAll(".view-container").forEach(view => {
         view.classList.toggle("active", view.id === tabId);
       });
+      if (tabId === "tab-findings") renderFindings();
+      if (tabId === "tab-sessions") renderSessions();
     }
 
     document.querySelectorAll(".nav-tab-btn").forEach(btn => {
       btn.addEventListener("click", () => switchTab(btn.dataset.tab));
     });
 
-    // Overview Table
+    // ========================================================================
+    // RENDERING LOGIC
+    // ========================================================================
+
+    function renderHeader() {
+      const repo = appData?.repositoryName || "AgentDock";
+      const branch = appData?.branch || "main";
+      const baselineRef = appData?.baselineComparison?.baselineRef;
+
+      const repoEl = document.getElementById("hdrRepoName");
+      if (repoEl) repoEl.innerText = repo;
+
+      const branchEl = document.getElementById("hdrBranchName");
+      if (branchEl) branchEl.innerText = branch;
+
+      const baseEl = document.getElementById("hdrBaselineName");
+      if (baseEl) {
+        baseEl.innerText = baselineRef ? `(vs ${baselineRef})` : "";
+      }
+
+      // Badges
+      const density = appData?.scanResult?.contextSignalDensity?.densityPercent ?? 54.7;
+      const badgeCtx = document.getElementById("badgeContext");
+      if (badgeCtx) badgeCtx.innerText = `${density}%`;
+
+      const findings = getFindings();
+      const badgeFindings = document.getElementById("badgeFindings");
+      if (badgeFindings) badgeFindings.innerText = findings.length;
+
+      const regressions = getRegressions();
+      const badgeReg = document.getElementById("badgeRegression");
+      if (badgeReg) {
+        if (appData?.baselineComparison) {
+          badgeReg.innerText = `${regressions.length} Δ`;
+          badgeReg.className = `tab-badge ${regressions.length > 0 ? "crit" : ""}`;
+        } else {
+          badgeReg.innerText = "—";
+          badgeReg.className = "tab-badge";
+        }
+      }
+
+      const sessions = getSessions();
+      const badgeSess = document.getElementById("badgeSessions");
+      if (badgeSess) badgeSess.innerText = sessions.length;
+
+      // Score Pill
+      const score = appData?.scanResult?.overallScore ?? 78;
+      const scoreVal = document.getElementById("hdrScoreVal");
+      if (scoreVal) scoreVal.innerText = score;
+
+      const scoreDelta = document.getElementById("hdrScoreDelta");
+      if (scoreDelta) {
+        if (appData?.baselineComparison) {
+          const delta = appData.baselineComparison.scoreDelta;
+          scoreDelta.innerText = delta >= 0 ? `▲+${delta}` : `▼${delta}`;
+          scoreDelta.style.color = delta < 0 ? "var(--status-crit)" : "var(--status-pass)";
+        } else {
+          scoreDelta.innerText = "";
+        }
+      }
+    }
+
+    function renderOverview() {
+      const findings = getFindings();
+      const score = appData?.scanResult?.overallScore ?? 78;
+      const scoreEl = document.getElementById("ovScore");
+      if (scoreEl) scoreEl.innerText = score;
+
+      const deltaEl = document.getElementById("ovScoreDeltaPill");
+      if (deltaEl) {
+        if (appData?.baselineComparison) {
+          const delta = appData.baselineComparison.scoreDelta;
+          deltaEl.innerText = `${delta >= 0 ? "+" : ""}${delta} vs ${appData.baselineComparison.baselineRef}`;
+          deltaEl.className = `badge-sev ${delta < 0 ? "critical" : "pass"} mono`;
+          deltaEl.style.display = "inline-flex";
+        } else {
+          deltaEl.style.display = "none";
+        }
+      }
+
+      const scoreExp = document.getElementById("ovScoreExplanation");
+      if (scoreExp) {
+        scoreExp.innerText = appData?.scanResult?.scoreExplanation || (currentLang === "zh" ? "四维度全量评估，存在回归退化" : "Evaluated across 4 dimensions");
+      }
+
+      // Signal density card
+      const density = appData?.scanResult?.contextSignalDensity || {
+        totalTokens: 12481,
+        usefulTokens: 6823,
+        wastefulTokens: 5658,
+        duplicateTokens: 2104,
+        inferableTokens: 1721,
+        staleTokens: 903,
+        lowValueTokens: 930,
+        densityPercent: 54.7
+      };
+
+      const ovDensity = document.getElementById("ovDensity");
+      if (ovDensity) ovDensity.innerText = `${density.densityPercent}%`;
+
+      const ovWaste = document.getElementById("ovWaste");
+      if (ovWaste) {
+        ovWaste.innerText = currentLang === "zh"
+          ? `潜在精简空间: ${density.wastefulTokens.toLocaleString()} tokens`
+          : `Potential reduction: ${density.wastefulTokens.toLocaleString()} tokens`;
+      }
+
+      // Verification Card
+      const verifScore = appData?.scanResult?.scores?.verification?.score ?? 73;
+      const verifScoreEl = document.getElementById("ovVerifScore");
+      if (verifScoreEl) verifScoreEl.innerText = verifScore;
+
+      const verifStatus = appData?.scanResult?.verificationStatus || [];
+      const mismatches = verifStatus.filter(v => v.status === "warning" || v.status === "broken");
+      const ovVerifPill = document.getElementById("ovVerifPill");
+      if (ovVerifPill) {
+        if (mismatches.length > 0) {
+          ovVerifPill.innerText = currentLang === "zh" ? `${mismatches.length} 项漂移` : `${mismatches.length} Mismatch`;
+          ovVerifPill.className = "badge-sev medium mono";
+        } else {
+          ovVerifPill.innerText = currentLang === "zh" ? "闭环健康" : "Healthy";
+          ovVerifPill.className = "badge-sev pass mono";
+        }
+      }
+
+      const ovVerifSub = document.getElementById("ovVerifSub");
+      if (ovVerifSub) {
+        if (mismatches.length > 0) {
+          ovVerifSub.innerText = mismatches[0].detail || (currentLang === "zh" ? "CI 测试命令与 AGENTS.md 冲突" : "Command differs from docs");
+        } else {
+          ovVerifSub.innerText = currentLang === "zh" ? "测试、检查与 CI 命令定义一致" : "Verification commands match CI configuration";
+        }
+      }
+
+      // Runtime card
+      const runtimeScore = appData?.scanResult?.scores?.runtime?.score ?? 88;
+      const ovRuntimeScore = document.getElementById("ovRuntimeScore");
+      if (ovRuntimeScore) ovRuntimeScore.innerText = runtimeScore;
+
+      const sessions = getSessions();
+      const ovRuntimeSub = document.getElementById("ovRuntimeSub");
+      if (ovRuntimeSub) {
+        ovRuntimeSub.innerText = sessions.length > 0
+          ? (currentLang === "zh" ? `${sessions.length} 个会话追踪分析完成` : `${sessions.length} agent sessions analyzed`)
+          : (currentLang === "zh" ? "未检测到会话 Trace (使用 --session 载入)" : "No session traces found (use --session)");
+      }
+
+      // Stacked Bar
+      const total = density.totalTokens || 1;
+      const usefulW = (density.usefulTokens / total * 100).toFixed(1);
+      const dupW = (density.duplicateTokens / total * 100).toFixed(1);
+      const infW = (density.inferableTokens / total * 100).toFixed(1);
+      const staleW = (density.staleTokens / total * 100).toFixed(1);
+      const lowvalW = (density.lowValueTokens / total * 100).toFixed(1);
+
+      const totalSub = document.getElementById("ovDensityTotalSub");
+      if (totalSub) totalSub.innerText = `${density.totalTokens.toLocaleString()} tokens total`;
+
+      const segUseful = document.getElementById("segUseful");
+      if (segUseful) {
+        segUseful.style.width = `${usefulW}%`;
+        segUseful.title = `Useful: ${density.usefulTokens.toLocaleString()} (${usefulW}%)`;
+      }
+      const segDup = document.getElementById("segDup");
+      if (segDup) {
+        segDup.style.width = `${dupW}%`;
+        segDup.title = `Duplicate: ${density.duplicateTokens.toLocaleString()} (${dupW}%)`;
+      }
+      const segInf = document.getElementById("segInf");
+      if (segInf) {
+        segInf.style.width = `${infW}%`;
+        segInf.title = `Inferable: ${density.inferableTokens.toLocaleString()} (${infW}%)`;
+      }
+      const segStale = document.getElementById("segStale");
+      if (segStale) {
+        segStale.style.width = `${staleW}%`;
+        segStale.title = `Stale: ${density.staleTokens.toLocaleString()} (${staleW}%)`;
+      }
+      const segLowval = document.getElementById("segLowval");
+      if (segLowval) {
+        segLowval.style.width = `${lowvalW}%`;
+        segLowval.title = `Low-value: ${density.lowValueTokens.toLocaleString()} (${lowvalW}%)`;
+      }
+
+      // Legend
+      const legend = document.getElementById("ovDensityLegend");
+      if (legend) {
+        legend.innerHTML = `
+          <div class="legend-item"><div class="legend-box seg-useful"></div><span>${currentLang === "zh" ? `高价值 ${usefulW}%` : `Useful ${usefulW}%`}</span></div>
+          <div class="legend-item"><div class="legend-box seg-dup"></div><span>${currentLang === "zh" ? `重复 ${dupW}%` : `Duplicate ${dupW}%`}</span></div>
+          <div class="legend-item"><div class="legend-box seg-inf"></div><span>${currentLang === "zh" ? `可推断 ${infW}%` : `Inferable ${infW}%`}</span></div>
+          <div class="legend-item"><div class="legend-box seg-stale"></div><span>${currentLang === "zh" ? `过时 ${staleW}%` : `Stale ${staleW}%`}</span></div>
+          <div class="legend-item"><div class="legend-box seg-lowval"></div><span>${currentLang === "zh" ? `水话 ${lowvalW}%` : `Low-val ${lowvalW}%`}</span></div>
+        `;
+      }
+
+      // Verification Strip
+      const verifStrip = document.getElementById("ovVerifStrip");
+      if (verifStrip) {
+        verifStrip.innerHTML = "";
+        const items = verifStatus.length > 0 ? verifStatus : [
+          { name: "test", status: "healthy", command: "vitest run" },
+          { name: "lint", status: "healthy", command: "tsc --noEmit" },
+          { name: "typecheck", status: "healthy", command: "tsc --noEmit" },
+          { name: "build", status: "healthy", command: "tsup" },
+          { name: "ci", status: "warning", command: "pnpm test:ci" }
+        ];
+
+        items.forEach(item => {
+          const isHealthy = item.status === "healthy";
+          const isWarning = item.status === "warning";
+          const statusColor = isHealthy ? "var(--status-pass)" : isWarning ? "var(--status-med)" : "var(--status-crit)";
+          const statusText = isHealthy ? "PASS" : isWarning ? "MISMATCH" : item.status.toUpperCase();
+
+          const chip = document.createElement("div");
+          chip.className = "verif-chip";
+          if (!isHealthy) {
+            chip.style.borderColor = isWarning ? "var(--status-med-border)" : "var(--status-crit-border)";
+            chip.style.background = isWarning ? "var(--status-med-bg)" : "var(--status-crit-bg)";
+          }
+
+          chip.innerHTML = `
+            <div class="verif-chip-head">
+              <span>${item.name.toUpperCase()}</span>
+              <span style="color:${statusColor}">${statusText}</span>
+            </div>
+            <div class="verif-chip-cmd">${item.command || "—"}</div>
+          `;
+          verifStrip.appendChild(chip);
+        });
+      }
+
+      const alertHeader = document.getElementById("ovVerifHeaderAlert");
+      if (alertHeader) {
+        alertHeader.innerText = mismatches.length > 0
+          ? (currentLang === "zh" ? `⚠️ ${mismatches.length} 项验证回路存在命令漂移` : `⚠️ ${mismatches.length} verification command mismatches`)
+          : (currentLang === "zh" ? "✓ 全部验证回路一致健康" : "✓ All verification loops aligned");
+        alertHeader.style.color = mismatches.length > 0 ? "var(--status-med)" : "var(--status-pass)";
+      }
+
+      // View all issues button
+      const viewAllBtn = document.getElementById("ovViewAllFindingsBtn");
+      if (viewAllBtn) {
+        viewAllBtn.innerText = currentLang === "zh"
+          ? `查看全部 ${findings.length} 项问题 →`
+          : `View all ${findings.length} findings →`;
+      }
+
+      renderOverviewIssues();
+    }
+
     function renderOverviewIssues() {
       const tbody = document.getElementById("overviewIssuesBody");
+      if (!tbody) return;
       tbody.innerHTML = "";
-      FINDINGS_DATA.forEach(f => {
+
+      const findings = getFindings();
+      const top5 = findings.slice(0, 5);
+
+      top5.forEach(f => {
         const tr = document.createElement("tr");
         tr.onclick = () => {
           selectedFindingId = f.id;
@@ -1765,18 +2102,23 @@
           renderFindings();
         };
 
-        const titleText = f.title[currentLang] || f.title.en;
-        const wasteText = f.impact.waste + " · " + (f.impact.risk[currentLang] || f.impact.risk.en);
+        const titleText = getFindingTitle(f);
+        const wasteTokens = f.impact?.tokens ? `${f.impact.tokens.toLocaleString()} tokens` : (f.impact?.waste || "—");
+        const riskText = typeof f.impact?.risk === "object"
+          ? (f.impact.risk[currentLang] || f.impact.risk.en)
+          : (f.impact?.risk || (f.severity === "critical" ? "阻断风险" : "效能损耗"));
+        const wasteCol = `${wasteTokens} · ${riskText}`;
+        const loc = f.evidence && f.evidence[0] ? `${f.evidence[0].file}${f.evidence[0].line ? `:${f.evidence[0].line}` : ""}` : "—";
 
         tr.innerHTML = `
           <td><span class="badge-sev ${f.severity}">${f.severity.toUpperCase()}</span></td>
           <td><strong>${titleText}</strong></td>
-          <td><code class="mono" style="color:var(--text-secondary);">${f.evidence[0]?.file}</code></td>
-          <td><span class="mono">${Math.round(f.confidence * 100)}%</span></td>
-          <td class="mono" style="font-size:11px; color:var(--status-crit);">${wasteText}</td>
+          <td><code class="mono" style="color:var(--text-secondary);">${loc}</code></td>
+          <td><span class="mono">${Math.round((f.confidence ?? 0.85) * 100)}%</span></td>
+          <td class="mono" style="font-size:11px; color:var(--status-crit);">${wasteCol}</td>
           <td style="text-align:right;">
             <button class="btn-icon" style="height:22px; padding:0 6px;" onclick="event.stopPropagation(); copyPrompt('${f.id}')">
-              ${currentLang === "zh" ? "复制 Prompt" : "Copy"}
+              ${currentLang === "zh" ? "复制 Prompt" : "Copy Prompt"}
             </button>
           </td>
         `;
@@ -1784,100 +2126,420 @@
       });
     }
 
-    // Findings
+    // ========================================================================
+    // CONTEXT TAB
+    // ========================================================================
+    function renderContext() {
+      const files = getContextFiles();
+      const density = appData?.scanResult?.contextSignalDensity;
+      const totalTokens = density ? density.totalTokens : 12481;
+      const wastefulTokens = density ? density.wastefulTokens : 5658;
+
+      const titleEl = document.getElementById("ctxFilesTitle");
+      if (titleEl) {
+        titleEl.innerText = currentLang === "zh"
+          ? `Agent 指令源文件盘点 (${files.length} 个文件)`
+          : `Agent Instruction Source Files (${files.length} Files)`;
+      }
+
+      const subEl = document.getElementById("ctxFilesSub");
+      if (subEl) {
+        subEl.innerText = currentLang === "zh"
+          ? `总计 ${totalTokens.toLocaleString()} Tokens，${wastefulTokens.toLocaleString()} Tokens 为冗余/可推断`
+          : `${totalTokens.toLocaleString()} tokens total, ${wastefulTokens.toLocaleString()} tokens redundant`;
+      }
+
+      const tbody = document.getElementById("contextFilesTableBody");
+      if (tbody) {
+        tbody.innerHTML = "";
+        files.forEach(f => {
+          const tr = document.createElement("tr");
+          const roleText = typeof f.role === "object" ? (f.role[currentLang] || f.role.en) : f.role;
+          const densityColor = f.densityPercent >= 75 ? "var(--status-pass)" : f.densityPercent >= 50 ? "var(--status-med)" : "var(--status-crit)";
+          const sevClass = f.issuesCount >= 3 ? "high" : f.issuesCount > 0 ? "medium" : "pass";
+
+          tr.innerHTML = `
+            <td><code class="mono" style="font-weight:600;">${f.file}</code></td>
+            <td style="color:var(--text-secondary);">${roleText}</td>
+            <td class="mono">${f.totalTokens.toLocaleString()}</td>
+            <td class="mono" style="color:var(--status-pass)">${f.usefulTokens.toLocaleString()}</td>
+            <td class="mono" style="color:var(--status-crit)">${f.wastefulTokens.toLocaleString()}</td>
+            <td class="mono" style="color:${densityColor}">${f.densityPercent}%</td>
+            <td><span class="badge-sev ${sevClass}">${f.issuesCount} ${currentLang === "zh" ? "项问题" : "ISSUES"}</span></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Wasteful snippets
+      const snipContainer = document.getElementById("contextWastefulSnippetsContainer");
+      if (snipContainer) {
+        snipContainer.innerHTML = "";
+        const snippets = getWastefulSnippets();
+        snippets.forEach(s => {
+          const div = document.createElement("div");
+          div.className = "code-panel";
+          div.innerHTML = `
+            <div class="code-panel-head">
+              <div><span class="badge-sev ${s.severity || "high"}">${(s.ruleId || "SNIPPET").toUpperCase()}</span> <span class="mono" style="color:var(--text-primary); margin-left:6px;">${s.locations}</span></div>
+              <span class="mono" style="color:var(--status-crit);">${s.wasteText}</span>
+            </div>
+            <div class="code-panel-body" style="color:var(--status-crit);">
+              ${s.snippet}
+            </div>
+          `;
+          snipContainer.appendChild(div);
+        });
+      }
+    }
+
+    // ========================================================================
+    // REGRESSION TAB
+    // ========================================================================
+    function renderRegressions() {
+      const regressions = getRegressions();
+      const comp = appData?.baselineComparison;
+
+      const banner = document.getElementById("regBannerCard");
+      const statusTitle = document.getElementById("regStatusTitle");
+      const statusDesc = document.getElementById("regStatusDesc");
+      const statusPill = document.getElementById("regStatusPill");
+
+      if (banner && statusTitle && statusDesc && statusPill) {
+        if (comp) {
+          const hasDegraded = comp.scoreDelta < 0 || regressions.length > 0;
+          if (hasDegraded) {
+            banner.style.borderColor = "var(--status-crit-border)";
+            banner.style.background = "var(--status-crit-bg)";
+            statusTitle.style.color = "var(--status-crit)";
+            statusTitle.innerText = "CHECK FAILED (Exit Code: 1)";
+            statusDesc.innerText = currentLang === "zh"
+              ? `基线回归策略拦截: 分数从 ${comp.baselineScore} 退化至 ${comp.headScore} (${comp.scoreDelta} pts)，引入 ${regressions.length} 项退化事件。`
+              : `Regression gate violated: Score degraded from ${comp.baselineScore} to ${comp.headScore} (${comp.scoreDelta} pts), ${regressions.length} regressions.`;
+            statusPill.innerText = "CI BLOCKED";
+            statusPill.className = "badge-sev critical";
+          } else {
+            banner.style.borderColor = "var(--status-pass-border)";
+            banner.style.background = "var(--status-pass-bg)";
+            statusTitle.style.color = "var(--status-pass)";
+            statusTitle.innerText = "CHECK PASSED (Exit Code: 0)";
+            statusDesc.innerText = currentLang === "zh"
+              ? `基线对比通过: 未检测到评分退化，分数保持在 ${comp.headScore} / 100。`
+              : `Baseline comparison passed: No regressions detected, score remains ${comp.headScore}/100.`;
+            statusPill.innerText = "CI PASSED";
+            statusPill.className = "badge-sev pass";
+          }
+        } else {
+          banner.style.borderColor = "var(--border-muted)";
+          banner.style.background = "var(--bg-surface)";
+          statusTitle.style.color = "var(--text-primary)";
+          statusTitle.innerText = currentLang === "zh" ? "单分支扫描模式 (Single Branch Mode)" : "Single Branch Mode";
+          statusDesc.innerText = currentLang === "zh"
+            ? "当前未配置基线分支。通过 `agentdoctor web --baseline main` 进行分支回归对比。"
+            : "No baseline configured. Run `agentdoctor web --baseline main` to evaluate regressions.";
+          statusPill.innerText = "NO BASELINE";
+          statusPill.className = "badge-sev low";
+        }
+      }
+
+      // Regressions table title
+      const regTableTitle = document.getElementById("regTableTitle");
+      if (regTableTitle) {
+        regTableTitle.innerText = currentLang === "zh"
+          ? `本次变更引入的退化事件清单 (${regressions.length} 项)`
+          : `Regressions Introduced (${regressions.length} Items)`;
+      }
+
+      // Regressions table body
+      const tbody = document.getElementById("regressionTableBody");
+      if (tbody) {
+        tbody.innerHTML = "";
+        if (regressions.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="5" style="text-align:center; padding:24px; color:var(--status-pass); font-family:var(--font-mono);">
+                ✓ ${currentLang === "zh" ? "未检测到效能退化事件 (No regressions detected)" : "No regressions detected"}
+              </td>
+            </tr>
+          `;
+        } else {
+          regressions.forEach(r => {
+            const tr = document.createElement("tr");
+            const sev = r.severity || r.sev || "high";
+            const kind = r.kind || "new-finding";
+            const title = getRegressionTitle(r);
+            const desc = getRegressionDesc(r);
+            const loc = getRegressionLoc(r);
+
+            // Find matching finding if any
+            const findings = getFindings();
+            const matched = findings.find(f => f.id === r.findingId || (r.fingerprint && f.fingerprint === r.fingerprint));
+
+            tr.innerHTML = `
+              <td><span class="badge-sev ${sev}">${sev.toUpperCase()}</span></td>
+              <td><code class="mono">${kind}</code></td>
+              <td>
+                <strong>${title}</strong>
+                <div style="font-size:11px; color:var(--text-secondary); margin-top:2px;">${desc}</div>
+              </td>
+              <td><code class="mono" style="color:var(--status-med);">${loc}</code></td>
+              <td style="text-align:right;">
+                ${matched ? `<button class="btn-icon" style="height:20px; padding:0 6px;" onclick="selectedFindingId='${matched.id}'; switchTab('tab-findings'); renderFindings();">${currentLang === "zh" ? "查看" : "Inspect"}</button>` : "—"}
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        }
+      }
+
+      // Side by Side Panels
+      const treeInfo = appData?.baselineTreeInfo;
+      const baseTitle = document.getElementById("regBasePanelTitle");
+      const baseSub = document.getElementById("regBaseTokensSub");
+      const baseBody = document.getElementById("regBaseCodeBody");
+
+      const headTitle = document.getElementById("regHeadPanelTitle");
+      const headSub = document.getElementById("regHeadTokensSub");
+      const headBody = document.getElementById("regHeadCodeBody");
+
+      if (treeInfo) {
+        if (baseTitle) baseTitle.innerText = `${currentLang === "zh" ? "基线" : "Baseline"}: ${treeInfo.baselineRef} (AGENTS.md)`;
+        if (baseSub) baseSub.innerText = `${treeInfo.baselineTokens.toLocaleString()} tokens`;
+        if (baseBody) {
+          baseBody.innerHTML = "";
+          treeInfo.baselineLines.forEach(l => {
+            const d = document.createElement("div");
+            d.innerText = l;
+            baseBody.appendChild(d);
+          });
+        }
+
+        if (headTitle) headTitle.innerText = `HEAD: ${appData?.branch || "current"} (AGENTS.md)`;
+        if (headSub) {
+          const delta = treeInfo.deltaTokens;
+          headSub.innerText = `${treeInfo.headTokens.toLocaleString()} tokens (${delta >= 0 ? "+" : ""}${delta} tk)`;
+          headSub.style.color = delta > 0 ? "var(--status-crit)" : "var(--status-pass)";
+        }
+        if (headBody) {
+          headBody.innerHTML = "";
+          if (treeInfo.diffLines && treeInfo.diffLines.length > 0) {
+            treeInfo.diffLines.forEach(dl => {
+              const d = document.createElement("div");
+              d.className = `diff-line ${dl.type}`;
+              d.innerText = dl.text;
+              headBody.appendChild(d);
+            });
+          } else {
+            treeInfo.headLines.forEach(l => {
+              const d = document.createElement("div");
+              d.innerText = l;
+              headBody.appendChild(d);
+            });
+          }
+        }
+      } else {
+        if (baseTitle) baseTitle.innerText = `${currentLang === "zh" ? "基线" : "Baseline"} (AGENTS.md)`;
+        if (baseSub) baseSub.innerText = "—";
+        if (baseBody) baseBody.innerHTML = `<div style="color:var(--text-muted);">${currentLang === "zh" ? "未配置基线分支" : "No baseline specified"}</div>`;
+
+        if (headTitle) headTitle.innerText = `HEAD: ${appData?.branch || "current"} (AGENTS.md)`;
+        if (headSub) headSub.innerText = "—";
+        if (headBody) headBody.innerHTML = `<div style="color:var(--text-muted);">${currentLang === "zh" ? "使用 --baseline <ref> 运行基线比较" : "Run with --baseline <ref> to inspect diff"}</div>`;
+      }
+    }
+
+    // ========================================================================
+    // FINDINGS WORKBENCH
+    // ========================================================================
     function renderFindings() {
+      const findings = getFindings();
+      if (!selectedFindingId || !findings.some(f => f.id === selectedFindingId)) {
+        selectedFindingId = findings[0]?.id;
+      }
+
+      // Update Filter counts
+      const counts = { all: findings.length, context: 0, repository: 0, verification: 0, runtime: 0 };
+      findings.forEach(f => {
+        if (counts[f.category] !== undefined) counts[f.category]++;
+      });
+
+      const catButtons = document.querySelectorAll("#categoryFilterRow .pill-filter");
+      catButtons.forEach(btn => {
+        const cat = btn.dataset.cat;
+        if (cat === "all") btn.innerText = `${t("f.all")} (${counts.all})`;
+        if (cat === "context") btn.innerText = `${t("f.ctx")} (${counts.context})`;
+        if (cat === "repository") btn.innerText = `${t("f.repo")} (${counts.repository})`;
+        if (cat === "verification") btn.innerText = `${t("f.verif")} (${counts.verification})`;
+        if (cat === "runtime") btn.innerText = `${t("f.run")} (${counts.runtime})`;
+      });
+
       const container = document.getElementById("findingsListContainer");
+      if (!container) return;
       container.innerHTML = "";
 
-      const filtered = FINDINGS_DATA.filter(f => {
+      const filtered = findings.filter(f => {
         if (activeCategoryFilter !== "all" && f.category !== activeCategoryFilter) return false;
         if (searchQuery) {
           const q = searchQuery.toLowerCase();
-          const title = (f.title[currentLang] || f.title.en).toLowerCase();
-          if (!title.includes(q) && !f.ruleId.includes(q)) return false;
+          const title = getFindingTitle(f).toLowerCase();
+          const rule = (f.ruleId || "").toLowerCase();
+          const loc = (f.evidence?.[0]?.file || "").toLowerCase();
+          if (!title.includes(q) && !rule.includes(q) && !loc.includes(q)) return false;
         }
         return true;
       });
 
-      filtered.forEach(f => {
-        const row = document.createElement("div");
-        row.className = `finding-row ${f.id === selectedFindingId ? "active" : ""}`;
-        row.onclick = () => {
-          selectedFindingId = f.id;
-          renderFindings();
-        };
-
-        row.innerHTML = `
-          <div class="finding-row-top">
-            <span class="badge-sev ${f.severity}">${f.severity.toUpperCase()}</span>
-            <span class="mono" style="color:var(--text-muted); font-size:10px;">${f.ruleId}</span>
-          </div>
-          <div class="finding-row-title">${f.title[currentLang] || f.title.en}</div>
-          <div class="finding-row-meta">
-            <span>${f.evidence[0]?.file}</span>
-            <span>${Math.round(f.confidence * 100)}%</span>
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="padding:20px; text-align:center; color:var(--text-muted); font-family:var(--font-mono); font-size:12px;">
+            ${currentLang === "zh" ? "未匹配到相关 Finding" : "No findings match query"}
           </div>
         `;
-        container.appendChild(row);
-      });
+      } else {
+        filtered.forEach(f => {
+          const row = document.createElement("div");
+          row.className = `finding-row ${f.id === selectedFindingId ? "active" : ""}`;
+          row.onclick = () => {
+            selectedFindingId = f.id;
+            renderFindings();
+          };
+
+          const title = getFindingTitle(f);
+          const loc = f.evidence && f.evidence[0] ? `${f.evidence[0].file}${f.evidence[0].line ? `:${f.evidence[0].line}` : ""}` : "—";
+          const conf = Math.round((f.confidence ?? 0.85) * 100);
+
+          row.innerHTML = `
+            <div class="finding-row-top">
+              <span class="badge-sev ${f.severity}">${f.severity.toUpperCase()}</span>
+              <span class="mono" style="color:var(--text-muted); font-size:10px;">${f.ruleId}</span>
+            </div>
+            <div class="finding-row-title">${title}</div>
+            <div class="finding-row-meta">
+              <span>${loc}</span>
+              <span>${conf}%</span>
+            </div>
+          `;
+          container.appendChild(row);
+        });
+      }
 
       updateInspector();
     }
 
     function updateInspector() {
-      const f = FINDINGS_DATA.find(x => x.id === selectedFindingId);
-      if (!f) return;
-
-      document.getElementById("inspSeverity").className = `badge-sev ${f.severity}`;
-      document.getElementById("inspSeverity").innerText = f.severity.toUpperCase();
-      document.getElementById("inspCategory").innerText = f.category;
-      document.getElementById("inspRuleId").innerText = f.ruleId;
-      document.getElementById("inspConfidence").innerText = `${Math.round(f.confidence * 100)}% ${currentLang === "zh" ? "置信度" : "confidence"}`;
-      document.getElementById("inspTitle").innerText = f.title[currentLang] || f.title.en;
-      document.getElementById("inspDescription").innerText = f.description[currentLang] || f.description.en;
-      document.getElementById("inspRecommendation").innerText = f.recommendation[currentLang] || f.recommendation.en;
-
-      // Evidence
-      const evBox = document.getElementById("inspEvidenceContainer");
-      evBox.innerHTML = "";
-      f.evidence.forEach(ev => {
-        const p = document.createElement("div");
-        p.className = "code-panel";
-        p.innerHTML = `
-          <div class="code-panel-head">
-            <span style="color:var(--status-med);">${ev.file}${ev.line ? `:${ev.line}` : ""}</span>
-          </div>
-          <div class="code-panel-body" style="color:var(--status-crit);">
-            ${ev.snippet || "[file level detection]"}
-          </div>
-        `;
-        evBox.appendChild(p);
-      });
-
-      // Diff
-      const diffSec = document.getElementById("inspDiffSection");
-      const diffContainer = document.getElementById("inspDiffContainer");
-      if (f.diff) {
-        diffSec.style.display = "block";
-        diffContainer.innerHTML = "";
-        f.diff.forEach(l => {
-          const row = document.createElement("div");
-          row.className = `diff-line ${l.type}`;
-          row.innerText = l.text;
-          diffContainer.appendChild(row);
-        });
-      } else {
-        diffSec.style.display = "none";
+      const findings = getFindings();
+      const f = findings.find(x => x.id === selectedFindingId) || findings[0];
+      if (!f) {
+        const sevEl = document.getElementById("inspSeverity");
+        if (sevEl) { sevEl.className = "badge-sev pass"; sevEl.innerText = "NONE"; }
+        const catEl = document.getElementById("inspCategory");
+        if (catEl) catEl.innerText = "—";
+        const ruleEl = document.getElementById("inspRuleId");
+        if (ruleEl) ruleEl.innerText = "—";
+        const confEl = document.getElementById("inspConfidence");
+        if (confEl) confEl.innerText = "—";
+        const titleEl = document.getElementById("inspTitle");
+        if (titleEl) titleEl.innerText = currentLang === "zh" ? "未发现匹配问题" : "No findings found";
+        const descEl = document.getElementById("inspDescription");
+        if (descEl) descEl.innerText = currentLang === "zh" ? "当前代码库在此分类下未检测到效能问题。" : "No findings detected in this category.";
+        const recEl = document.getElementById("inspRecommendation");
+        if (recEl) recEl.innerText = "—";
+        const evBox = document.getElementById("inspEvidenceContainer");
+        if (evBox) evBox.innerHTML = "";
+        const diffSec = document.getElementById("inspDiffSection");
+        if (diffSec) diffSec.style.display = "none";
+        const promptBox = document.getElementById("inspPromptBox");
+        if (promptBox) promptBox.innerText = "—";
+        return;
       }
 
-      // Prompt
-      const promptText = f.prompt[currentLang] || f.prompt.en;
-      document.getElementById("inspPromptBox").innerText = promptText;
-      document.getElementById("inspBtnCopyPrompt").onclick = () => {
-        copyToClipboard(promptText, currentLang === "zh" ? "✓ Fix Prompt 已复制" : "✓ Copied fix prompt");
-      };
+      const sevEl = document.getElementById("inspSeverity");
+      if (sevEl) {
+        sevEl.className = `badge-sev ${f.severity}`;
+        sevEl.innerText = f.severity.toUpperCase();
+      }
+
+      const catEl = document.getElementById("inspCategory");
+      if (catEl) catEl.innerText = f.category;
+
+      const ruleEl = document.getElementById("inspRuleId");
+      if (ruleEl) ruleEl.innerText = f.ruleId;
+
+      const confEl = document.getElementById("inspConfidence");
+      if (confEl) {
+        const conf = Math.round((f.confidence ?? 0.85) * 100);
+        confEl.innerText = `${conf}% ${currentLang === "zh" ? "置信度" : "confidence"}`;
+      }
+
+      const titleEl = document.getElementById("inspTitle");
+      if (titleEl) titleEl.innerText = getFindingTitle(f);
+
+      const descEl = document.getElementById("inspDescription");
+      if (descEl) descEl.innerText = getFindingDesc(f);
+
+      const recEl = document.getElementById("inspRecommendation");
+      if (recEl) recEl.innerText = getFindingRec(f);
+
+      // Multi-source evidence
+      const evBox = document.getElementById("inspEvidenceContainer");
+      if (evBox) {
+        evBox.innerHTML = "";
+        const evidenceList = f.evidence && f.evidence.length > 0 ? f.evidence : [{ file: "repository", snippet: f.description }];
+        evidenceList.forEach(ev => {
+          const p = document.createElement("div");
+          p.className = "code-panel";
+          const loc = `${ev.file}${ev.line ? `:${ev.line}` : ""}`;
+          p.innerHTML = `
+            <div class="code-panel-head">
+              <span style="color:var(--status-med); font-family:var(--font-mono); font-size:11px;">${loc}</span>
+            </div>
+            <div class="code-panel-body" style="color:var(--status-crit); font-family:var(--font-mono); font-size:11px;">
+              ${ev.snippet || ev.source || "[file level check]"}
+            </div>
+          `;
+          evBox.appendChild(p);
+        });
+      }
+
+      // Unified Diff Section
+      const diffSec = document.getElementById("inspDiffSection");
+      const diffContainer = document.getElementById("inspDiffContainer");
+      if (diffSec && diffContainer) {
+        let diffLines = [];
+        if (f.diffLines && Array.isArray(f.diffLines)) {
+          diffLines = f.diffLines;
+        } else if (Array.isArray(f.diff)) {
+          diffLines = f.diff;
+        }
+
+        if (diffLines.length > 0) {
+          diffSec.style.display = "block";
+          diffContainer.innerHTML = "";
+          diffLines.forEach(l => {
+            const row = document.createElement("div");
+            row.className = `diff-line ${l.type}`;
+            row.innerText = l.text;
+            diffContainer.appendChild(row);
+          });
+        } else {
+          diffSec.style.display = "none";
+        }
+      }
+
+      // Fix Prompt Box
+      const promptText = getFindingPrompt(f);
+      const promptBox = document.getElementById("inspPromptBox");
+      if (promptBox) promptBox.innerText = promptText;
+
+      const copyBtn = document.getElementById("inspBtnCopyPrompt");
+      if (copyBtn) {
+        copyBtn.onclick = () => {
+          copyToClipboard(promptText, currentLang === "zh" ? "✓ Fix Prompt 已复制" : "✓ Copied fix prompt");
+        };
+      }
     }
 
+    // Category filter clicks
     document.querySelectorAll("#categoryFilterRow .pill-filter").forEach(b => {
       b.addEventListener("click", () => {
         document.querySelectorAll("#categoryFilterRow .pill-filter").forEach(c => c.classList.remove("active"));
@@ -1887,129 +2549,288 @@
       });
     });
 
-    document.getElementById("findingsSearch").addEventListener("input", (e) => {
-      searchQuery = e.target.value;
-      renderFindings();
-    });
-
-    // Regressions
-    function renderRegressions() {
-      const tbody = document.getElementById("regressionTableBody");
-      tbody.innerHTML = "";
-      REGRESSIONS_DATA.forEach(r => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td><span class="badge-sev ${r.sev}">${r.sev.toUpperCase()}</span></td>
-          <td><code class="mono">${r.kind}</code></td>
-          <td>
-            <strong>${r.title[currentLang] || r.title.en}</strong>
-            <div style="font-size:11px; color:var(--text-secondary);">${r.desc[currentLang] || r.desc.en}</div>
-          </td>
-          <td><code class="mono" style="color:var(--status-med);">${r.loc}</code></td>
-          <td style="text-align:right;">
-            ${r.findingId ? `<button class="btn-icon" style="height:20px; padding:0 6px;" onclick="selectedFindingId='${r.findingId}'; switchTab('tab-findings'); renderFindings();">${currentLang === "zh" ? "查看" : "Inspect"}</button>` : "—"}
-          </td>
-        `;
-        tbody.appendChild(tr);
+    // Search input
+    const searchInput = document.getElementById("findingsSearch");
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        renderFindings();
       });
     }
 
-    // Sessions
+    // ========================================================================
+    // SESSIONS TAB
+    // ========================================================================
     function renderSessions() {
+      const sessions = getSessions();
       const list = document.getElementById("sessionListContainer");
-      list.innerHTML = "";
-      SESSIONS_DATA.forEach(s => {
-        const row = document.createElement("div");
-        row.className = `finding-row ${s.id === selectedSessionId ? "active" : ""}`;
-        row.onclick = () => {
-          selectedSessionId = s.id;
-          renderSessions();
-        };
-        row.innerHTML = `
-          <div class="finding-row-top">
-            <strong class="mono">${s.agentName}</strong>
-            <span class="mono" style="color:var(--status-pass);">${s.score}</span>
-          </div>
-          <div style="font-size:11px; color:var(--text-secondary);">${s.task[currentLang] || s.task.en}</div>
-          <div class="finding-row-meta">
-            <span>${s.duration}</span>
-            <span>${s.tokensTotal} tk</span>
-          </div>
-        `;
-        list.appendChild(row);
-      });
+      const titleEl = document.getElementById("sessListTitle");
+      if (titleEl) {
+        titleEl.innerText = `${t("sess.listTitle")} (${sessions.length})`;
+      }
 
-      const activeSess = SESSIONS_DATA.find(x => x.id === selectedSessionId) || SESSIONS_DATA[0];
-      document.getElementById("sessAgentBadge").innerText = activeSess.agentName.toUpperCase();
-      document.getElementById("sessId").innerText = activeSess.id;
-      document.getElementById("sessTask").innerText = activeSess.task[currentLang] || activeSess.task.en;
-      document.getElementById("sessScore").innerText = `${activeSess.score}/100`;
-      document.getElementById("sessDuration").innerText = activeSess.duration;
-      document.getElementById("sessTokens").innerText = activeSess.tokensTotal;
-      document.getElementById("sessCalls").innerText = activeSess.toolCalls;
-      document.getElementById("sessCmds").innerText = activeSess.cmds;
+      const scoreSubEl = document.getElementById("sessScoreSub");
+      if (scoreSubEl) {
+        const runtimeScore = appData?.scanResult?.scores?.runtime?.score;
+        const avgScore = sessions.length > 0
+          ? Math.round(sessions.reduce((acc, s) => acc + getSessionScore(s), 0) / sessions.length)
+          : (runtimeScore ?? "—");
+        scoreSubEl.innerText = avgScore !== "—" && avgScore !== null && avgScore !== undefined ? `Score: ${avgScore}` : "";
+      }
 
-      document.getElementById("sessIneffBox").innerHTML = activeSess.ineff[currentLang] || activeSess.ineff.en;
+      if (sessions.length === 0) {
+        if (list) {
+          list.innerHTML = `
+            <div style="padding:28px 16px; text-align:center; color:var(--text-muted); font-family:var(--font-mono); font-size:12px;">
+              <div style="font-size:24px; margin-bottom:8px;">📋</div>
+              <div style="font-weight:600; color:var(--text-secondary); margin-bottom:6px;">
+                ${t("sess.emptyTitle")}
+              </div>
+              <div style="font-size:11px; line-height:1.6; color:var(--text-muted);">
+                ${t("sess.emptyDesc")}
+              </div>
+            </div>
+          `;
+        }
+
+        const agentBadge = document.getElementById("sessAgentBadge");
+        if (agentBadge) agentBadge.innerText = "NO TRACE";
+
+        const sessIdEl = document.getElementById("sessId");
+        if (sessIdEl) sessIdEl.innerText = t("sess.noSelection");
+
+        const sessTaskEl = document.getElementById("sessTask");
+        if (sessTaskEl) sessTaskEl.innerText = t("sess.noTraceDesc");
+
+        const sessScoreEl = document.getElementById("sessScore");
+        if (sessScoreEl) sessScoreEl.innerText = "—";
+
+        const sessDurEl = document.getElementById("sessDuration");
+        if (sessDurEl) sessDurEl.innerText = "—";
+
+        const sessTkEl = document.getElementById("sessTokens");
+        if (sessTkEl) sessTkEl.innerText = "—";
+
+        const sessCallsEl = document.getElementById("sessCalls");
+        if (sessCallsEl) sessCallsEl.innerText = "0";
+
+        const sessCmdsEl = document.getElementById("sessCmds");
+        if (sessCmdsEl) sessCmdsEl.innerText = "0";
+
+        const ineffBox = document.getElementById("sessIneffBox");
+        if (ineffBox) ineffBox.innerHTML = t("sess.noIneffDesc");
+
+        const tContainer = document.getElementById("sessTimelineContainer");
+        if (tContainer) {
+          tContainer.innerHTML = `
+            <div style="padding:16px; text-align:center; color:var(--text-muted); font-family:var(--font-mono); font-size:11px;">
+              ${t("sess.noTimeline")}
+            </div>
+          `;
+        }
+        return;
+      }
+
+      if (!selectedSessionId || !sessions.some(s => s.id === selectedSessionId)) {
+        selectedSessionId = sessions[0]?.id;
+      }
+
+      if (list) {
+        list.innerHTML = "";
+        sessions.forEach(s => {
+          const row = document.createElement("div");
+          row.className = `finding-row ${s.id === selectedSessionId ? "active" : ""}`;
+          row.onclick = () => {
+            selectedSessionId = s.id;
+            renderSessions();
+          };
+
+          const task = getSessionTask(s);
+          const dur = getSessionDuration(s);
+          const tk = getSessionTokens(s);
+          const score = getSessionScore(s);
+
+          row.innerHTML = `
+            <div class="finding-row-top">
+              <strong class="mono">${s.agentName || "Agent"}</strong>
+              <span class="mono" style="color:var(--status-pass);">${score}</span>
+            </div>
+            <div style="font-size:11px; color:var(--text-secondary); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${task}</div>
+            <div class="finding-row-meta">
+              <span>${dur}</span>
+              <span>${tk} tk</span>
+            </div>
+          `;
+          list.appendChild(row);
+        });
+      }
+
+      const activeSess = sessions.find(x => x.id === selectedSessionId) || sessions[0];
+      if (!activeSess) return;
+
+      const agentBadge = document.getElementById("sessAgentBadge");
+      if (agentBadge) agentBadge.innerText = (activeSess.agentName || "AGENT").toUpperCase();
+
+      const sessIdEl = document.getElementById("sessId");
+      if (sessIdEl) sessIdEl.innerText = activeSess.id;
+
+      const sessTaskEl = document.getElementById("sessTask");
+      if (sessTaskEl) sessTaskEl.innerText = getSessionTask(activeSess);
+
+      const sessScoreEl = document.getElementById("sessScore");
+      if (sessScoreEl) sessScoreEl.innerText = `${getSessionScore(activeSess)}/100`;
+
+      const sessDurEl = document.getElementById("sessDuration");
+      if (sessDurEl) sessDurEl.innerText = getSessionDuration(activeSess);
+
+      const sessTkEl = document.getElementById("sessTokens");
+      if (sessTkEl) sessTkEl.innerText = getSessionTokens(activeSess);
+
+      const sessCallsEl = document.getElementById("sessCalls");
+      if (sessCallsEl) sessCallsEl.innerText = activeSess.toolCalls ?? 0;
+
+      const sessCmdsEl = document.getElementById("sessCmds");
+      if (sessCmdsEl) sessCmdsEl.innerText = activeSess.commandsExecuted ?? activeSess.cmds ?? 0;
+
+      const ineffBox = document.getElementById("sessIneffBox");
+      if (ineffBox) ineffBox.innerHTML = getSessionIneff(activeSess);
 
       const tContainer = document.getElementById("sessTimelineContainer");
-      tContainer.innerHTML = "";
-      activeSess.timeline.forEach(event => {
-        const d = document.createElement("div");
-        d.className = "mono";
-        d.style.display = "flex";
-        d.style.justifyContent = "space-between";
-        d.style.fontSize = "11px";
-        d.style.padding = "2px 4px";
-        d.style.background = event.status === "err" ? "var(--status-crit-bg)" : "var(--bg-canvas)";
-        d.style.borderRadius = "var(--radius-sm)";
-        d.innerHTML = `
-          <span><span style="color:var(--text-muted);">${event.time}</span> [${event.tool}] ${event.action}</span>
-          <span style="color:${event.status === 'ok' ? 'var(--status-pass)' : 'var(--status-crit)'};">${event.status.toUpperCase()}</span>
-        `;
-        tContainer.appendChild(d);
-      });
+      if (tContainer) {
+        tContainer.innerHTML = "";
+        const timeline = activeSess.timeline || [];
+        if (timeline.length === 0) {
+          tContainer.innerHTML = `
+            <div style="padding:16px; text-align:center; color:var(--text-muted); font-family:var(--font-mono); font-size:11px;">
+              ${t("sess.noTimeline")}
+            </div>
+          `;
+        } else {
+          timeline.forEach(event => {
+            const d = document.createElement("div");
+            d.className = "mono";
+            d.style.display = "flex";
+            d.style.justifyContent = "space-between";
+            d.style.fontSize = "11px";
+            d.style.padding = "4px 6px";
+            const isErr = event.status === "failed" || event.status === "err";
+            d.style.background = isErr ? "var(--status-crit-bg)" : "var(--bg-canvas)";
+            d.style.borderRadius = "var(--radius-sm)";
+            const time = event.timeOffset || event.time || "00:00";
+            const tool = event.tool ? `[${event.tool}] ` : "";
+            d.innerHTML = `
+              <span><span style="color:var(--text-muted);">${time}</span> ${tool}${event.action}</span>
+              <span style="color:${isErr ? "var(--status-crit)" : "var(--status-pass)"}; font-weight:600;">${isErr ? "FAILED" : "OK"}</span>
+            `;
+            tContainer.appendChild(d);
+          });
+        }
+      }
     }
 
-    // Utilities
+    // ========================================================================
+    // GLOBAL ACTIONS & UTILS
+    // ========================================================================
+    function renderAll() {
+      renderHeader();
+      renderOverview();
+      renderContext();
+      renderRegressions();
+      renderFindings();
+      renderSessions();
+    }
+
     function showToast(msg) {
       const t = document.getElementById("toast");
+      if (!t) return;
       t.innerText = msg;
       t.classList.add("show");
-      setTimeout(() => t.classList.remove("show"), 2000);
+      setTimeout(() => t.classList.remove("show"), 2200);
     }
 
     function copyToClipboard(text, msg) {
-      navigator.clipboard.writeText(text).then(() => showToast(msg || "✓ Copied"));
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast(msg || "✓ Copied"));
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        showToast(msg || "✓ Copied");
+      }
     }
 
     function copyPrompt(id) {
-      const f = FINDINGS_DATA.find(x => x.id === id);
-      if (f) copyToClipboard(f.prompt[currentLang] || f.prompt.en, currentLang === "zh" ? "✓ Fix Prompt 已复制" : "✓ Copied prompt");
+      const findings = getFindings();
+      const f = findings.find(x => x.id === id);
+      if (f) {
+        const prompt = getFindingPrompt(f);
+        copyToClipboard(prompt, currentLang === "zh" ? "✓ Fix Prompt 已复制" : "✓ Copied prompt");
+      }
     }
 
-    document.getElementById("btnCopyBatch").onclick = () => {
-      const batch = FINDINGS_DATA.map(f => f.prompt[currentLang] || f.prompt.en).join("\n\n---\n\n");
-      copyToClipboard(batch, currentLang === "zh" ? "✓ 全部 Fix Prompts 已复制" : "✓ Copied all prompts");
-    };
+    async function handleRescan() {
+      showToast(currentLang === "zh" ? "正在执行代码扫描与基线分析..." : "Scanning repository...");
+      try {
+        const res = await fetch("/api/rescan", { method: "POST" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const fresh = await res.json();
+        appData = fresh;
+        renderAll();
+        const dur = fresh.scanResult?.metadata?.scanDurationMs ?? 35;
+        showToast(currentLang === "zh" ? `✓ 重新扫描完成 (${dur}ms)` : `✓ Rescan complete (${dur}ms)`);
+      } catch (err) {
+        showToast(`Rescan: ${err.message || String(err)}`);
+      }
+    }
 
-    document.getElementById("btnRescan").onclick = () => {
-      showToast(currentLang === "zh" ? "✓ 重新扫描完成 (37ms)" : "✓ Rescan complete (37ms)");
-    };
+    function handleCopyBatch() {
+      if (appData && appData.batchFixPrompt) {
+        copyToClipboard(appData.batchFixPrompt, currentLang === "zh" ? "✓ 全部 Fix Prompts 已复制" : "✓ Copied all prompts");
+        return;
+      }
+      const findings = getFindings();
+      const batch = findings.map(f => getFindingPrompt(f)).filter(Boolean).join("\n\n---\n\n");
+      copyToClipboard(batch, currentLang === "zh" ? "✓ 全部 Fix Prompts 已复制" : "✓ Copied all prompts");
+    }
+
+    const rescanBtn = document.getElementById("btnRescan");
+    if (rescanBtn) rescanBtn.onclick = handleRescan;
+
+    const copyBatchBtn = document.getElementById("btnCopyBatch");
+    if (copyBatchBtn) copyBatchBtn.onclick = handleCopyBatch;
 
     window.addEventListener("keydown", (e) => {
-      if (e.target.tagName === "INPUT") return;
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
       if (e.key === "1") switchTab("tab-overview");
       if (e.key === "2") switchTab("tab-context");
       if (e.key === "3") switchTab("tab-findings");
       if (e.key === "4") switchTab("tab-regression");
       if (e.key === "5") switchTab("tab-sessions");
-      if (e.key === "r" || e.key === "R") document.getElementById("btnRescan").click();
-      if (e.key === "P") document.getElementById("btnCopyBatch").click();
+      if (e.key === "r" || e.key === "R") handleRescan();
+      if (e.key === "P") handleCopyBatch();
     });
 
-    // Init
+    // Auto-fetch data if running via server and not pre-injected
+    if (!appData && window.location.protocol.startsWith("http")) {
+      fetch("/api/data")
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data) {
+            appData = data;
+            renderAll();
+          }
+        })
+        .catch(() => {});
+    }
+
+    // Initial render
     setLang("zh");
     setTheme("dark");
+    renderAll();
   </script>
 </body>
 </html>
