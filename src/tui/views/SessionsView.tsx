@@ -16,14 +16,15 @@ export const SessionsView: React.FC<SessionsViewProps> = ({ result, selectedSess
         <Box borderStyle="single" borderColor="gray" padding={1}>
           <Text bold color="yellow">No Agent Sessions Found</Text>
         </Box>
-        <Box marginTop={1} padding={1}>
+        <Box marginTop={1} padding={1} flexDirection="column">
           <Text dimColor>
-            To inspect session performance, place agent session traces in:
+            AgentDoctor scans repo-local traces plus global native logs for this repo:
           </Text>
-          <Text color="cyan">  .claude/sessions/*.json</Text>
-          <Text color="cyan">  .agent/sessions/*.json</Text>
-          <Text dimColor>Or pass directly via CLI:</Text>
-          <Text color="cyan">  agentdoctor scan --session path/to/session.json</Text>
+          <Text color="cyan">  .agent/sessions/*.json(.jsonl), .claude/sessions/, sessions/</Text>
+          <Text color="cyan">  ~/.codex/sessions (same-repo), ~/.claude/projects (same-repo)</Text>
+          <Text color="cyan">  ~/.gemini/tmp/&lt;project-hash&gt;/chats, ~/.cursor/projects/&lt;cwd&gt;/agent-transcripts/</Text>
+          <Text color="cyan">  OTLP/HTTP JSON traces via --session or `agentdoctor otel`</Text>
+          <Text dimColor>Skip global dirs with --no-global. Secrets are redacted by default.</Text>
         </Box>
       </Box>
     );
@@ -70,11 +71,37 @@ export const SessionsView: React.FC<SessionsViewProps> = ({ result, selectedSess
             <Text bold color="green">Score: {activeSession.efficiencyScore}/100</Text>
           </Box>
           <Box gap={2} marginTop={1}>
-            <Text dimColor>Duration: <Text bold color="white">{Math.round(activeSession.durationSeconds / 60)}m</Text></Text>
-            <Text dimColor>Tokens: <Text bold color="white">{Math.round(activeSession.tokenUsage.total / 1000)}k</Text></Text>
+            <Text dimColor>Duration: <Text bold color="white">{activeSession.durationUnknown ? "n/a" : `${Math.round(activeSession.durationSeconds / 60)}m`}</Text></Text>
+            <Text dimColor>Tokens: <Text bold color="white">{activeSession.tokensUnknown ? "n/a" : `${Math.round(activeSession.tokenUsage.total / 1000)}k`}</Text></Text>
             <Text dimColor>Tool calls: <Text bold color="white">{activeSession.toolCalls}</Text></Text>
             <Text dimColor>Failures: <Text bold color={activeSession.failedToolCalls > 0 ? "red" : "green"}>{activeSession.failedToolCalls}</Text></Text>
           </Box>
+          {(activeSession.model || activeSession.gitCommit || activeSession.prNumber !== undefined ||
+            (activeSession.approvalsCount || 0) > 0 || (activeSession.retriesCount || 0) > 0 ||
+            (activeSession.redactedFields || 0) > 0 || activeSession.contextWindowTokens !== undefined) && (
+            <Box gap={2} marginTop={1}>
+              {activeSession.model && <Text dimColor>Model: <Text color="white">{activeSession.model}</Text></Text>}
+              {activeSession.gitCommit && <Text dimColor>Commit: <Text color="white">{activeSession.gitCommit.slice(0, 8)}{activeSession.gitDirty ? "*" : ""}</Text></Text>}
+              {activeSession.prNumber !== undefined && <Text dimColor>PR: <Text color="white">#{activeSession.prNumber} {activeSession.prState || ""}</Text></Text>}
+              {(activeSession.approvalsCount || 0) > 0 && <Text dimColor>Approvals: <Text color="white">{activeSession.approvalsCount}</Text></Text>}
+              {(activeSession.retriesCount || 0) > 0 && <Text dimColor>Retries: <Text color="white">{activeSession.retriesCount}</Text></Text>}
+              {activeSession.contextWindowTokens !== undefined && <Text dimColor>Context: <Text color="white">{Math.round(activeSession.contextWindowTokens / 1000)}k</Text></Text>}
+              {(activeSession.redactedFields || 0) > 0 && <Text dimColor>Redacted: <Text color="yellow">{activeSession.redactedFields}</Text></Text>}
+            </Box>
+          )}
+          {activeSession.taskTitle && (
+            <Box marginTop={1}>
+              <Text dimColor>Task: <Text color="white">{activeSession.taskTitle.slice(0, 80)}</Text></Text>
+            </Box>
+          )}
+          {(activeSession.failureReasons || []).length > 0 && (
+            <Box marginTop={1} flexDirection="column">
+              <Text bold color="red">Failure reasons:</Text>
+              {activeSession.failureReasons!.slice(0, 3).map((f, idx) => (
+                <Text key={idx} dimColor>  - {f.reason.slice(0, 120)}</Text>
+              ))}
+            </Box>
+          )}
 
           {/* Repeated operations warnings */}
           {activeSession.repeatedReads.length > 0 && (

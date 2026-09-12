@@ -3,6 +3,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
 import { createFix, applyFix, applySafeFixes, generateDiff } from "../../src/core/fix/fixEngine.js";
+import { rollbackFixJournal } from "../../src/core/fix/journal.js";
 
 describe("Fix Engine", () => {
   let tmpDir: string;
@@ -72,11 +73,72 @@ describe("Fix Engine", () => {
       newText: "Rule B Updated\n",
     });
 
-    const { applied } = applySafeFixes([fixSafe, fixUnsafe]);
+    const { applied } = applySafeFixes([fixSafe, fixUnsafe], tmpDir);
     expect(applied.length).toBe(1);
     expect(applied[0].id).toBe("fix-safe");
 
     expect(fs.readFileSync(fileA, "utf-8")).toBe("Rule A Updated\n");
     expect(fs.readFileSync(fileB, "utf-8")).toBe("Rule B\n"); // untouched
+  });
+
+  it("applies multi-file changes atomically and rolls back on failure", () => {
+    const created = path.join(tmpDir, "CLAUDE.md");
+    const existing = path.join(tmpDir, "AGENTS.md");
+    fs.writeFileSync(existing, "Keep this\n");
+
+    const ok = createFix({
+      id: "multi-ok",
+      title: "Create shim and update agents",
+      description: "two files",
+      isSafe: true,
+      file: existing,
+      oldText: "Keep this\n",
+      newText: "Keep this\nUpdated\n",
+      changes: [
+        { path: existing, kind: "update", oldText: "Keep this\n", newText: "Keep this\nUpdated\n" },
+        { path: created, kind: "create", newText: "Claude pointer\n", replaceFile: true },
+      ],
+    });
+
+    expect(applyFix(ok, tmpDir).success).toBe(true);
+    expect(fs.readFileSync(created, "utf-8")).toBe("Claude pointer\n");
+
+    const failing = createFix({
+      id: "multi-fail",
+      title: "Fail mid-transaction",
+      description: "second file missing text",
+      isSafe: true,
+      file: existing,
+      oldText: "nope",
+      newText: "x",
+      changes: [
+        { path: created, kind: "update", oldText: "Claude pointer\n", newText: "changed\n" },
+        { path: existing, kind: "update", oldText: "does-not-exist", newText: "x" },
+      ],
+    });
+
+    const result = applyFix(failing, tmpDir);
+    expect(result.success).toBe(false);
+    expect(fs.readFileSync(created, "utf-8")).toBe("Claude pointer\n");
+    expect(fs.readFileSync(existing, "utf-8")).toBe("Keep this\nUpdated\n");
+  });
+
+  it("writes a journal that rollback restores", () => {
+    const target = path.join(tmpDir, "AGENTS.md");
+    fs.writeFileSync(target, "before\n");
+    const fix = createFix({
+      id: "journaled",
+      title: "Change agents",
+      description: "d",
+      isSafe: true,
+      file: target,
+      oldText: "before\n",
+      newText: "after\n",
+    });
+    applySafeFixes([fix], tmpDir);
+    expect(fs.readFileSync(target, "utf-8")).toBe("after\n");
+    const restored = rollbackFixJournal(tmpDir);
+    expect(restored.restored).toContain("AGENTS.md");
+    expect(fs.readFileSync(target, "utf-8")).toBe("before\n");
   });
 });

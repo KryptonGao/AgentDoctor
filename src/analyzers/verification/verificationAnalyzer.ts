@@ -1,88 +1,16 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
-import fg from "fast-glob";
 import { Finding, Fix, VerificationItem, ProjectProfile } from "../../core/types.js";
 import { createFix } from "../../core/fix/fixEngine.js";
-
-function findNodePackagePaths(repoRoot: string, profile: ProjectProfile): string[] {
-  const configured = profile.configFiles.node?.filter((file) => path.basename(file) === "package.json") || [];
-  const candidates = ["package.json", ...configured].filter((file, index, all) => all.indexOf(file) === index);
-  return candidates.filter((file) => fs.existsSync(path.join(repoRoot, file)));
-}
-
-interface NodePackageScripts {
-  scripts: Record<string, string>;
-  sources: Record<string, string>;
-  rootScripts: Record<string, string>;
-}
-
-function readNodePackageScripts(repoRoot: string, profile: ProjectProfile): NodePackageScripts {
-  const paths = findNodePackagePaths(repoRoot, profile);
-  const scripts: Record<string, string> = {};
-  const sources: Record<string, string> = {};
-  const rootScripts: Record<string, string> = {};
-
-  // Prefer root workspace scripts, then use a nested package as a fallback.
-  // This keeps ordinary monorepos from being reported as missing a workflow
-  // merely because the root package delegates it to a workspace package.
-  for (const packagePath of paths) {
-    try {
-      const pkg = JSON.parse(fs.readFileSync(path.join(repoRoot, packagePath), "utf-8")) as { scripts?: Record<string, unknown> };
-      for (const [name, command] of Object.entries(pkg.scripts || {})) {
-        if (typeof command === "string" && !scripts[name]) {
-          scripts[name] = command;
-          sources[name] = packagePath;
-        }
-        if (packagePath === "package.json" && typeof command === "string") {
-          rootScripts[name] = command;
-        }
-      }
-    } catch {
-      // ignore malformed package manifests and continue with other workspaces
-    }
-  }
-
-  return { scripts, sources, rootScripts };
-}
-
-function isTestScriptName(name: string): boolean {
-  return name === "test" || /^test(?:$|[:.-])/.test(name) || /(?:^|:)test(?:$|[:.-])/.test(name);
-}
-
-function isPlaceholderTestCommand(command: string): boolean {
-  return command.includes("no test specified") && command.includes("exit 1");
-}
+import { AGENT_INSTRUCTION_GLOBS, globAgentFilesSync } from "../context/agentFiles.js";
+import {
+  isPlaceholderTestCommand,
+  isTestScriptName,
+  readNodePackageScripts,
+} from "./nodeScripts.js";
 
 function discoverInstructionFiles(repoRoot: string): string[] {
-  return fg.sync(
-    [
-      "**/AGENTS.md",
-      "**/CLAUDE.md",
-      "**/.cursorrules",
-      "**/.cursor/rules/**/*.mdc",
-      "**/.cursor/rules/**/*.md",
-      ".cursor/rules/**/*.mdc",
-      ".cursor/rules/**/*.md",
-      "**/.github/copilot-instructions.md",
-    ],
-    {
-      cwd: repoRoot,
-      dot: true,
-      onlyFiles: true,
-      ignore: [
-        "**/node_modules/**",
-        "**/.git/**",
-        "**/dist/**",
-        "**/build/**",
-        "**/target/**",
-        "**/out/**",
-        "**/coverage/**",
-        "**/generated/**",
-        "**/vendor/**",
-        "**/.next/**",
-      ],
-    }
-  ).sort((a, b) => a.localeCompare(b));
+  return globAgentFilesSync(repoRoot, AGENT_INSTRUCTION_GLOBS);
 }
 
 export async function analyzeVerification(
@@ -177,6 +105,7 @@ export async function analyzeVerification(
         name: "test",
         status: "healthy",
         command: "pytest",
+        source: pyprojectHasPytest ? "pyproject.toml" : "tests",
         detail: "Configured with pytest / test suite",
       };
     } else {
@@ -205,6 +134,7 @@ export async function analyzeVerification(
         name: "lint",
         status: "healthy",
         command: pyprojectHasRuff ? "ruff check ." : "pre-commit run",
+        source: pyprojectHasRuff ? "pyproject.toml" : ".pre-commit-config.yaml",
         detail: "Linter configured (ruff / pre-commit)",
       };
     } else {
@@ -221,6 +151,7 @@ export async function analyzeVerification(
         name: "typecheck",
         status: "healthy",
         command: "mypy .",
+        source: "pyproject.toml",
         detail: "Static type checker (mypy/pyright) configured",
       };
     } else {
@@ -237,6 +168,7 @@ export async function analyzeVerification(
         name: "build",
         status: "healthy",
         command: "python -m build",
+        source: "pyproject.toml",
         detail: "Package build system configured",
       };
     } else {
@@ -247,15 +179,15 @@ export async function analyzeVerification(
       };
     }
   } else if (profile.primaryEcosystem === "rust") {
-    statusMap.test = { name: "test", status: "healthy", command: "cargo test", detail: "Standard Cargo test" };
-    statusMap.lint = { name: "lint", status: "healthy", command: "cargo clippy", detail: "Standard Cargo clippy" };
-    statusMap.typecheck = { name: "typecheck", status: "healthy", command: "cargo check", detail: "Cargo compiler typecheck" };
-    statusMap.build = { name: "build", status: "healthy", command: "cargo build", detail: "Standard Cargo build" };
+    statusMap.test = { name: "test", status: "healthy", command: "cargo test", source: "Cargo.toml", detail: "Standard Cargo test" };
+    statusMap.lint = { name: "lint", status: "healthy", command: "cargo clippy", source: "Cargo.toml", detail: "Standard Cargo clippy" };
+    statusMap.typecheck = { name: "typecheck", status: "healthy", command: "cargo check", source: "Cargo.toml", detail: "Cargo compiler typecheck" };
+    statusMap.build = { name: "build", status: "healthy", command: "cargo build", source: "Cargo.toml", detail: "Standard Cargo build" };
   } else if (profile.primaryEcosystem === "go") {
-    statusMap.test = { name: "test", status: "healthy", command: "go test ./...", detail: "Standard Go test" };
-    statusMap.lint = { name: "lint", status: "healthy", command: "go vet ./...", detail: "Standard Go vet" };
-    statusMap.typecheck = { name: "typecheck", status: "healthy", command: "go build", detail: "Go compiler typecheck" };
-    statusMap.build = { name: "build", status: "healthy", command: "go build ./...", detail: "Standard Go build" };
+    statusMap.test = { name: "test", status: "healthy", command: "go test ./...", source: "go.mod", detail: "Standard Go test" };
+    statusMap.lint = { name: "lint", status: "healthy", command: "go vet ./...", source: "go.mod", detail: "Standard Go vet" };
+    statusMap.typecheck = { name: "typecheck", status: "healthy", command: "go build", source: "go.mod", detail: "Go compiler typecheck" };
+    statusMap.build = { name: "build", status: "healthy", command: "go build ./...", source: "go.mod", detail: "Standard Go build" };
   } else if (profile.primaryEcosystem === "node" || profile.ecosystems.includes("node")) {
     // Node.js, including mixed projects where Node is not the primary runtime.
     const packageScriptData = readNodePackageScripts(repoRoot, profile);
@@ -279,6 +211,7 @@ export async function analyzeVerification(
           name: "test",
           status: "broken",
           command: configuredTest.command,
+          source: packageScriptSources[configuredTest.name] || "package.json",
           detail: "Default unconfigured npm placeholder test script",
         };
         findings.push({
@@ -303,6 +236,7 @@ export async function analyzeVerification(
           name: "test",
           status: "healthy",
           command: configuredTest.command,
+          source: packageScriptSources[configuredTest.name] || "package.json",
           detail: `Defined in ${packageScriptSources[configuredTest.name] || "package.json"}: "${configuredTest.command}"`,
         };
       }
@@ -331,6 +265,7 @@ export async function analyzeVerification(
         name: "lint",
         status: "healthy",
         command: packageScripts.lint,
+        source: packageScriptSources.lint || "package.json",
         detail: `Defined in package.json: "${packageScripts.lint}"`,
       };
     } else {
@@ -352,6 +287,7 @@ export async function analyzeVerification(
         name: "typecheck",
         status: "healthy",
         command: typecheckCmd || inferredTypecheck,
+        source: "package.json",
         detail: typecheckCmd
           ? `Defined in package.json: "${typecheckCmd}"`
           : `Inferred from a compiler-backed package script: "${inferredTypecheck}"`,
@@ -387,6 +323,7 @@ export async function analyzeVerification(
         name: "build",
         status: "healthy",
         command: packageScripts.build,
+        source: packageScriptSources.build || "package.json",
         detail: `Defined in package.json: "${packageScripts.build}"`,
       };
     } else {

@@ -8,6 +8,36 @@ interface RuleSpecificGuidance {
 function getRuleSpecificGuidance(ruleId: string): RuleSpecificGuidance {
   const lowerRule = ruleId.toLowerCase();
 
+  if (lowerRule.startsWith("security/")) {
+    return {
+      constraints: [
+        "只修改指令文件、MCP 配置或 hook 配置中引入风险的内容",
+        "不要把真实密钥写进证据、注释或新的指令文本；如已泄露，说明需要轮换",
+        "保留仓库里正当的安全约束（例如 never edit generated files）",
+        "不要为了消除告警而删除有用的架构说明",
+      ],
+      verification: [
+        "再次运行 agentdoctor audit，确认对应 ruleId 已消失",
+        "确认指令仍然能指导 agent 完成正当开发任务",
+      ],
+    };
+  }
+
+  if (lowerRule.includes("missing-agents-md")) {
+    return {
+      constraints: [
+        "根据仓库真实布局、包管理器和验证命令生成 AGENTS.md",
+        "只写 Agent 无法从 lockfile / package.json 推断的信息",
+        "不要复制到 CLAUDE.md 等 shim 文件中；shim 只做指针",
+        "明确禁止编辑 generated/dist/build 等产物目录",
+      ],
+      verification: [
+        "再次运行 agentdoctor scan，确认 context/missing-agents-md 已消失",
+        "确认 Critical Commands 与 package.json / CI 一致",
+      ],
+    };
+  }
+
   if (lowerRule.includes("stale-path") || lowerRule.includes("unresolved-path")) {
     return {
       constraints: [

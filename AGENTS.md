@@ -9,6 +9,10 @@ Concise architecture overview for AI Coding Agents.
 - Test: `npm test`
 - Typecheck: `npm run typecheck`
 - Lint: `npm run lint`
+- Verify (opt-in, executes commands): `npx agentdoctor verify`
+- Security audit: `npx agentdoctor audit`
+- Fix loop: `npx agentdoctor fix --safe --shims --verify`
+- Rollback last fix: `npx agentdoctor fix --rollback`
 
 ## Architecture & Conventions
 - Source code is encapsulated in `src/`.

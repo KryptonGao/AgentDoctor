@@ -9,6 +9,7 @@ import {
 } from "../core/types.js";
 import { scanRepository } from "../core/scan/scanner.js";
 import { findContextFiles } from "../analyzers/context/contextAnalyzer.js";
+import { describeAgentFileRole } from "../analyzers/context/agentFiles.js";
 import { estimateTokens } from "../analyzers/context/tokenCounter.js";
 import {
   getGitRoot,
@@ -71,6 +72,8 @@ export interface BuildWebPayloadOptions {
   cwd?: string;
   baseline?: string;
   sessionPath?: string;
+  includeGlobal?: boolean;
+  allowSensitive?: boolean;
 }
 
 export function parseUnifiedDiffLines(diffText: string): DiffLine[] {
@@ -97,20 +100,7 @@ export function parseUnifiedDiffLines(diffText: string): DiffLine[] {
 }
 
 function getRoleForFile(relativePath: string): { zh: string; en: string } {
-  const norm = relativePath.replace(/\\/g, "/");
-  if (norm.endsWith("AGENTS.md")) {
-    return { zh: "单一事实来源 (Primary)", en: "Source of Truth (Primary)" };
-  }
-  if (norm.endsWith("CLAUDE.md")) {
-    return { zh: "Claude Code 指令", en: "Claude Code Instructions" };
-  }
-  if (norm.includes(".cursor") || norm.endsWith(".cursorrules")) {
-    return { zh: "Cursor IDE 规则", en: "Cursor IDE Rules" };
-  }
-  if (norm.includes("copilot-instructions")) {
-    return { zh: "Copilot 补充指令", en: "Copilot Instructions" };
-  }
-  return { zh: "辅助指令配置", en: "Instruction Config" };
+  return describeAgentFileRole(relativePath);
 }
 
 export async function buildWebPayload(options: BuildWebPayloadOptions = {}): Promise<WebDataPayload> {
@@ -124,6 +114,8 @@ export async function buildWebPayload(options: BuildWebPayloadOptions = {}): Pro
     cwd: repoRoot,
     sessionPath: options.sessionPath,
     includeRuntime: true,
+    includeGlobal: options.includeGlobal,
+    allowSensitive: options.allowSensitive,
   });
 
   // Attach diff lines to findings with fixes

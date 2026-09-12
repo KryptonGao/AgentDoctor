@@ -106,13 +106,15 @@ export function calculateEfficiencyScore(
   const contextScoreVal = calculateCategoryScore("context", findings, signalDensity);
   const repoScoreVal = calculateCategoryScore("repository", findings);
   const verifScoreVal = calculateCategoryScore("verification", findings);
+  const securityScoreVal = calculateCategoryScore("security", findings);
   const runtimeScoreVal = hasRuntimeData
     ? calculateCategoryScore("runtime", findings)
     : undefined;
 
-  let contextWeight = 0.35;
-  let repoWeight = 0.2;
-  let verifWeight = 0.2;
+  let contextWeight = 0.3;
+  let repoWeight = 0.15;
+  let verifWeight = 0.15;
+  let securityWeight = 0.15;
   const runtimeWeight = 0.25;
 
   let overallScore: number;
@@ -123,19 +125,22 @@ export function calculateEfficiencyScore(
       contextScoreVal * contextWeight +
       repoScoreVal * repoWeight +
       verifScoreVal * verifWeight +
+      securityScoreVal * securityWeight +
       runtimeScoreVal * runtimeWeight;
-    scoreExplanation = "Full assessment (4 of 4 dimensions evaluated)";
+    scoreExplanation = "Full assessment (5 of 5 dimensions evaluated)";
   } else {
-    const totalStaticWeight = contextWeight + repoWeight + verifWeight;
+    const totalStaticWeight = contextWeight + repoWeight + verifWeight + securityWeight;
     contextWeight /= totalStaticWeight;
     repoWeight /= totalStaticWeight;
     verifWeight /= totalStaticWeight;
+    securityWeight /= totalStaticWeight;
 
     overallScore =
       contextScoreVal * contextWeight +
       repoScoreVal * repoWeight +
-      verifScoreVal * verifWeight;
-    scoreExplanation = "Based on 3 of 4 dimensions (Runtime session data unavailable)";
+      verifScoreVal * verifWeight +
+      securityScoreVal * securityWeight;
+    scoreExplanation = "Based on 4 of 5 dimensions (Runtime session data unavailable)";
   }
 
   const scores: ScanResult["scores"] = {
@@ -157,6 +162,11 @@ export function calculateEfficiencyScore(
         applicableChecks: verificationStatus?.filter((item) => item.status !== "not_applicable").length ?? 0,
         notApplicableChecks: verificationStatus?.filter((item) => item.status === "not_applicable").length ?? 0,
       },
+    },
+    security: {
+      score: securityScoreVal,
+      weight: Number(securityWeight.toFixed(3)),
+      findingsCount: countFindingsBySeverity(findings, "security"),
     },
     runtime: hasRuntimeData && runtimeScoreVal !== undefined
       ? {

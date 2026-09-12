@@ -92,6 +92,7 @@ export function formatTerminalScanResult(result: ScanResult): string {
   lines.push(pc.cyan(`│ `) + `Context Health       ${renderProgressBar(scores.context.score)}` + " ".repeat(15) + pc.cyan(`│`));
   lines.push(pc.cyan(`│ `) + `Repository Readiness ${renderProgressBar(scores.repository.score)}` + " ".repeat(15) + pc.cyan(`│`));
   lines.push(pc.cyan(`│ `) + `Verification Loop    ${renderProgressBar(scores.verification.score)}` + " ".repeat(15) + pc.cyan(`│`));
+  lines.push(pc.cyan(`│ `) + `Security Audit       ${renderProgressBar(scores.security.score)}` + " ".repeat(15) + pc.cyan(`│`));
   if (scores.runtime) {
     lines.push(pc.cyan(`│ `) + `Runtime Efficiency   ${renderProgressBar(scores.runtime.score)}` + " ".repeat(15) + pc.cyan(`│`));
   } else {

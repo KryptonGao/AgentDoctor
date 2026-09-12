@@ -78,10 +78,11 @@ describe("Scoring Calculator", () => {
 
     const result = calculateEfficiencyScore([], signalDensity, false);
     expect(result.scores.runtime).toBeNull();
-    // Context: 35 / 75 = 0.467
-    expect(result.scores.context.weight).toBeCloseTo(0.467, 2);
-    expect(result.scores.repository.weight).toBeCloseTo(0.267, 2);
-    expect(result.scores.verification.weight).toBeCloseTo(0.267, 2);
+    // Context: 0.30 / 0.75 = 0.4
+    expect(result.scores.context.weight).toBeCloseTo(0.4, 2);
+    expect(result.scores.repository.weight).toBeCloseTo(0.2, 2);
+    expect(result.scores.verification.weight).toBeCloseTo(0.2, 2);
+    expect(result.scores.security.weight).toBeCloseTo(0.2, 2);
     expect(result.overallScore).toBeGreaterThanOrEqual(90);
   });
 
@@ -99,9 +100,10 @@ describe("Scoring Calculator", () => {
 
     const result = calculateEfficiencyScore([], signalDensity, true);
     expect(result.scores.runtime).toBeDefined();
-    expect(result.scores.context.weight).toBe(0.35);
-    expect(result.scores.repository.weight).toBe(0.2);
-    expect(result.scores.verification.weight).toBe(0.2);
+    expect(result.scores.context.weight).toBe(0.3);
+    expect(result.scores.repository.weight).toBe(0.15);
+    expect(result.scores.verification.weight).toBe(0.15);
+    expect(result.scores.security.weight).toBe(0.15);
     expect(result.scores.runtime?.weight).toBe(0.25);
     expect(result.overallScore).toBe(100);
   });

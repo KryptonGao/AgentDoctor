@@ -155,7 +155,7 @@ describe("Accuracy & Credibility P0 Fixes", () => {
 
     expect(scan.metadata.hasRuntimeData).toBe(false);
     expect(scan.overallScore).toBeGreaterThan(0);
-    expect(scan.scoreExplanation).toContain("Based on 3 of 4 dimensions");
+    expect(scan.scoreExplanation).toContain("Based on 4 of 5 dimensions");
   });
 
   // Requirement 10: Low confidence findings have lower impact on score than high confidence

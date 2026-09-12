@@ -22,6 +22,10 @@ inputs:
     description: Token used to update the sticky PR report comment
     required: false
     default: ""
+  sarif:
+    description: Workspace-relative path for the SARIF 2.1.0 report
+    required: false
+    default: "agentdoctor.sarif"
 outputs:
   score:
     description: Current Agent Efficiency score
@@ -41,6 +45,9 @@ outputs:
   report:
     description: Markdown AgentDoctor report
     value: ${{ steps.agentdoctor.outputs.report }}
+  sarif-path:
+    description: Absolute path of the written SARIF report
+    value: ${{ steps.agentdoctor.outputs.sarif-path }}
 runs:
   using: composite
   steps:
@@ -52,4 +59,5 @@ runs:
         AGENTDOCTOR_FAIL_ON: ${{ inputs.fail-on }}
         AGENTDOCTOR_BASELINE: ${{ inputs.baseline }}
         AGENTDOCTOR_GITHUB_TOKEN: ${{ inputs.github-token || github.token }}
+        AGENTDOCTOR_SARIF: ${{ inputs.sarif }}
       run: node "$GITHUB_ACTION_PATH/action-dist/index.mjs"

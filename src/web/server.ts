@@ -4,6 +4,43 @@ import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { exec } from "node:child_process";
 import { buildWebPayload, WebDataPayload, BuildWebPayloadOptions } from "./payload.js";
+import { AGENT_PROFILE_IDS, AGENT_PROFILE_LIST, AgentProfileId, EffectiveContextQuery } from "../analyzers/context/effectiveTypes.js";
+import { simulateEffectiveContext } from "../analyzers/context/effectiveContext.js";
+
+const EFFECTIVE_CONTEXT_BODY_LIMIT = 256 * 1024;
+const EFFECTIVE_CONTEXT_AGENTS = new Set<AgentProfileId>(AGENT_PROFILE_IDS);
+
+function isInside(parent: string, child: string): boolean {
+  const relative = path.relative(parent, child);
+  return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
+}
+
+async function readJsonBody(req: http.IncomingMessage, limit: number): Promise<unknown> {
+  return await new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    let size = 0;
+    let exceeded = false;
+    req.on("data", (chunk: Buffer) => {
+      if (exceeded) return;
+      size += chunk.length;
+      if (size > limit) {
+        exceeded = true;
+        reject(Object.assign(new Error(`Request body exceeds ${limit} bytes`), { statusCode: 413 }));
+        return;
+      }
+      chunks.push(chunk);
+    });
+    req.on("end", () => {
+      if (exceeded) return;
+      try {
+        resolve(JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}"));
+      } catch {
+        reject(Object.assign(new Error("Request body must be valid JSON"), { statusCode: 400 }));
+      }
+    });
+    req.on("error", reject);
+  });
+}
 
 export interface WebServerOptions extends BuildWebPayloadOptions {
   port?: number;
@@ -107,6 +144,32 @@ export async function createWebServer(options: WebServerOptions = {}): Promise<W
       } catch (err: any) {
         res.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
         res.end(JSON.stringify({ error: err.message || String(err) }));
+      }
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/effective-context") {
+      try {
+        const body = await readJsonBody(req, EFFECTIVE_CONTEXT_BODY_LIMIT);
+        if (!body || typeof body !== "object" || Array.isArray(body)) throw Object.assign(new Error("Request body must be a JSON object"), { statusCode: 400 });
+        const input = body as Partial<EffectiveContextQuery>;
+        if (!input.agent || !EFFECTIVE_CONTEXT_AGENTS.has(input.agent)) {
+          throw Object.assign(new Error(`agent must be one of: ${AGENT_PROFILE_LIST}`), { statusCode: 400 });
+        }
+        const repositoryRoot = path.resolve(currentPayload.repositoryRoot);
+        const requestedCwd = input.cwd
+          ? path.resolve(repositoryRoot, input.cwd)
+          : path.resolve(options.cwd || repositoryRoot);
+        if (!isInside(repositoryRoot, requestedCwd)) {
+          throw Object.assign(new Error("cwd must be inside the scanned repository"), { statusCode: 400 });
+        }
+        const report = await simulateEffectiveContext({ ...input, agent: input.agent, cwd: requestedCwd });
+        res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify(report));
+      } catch (error) {
+        const err = error as Error & { statusCode?: number };
+        res.writeHead(err.statusCode || 400, { "Content-Type": "application/json; charset=utf-8" });
+        res.end(JSON.stringify({ error: err.message || String(error) }));
       }
       return;
     }

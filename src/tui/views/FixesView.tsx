@@ -68,7 +68,9 @@ export const FixesView: React.FC<FixesViewProps> = ({ result, selectedFixIndex }
               {activeFix.isSafe ? "Safe (Deterministic)" : "Review Needed"}
             </Text>
           </Box>
-          <Text dimColor>File: {activeFix.file}</Text>
+          <Text dimColor>File: {(activeFix.changes && activeFix.changes.length > 1)
+            ? `${activeFix.changes.length} files`
+            : activeFix.file}</Text>
           <Text dimColor>{activeFix.description}</Text>
 
           <Box flexDirection="column" marginTop={1} borderStyle="single" borderColor="gray" paddingX={1}>

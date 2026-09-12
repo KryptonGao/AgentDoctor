@@ -39,9 +39,10 @@ function makeScan(overrides: Partial<ScanResult> = {}): ScanResult {
     overallScore: 100,
     scoreExplanation: "static",
     scores: {
-      context: { score: 100, weight: 0.467, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
-      repository: { score: 100, weight: 0.267, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
-      verification: { score: 100, weight: 0.267, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
+      context: { score: 100, weight: 0.4, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
+      repository: { score: 100, weight: 0.2, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
+      verification: { score: 100, weight: 0.2, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
+      security: { score: 100, weight: 0.2, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
       runtime: null,
     },
     contextSignalDensity: {

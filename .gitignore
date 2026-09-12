@@ -5,3 +5,6 @@ dist/
 .coverage/
 .benchmark-cache/
 benchmarks/results/
+.agentdoctor/eval/last-run.json
+.agentdoctor/eval/logs/
+.agentdoctor/last-fix.json

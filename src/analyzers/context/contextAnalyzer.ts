@@ -1,12 +1,10 @@
-import * as fs from "node:fs";
-import * as path from "node:path";
-import fg from "fast-glob";
 import { Finding, Fix, ContextSignalDensity } from "../../core/types.js";
 import { ContextFile, detectDuplicates } from "./duplicateDetector.js";
 import { extractRepoMetadata, detectInferableContext } from "./inferableDetector.js";
 import { detectStalePaths } from "./stalePathDetector.js";
 import { detectVersionConflicts } from "./versionConflict.js";
 import { estimateTokens, calculateSignalDensity } from "./tokenCounter.js";
+import { AGENT_INSTRUCTION_GLOBS, globAgentFiles, readAgentTextFile } from "./agentFiles.js";
 
 const LOW_VALUE_PATTERNS = [
   /^(?:[\s*\-#\d.)>]*)(?:write clean (?:and maintainable )?code|always write clean code)[\s.!]*$/i,
@@ -16,57 +14,14 @@ const LOW_VALUE_PATTERNS = [
   /^(?:[\s*\-#\d.)>]*)(?:do your best|be helpful and thorough)[\s.!]*$/i,
 ];
 
-const CONTEXT_PATTERNS = [
-  "**/AGENTS.md",
-  "**/CLAUDE.md",
-  "**/.cursorrules",
-  "**/.cursor/rules/**/*.mdc",
-  "**/.cursor/rules/**/*.md",
-  ".cursor/rules/**/*.mdc",
-  ".cursor/rules/**/*.md",
-  "**/.github/copilot-instructions.md",
-  ".claude/skills/**/*.md",
-];
-
 export async function findContextFiles(repoRoot: string): Promise<ContextFile[]> {
-  const relativePaths = await fg(CONTEXT_PATTERNS, {
-    cwd: repoRoot,
-    dot: true,
-    onlyFiles: true,
-    ignore: [
-      "**/node_modules/**",
-      "**/.git/**",
-      "**/dist/**",
-      "**/build/**",
-      "**/target/**",
-      "**/out/**",
-      "**/coverage/**",
-      "**/generated/**",
-      "**/vendor/**",
-      "**/.next/**",
-      "**/.venv/**",
-      "**/venv/**",
-    ],
-  });
-
+  const relativePaths = await globAgentFiles(repoRoot, AGENT_INSTRUCTION_GLOBS);
   const files: ContextFile[] = [];
   for (const rel of relativePaths) {
-    const abs = path.join(repoRoot, rel);
-    try {
-      if (fs.existsSync(abs)) {
-        const content = fs.readFileSync(abs, "utf-8");
-        files.push({
-          relativePath: rel,
-          absolutePath: abs,
-          content,
-        });
-      }
-    } catch {
-      // ignore
-    }
+    const file = readAgentTextFile(repoRoot, rel);
+    if (file) files.push(file);
   }
-
-  return files.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+  return files;
 }
 
 function collectWastefulSnippetEntries(
