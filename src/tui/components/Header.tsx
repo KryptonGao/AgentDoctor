@@ -13,8 +13,9 @@ export const Header: React.FC<HeaderProps> = ({ repositoryName, branch, activeTa
     { key: "2", label: "Context", id: "context" },
     { key: "3", label: "Repository", id: "repository" },
     { key: "4", label: "Verification", id: "verification" },
-    { key: "5", label: "Sessions", id: "sessions" },
-    { key: "6", label: "Fixes", id: "fixes" },
+    { key: "5", label: "Security", id: "security" },
+    { key: "6", label: "Sessions", id: "sessions" },
+    { key: "7", label: "Fixes", id: "fixes" },
   ];
 
   return (

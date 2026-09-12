@@ -1,10 +1,21 @@
 import * as readline from "node:readline";
 import pc from "picocolors";
-import { scanRepository } from "../../core/scan/scanner.js";
-import { applyFix, applySafeFixes } from "../../core/fix/fixEngine.js";
+import { Fix } from "../../core/types.js";
+import { getGitRoot } from "../../shared/git.js";
+import { runFixLoop } from "../../core/fix/loop.js";
+import { rollbackFixJournal } from "../../core/fix/journal.js";
+import { formatFixLoopResult } from "../formatters/fix.js";
 
 export interface FixCommandOptions {
   safe?: boolean;
+  cwd?: string;
+  generateAgents?: boolean;
+  shims?: boolean;
+  verify?: boolean;
+  verifyAll?: boolean;
+  rollback?: boolean;
+  pr?: boolean;
+  json?: boolean;
 }
 
 function askConfirmation(question: string): Promise<boolean> {
@@ -22,74 +33,78 @@ function askConfirmation(question: string): Promise<boolean> {
   });
 }
 
-export async function runFixCommand(options: FixCommandOptions = {}) {
-  const initialResult = await scanRepository();
-  const fixes = initialResult.availableFixes;
-
-  if (fixes.length === 0) {
-    console.log(pc.green("\n✓ No fixes available. Repository instructions are up-to-date!\n"));
-    return;
-  }
-
-  console.log(pc.bold(`\nFound ${fixes.length} available fixes:`));
-
-  if (options.safe) {
-    const safeFixes = fixes.filter((f) => f.isSafe);
-    console.log(pc.cyan(`Applying ${safeFixes.length} safe fixes automatically...\n`));
-    const { applied, failed } = applySafeFixes(safeFixes);
-    for (const f of applied) {
-      console.log(pc.green(`  ✓ Applied: ${f.title} (${f.file})`));
-    }
-    for (const f of failed) {
-      console.log(pc.red(`  ✕ Failed: ${f.fix.title} - ${f.error}`));
-    }
-
-    const postScan = await scanRepository();
-    console.log(pc.bold(pc.green(`\nScore improved: ${initialResult.overallScore} → ${postScan.overallScore}\n`)));
-    return;
-  }
-
-  // Interactive review for each fix
-  let appliedCount = 0;
+async function selectInteractively(fixes: Fix[]): Promise<Fix[]> {
+  const selected: Fix[] = [];
   for (let i = 0; i < fixes.length; i++) {
     const fix = fixes[i];
+    const files = (fix.changes && fix.changes.length > 0)
+      ? fix.changes.map((change) => change.path).join(", ")
+      : fix.file;
     console.log(pc.cyan(`\n[Fix ${i + 1}/${fixes.length}] ${pc.bold(fix.title)}`));
-    console.log(`File: ${pc.yellow(fix.file)}`);
+    console.log(`File: ${pc.yellow(files)}`);
     console.log(`Description: ${fix.description}`);
     console.log(`Safety: ${fix.isSafe ? pc.green("Safe (Deterministic)") : pc.yellow("Review recommended")}`);
 
     if (fix.diff) {
       console.log(pc.dim("\nProposed Diff:"));
-      const diffLines = fix.diff.split("\n");
-      for (const line of diffLines) {
-        if (line.startsWith("+")) {
-          console.log(pc.green(line));
-        } else if (line.startsWith("-")) {
-          console.log(pc.red(line));
-        } else {
-          console.log(pc.dim(line));
-        }
+      for (const line of fix.diff.split("\n")) {
+        if (line.startsWith("+")) console.log(pc.green(line));
+        else if (line.startsWith("-")) console.log(pc.red(line));
+        else console.log(pc.dim(line));
       }
     }
 
     const ok = await askConfirmation(pc.bold("\nApply this fix? (y/N): "));
-    if (ok) {
-      const res = applyFix(fix);
-      if (res.success) {
-        console.log(pc.green("✓ Fix applied successfully."));
-        appliedCount++;
-      } else {
-        console.log(pc.red(`✕ Failed to apply fix: ${res.error}`));
-      }
-    } else {
-      console.log(pc.dim("Skipped."));
+    if (ok) selected.push(fix);
+    else console.log(pc.dim("Skipped."));
+  }
+  return selected;
+}
+
+export async function runFixCommand(options: FixCommandOptions = {}) {
+  const repoRoot = getGitRoot(options.cwd || process.cwd());
+
+  if (options.rollback) {
+    const result = rollbackFixJournal(repoRoot);
+    if (result.error) {
+      console.log(pc.yellow(`\n${result.error}\n`));
+      process.exitCode = 1;
+      return;
     }
+    console.log(pc.green(`\n✓ Rolled back ${result.restored.length} file(s): ${result.restored.join(", ")}\n`));
+    return;
   }
 
-  if (appliedCount > 0) {
-    const postScan = await scanRepository();
-    console.log(pc.bold(pc.green(`\nAll done! Score improved: ${initialResult.overallScore} → ${postScan.overallScore}\n`)));
+  const loop = await runFixLoop({
+    cwd: repoRoot,
+    safe: options.safe,
+    generateAgents: options.generateAgents,
+    shims: options.shims,
+    verify: options.verify || options.verifyAll,
+    verifyAll: options.verifyAll,
+    createPullRequest: options.pr,
+    selectFixes: options.safe ? undefined : selectInteractively,
+  });
+
+  if (options.json) {
+    console.log(JSON.stringify({
+      applied: loop.applied.map((fix) => fix.id),
+      failed: loop.failed.map((item) => ({ id: item.fix.id, error: item.error })),
+      rolledBack: loop.rolledBack,
+      rollbackReason: loop.rollbackReason,
+      journalId: loop.journalId,
+      initialScore: loop.initial.overallScore,
+      finalScore: loop.final?.overallScore,
+      verify: loop.verify,
+      pullRequest: loop.pullRequest,
+      generatedAgents: loop.generatedAgents,
+      generatedShims: loop.generatedShims,
+    }, null, 2));
   } else {
-    console.log(pc.dim("\nNo fixes were applied.\n"));
+    console.log(formatFixLoopResult(loop));
+  }
+
+  if (loop.rolledBack || loop.failed.length > 0 && loop.applied.length === 0) {
+    process.exitCode = 1;
   }
 }

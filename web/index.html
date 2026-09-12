@@ -322,6 +322,7 @@
     }
 
     .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
     /* Clean Card & Panel */
@@ -748,6 +749,38 @@
       transform: translateY(0);
       opacity: 1;
     }
+    .context-debugger-form { display:grid; grid-template-columns:repeat(4,minmax(130px,1fr)); gap:8px; }
+    .context-debugger-form label { display:flex; flex-direction:column; gap:4px; color:var(--text-secondary); font:10px var(--font-mono); text-transform:uppercase; letter-spacing:.04em; }
+    .context-debugger-form input, .context-debugger-form select, .context-debugger-form textarea { width:100%; min-height:32px; border:1px solid var(--border-muted); border-radius:var(--radius-sm); background:var(--bg-canvas); color:var(--text-primary); padding:6px 8px; font:12px var(--font-mono); text-transform:none; letter-spacing:normal; }
+    .context-debugger-form textarea { resize:vertical; min-height:52px; }
+    .context-debugger-form input:focus-visible, .context-debugger-form select:focus-visible, .context-debugger-form textarea:focus-visible, .context-debugger-tabs button:focus-visible { outline:2px solid var(--border-focus); outline-offset:1px; }
+    .context-debugger-span-2 { grid-column:span 2; }
+    .context-debugger-options { display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding-top:8px; }
+    .context-debugger-options label { flex-direction:row; align-items:center; text-transform:none; letter-spacing:normal; }
+    .context-debugger-options input { width:auto; min-height:auto; }
+    .context-budget-grid { display:grid; grid-template-columns:repeat(4,minmax(120px,1fr)); gap:8px; margin-top:10px; }
+    .context-budget-item { border:1px solid var(--border-subtle); background:var(--bg-canvas); padding:8px; }
+    .context-budget-item span { display:block; color:var(--text-muted); font:10px var(--font-mono); text-transform:uppercase; }
+    .context-budget-item strong { display:block; margin-top:3px; font:700 15px var(--font-mono); }
+    .context-debugger-tabs { display:flex; gap:4px; overflow-x:auto; padding:8px 0; }
+    .context-debugger-tabs button { white-space:nowrap; border:1px solid var(--border-muted); background:var(--bg-canvas); color:var(--text-secondary); padding:6px 9px; font:11px var(--font-mono); cursor:pointer; }
+    #effectiveContextRun { min-height:32px; cursor:pointer; }
+    #effectiveContextRun:disabled { opacity:.5; cursor:wait; }
+    .context-debugger-tabs button.active { background:var(--bg-surface-active); color:var(--text-primary); border-color:var(--border-focus); }
+    .effective-list { display:flex; flex-direction:column; gap:6px; }
+    .effective-item { display:grid; grid-template-columns:100px minmax(0,1fr) auto; gap:8px; align-items:start; border:1px solid var(--border-subtle); background:var(--bg-canvas); padding:8px; }
+    .effective-item-main { min-width:0; }
+    .effective-item-source { overflow-wrap:anywhere; color:var(--text-primary); font:600 11px var(--font-mono); }
+    .effective-item-reason { margin-top:3px; color:var(--text-secondary); font-size:11px; line-height:1.45; }
+    .effective-status { font:700 10px var(--font-mono); text-transform:uppercase; }
+    .effective-status.loaded, .effective-status.selected, .effective-status.matched, .effective-status.available { color:var(--status-pass); }
+    .effective-status.invalid, .effective-status.disabled { color:var(--status-crit); }
+    .effective-status.truncated, .effective-status.overridden { color:var(--status-med); }
+    .effective-prompt { white-space:pre-wrap; overflow:auto; max-height:420px; padding:10px; background:var(--bg-code); border:1px solid var(--border-subtle); color:var(--text-secondary); font:11px/1.55 var(--font-mono); }
+    .context-table-scroll { overflow-x:auto; }
+    .context-table-scroll .table-clean { min-width:760px; }
+    @media (max-width:900px) { .context-debugger-form { grid-template-columns:repeat(2,minmax(0,1fr)); } .context-budget-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .effective-item { grid-template-columns:86px minmax(0,1fr); } .effective-item > :last-child { grid-column:2; } .grid-5 { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:560px) { .context-debugger-form { grid-template-columns:1fr; } .context-debugger-span-2 { grid-column:span 1; } .context-budget-grid { grid-template-columns:1fr 1fr; } .context-debugger-form input, .context-debugger-form select, .context-debugger-form textarea { min-height:44px; font-size:16px; } #effectiveContextRun { min-height:44px; } }
   </style>
 </head>
 <body>
@@ -824,8 +857,8 @@
        VIEW 1: OVERVIEW
        ======================================================================== -->
   <main class="view-container active" id="tab-overview">
-    <!-- Top 4 Metrics Row (Clean, unbloated) -->
-    <div class="grid-4" style="margin-bottom: 12px;">
+    <!-- Top metrics row -->
+    <div class="grid-5" style="margin-bottom: 12px;">
       <div class="clean-card">
         <div class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.c1Title">AGENT 效能综合评分</div>
         <div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;">
@@ -853,6 +886,16 @@
           <span class="badge-sev medium mono" style="font-size:9px;" id="ovVerifPill" data-i18n="ov.mismatchPill">1 项漂移</span>
         </div>
         <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" id="ovVerifSub" data-i18n="ov.c3Sub">CI 测试命令与 AGENTS.md 冲突</div>
+      </div>
+
+      <div class="clean-card">
+        <div class="mono" style="font-size:11px; color:var(--text-muted);" data-i18n="ov.cSecTitle">Agent 安全审计</div>
+        <div style="display:flex; align-items:baseline; gap:6px; margin-top:4px;">
+          <span class="mono" style="font-size:28px; font-weight:800; color:var(--status-pass);" id="ovSecurityScore">100</span>
+          <span class="mono" style="color:var(--text-muted);">/ 100</span>
+          <span class="badge-sev pass mono" style="font-size:9px;" id="ovSecurityPill">0</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;" id="ovSecuritySub" data-i18n="ov.cSecSub">注入 / 密钥 / MCP / Hook</div>
       </div>
 
       <div class="clean-card">
@@ -948,12 +991,69 @@
        VIEW 2: CONTEXT HEALTH
        ======================================================================== -->
   <section class="view-container" id="tab-context">
+    <div class="clean-panel" style="margin-bottom:12px;">
+      <div class="clean-panel-header">
+        <div>
+          <div class="clean-panel-title">Effective Context Debugger</div>
+          <div class="clean-panel-sub">静态模拟最终 Prompt、候选项、能力与预算；不会启动 Agent、hooks 或 MCP</div>
+        </div>
+        <button class="btn-icon" id="effectiveContextRun" type="button">运行模拟</button>
+      </div>
+      <div class="clean-panel-body">
+        <form id="effectiveContextForm" class="context-debugger-form">
+          <label>Agent
+            <select id="effectiveAgent"><option value="codex">Codex</option><option value="claude">Claude Code</option><option value="cursor">Cursor</option><option value="copilot">Copilot CLI</option><option value="gemini">Gemini CLI</option><option value="windsurf">Windsurf</option><option value="cline">Cline</option><option value="aider">Aider</option><option value="opencode">OpenCode</option><option value="roo">Roo Code</option></select>
+          </label>
+          <label>启动目录
+            <input id="effectiveCwd" placeholder="仓库根目录（默认）">
+          </label>
+          <label class="context-debugger-span-2">目标路径（逗号或换行分隔）
+            <input id="effectivePaths" placeholder="src/index.ts, test/index.test.ts">
+          </label>
+          <label class="context-debugger-span-2">任务
+            <textarea id="effectiveTask" placeholder="描述任务，仅用于解释和排序候选项"></textarea>
+          </label>
+          <label>上下文窗口 Tokens
+            <input id="effectiveWindow" type="number" min="1" placeholder="unknown">
+          </label>
+          <label>Codex Profile
+            <input id="effectiveProfile" placeholder="可选">
+          </label>
+          <label>显式 Rules
+            <input id="effectiveRules" placeholder="逗号分隔">
+          </label>
+          <label>显式 Skills
+            <input id="effectiveSkills" placeholder="逗号分隔">
+          </label>
+          <label>Subagent
+            <input id="effectiveSubagent" placeholder="可选">
+          </label>
+          <label>Hook Event / Tool
+            <input id="effectiveHook" placeholder="PreToolUse / Bash">
+          </label>
+        </form>
+        <div class="context-debugger-options">
+          <label><input id="effectiveGlobal" type="checkbox" checked> 包含 global 配置</label>
+          <label><input id="effectiveExternal" type="checkbox"> 允许仓库外 imports</label>
+          <span id="effectiveContextStatus" class="mono" style="font-size:11px;color:var(--text-muted);" role="status" aria-live="polite"></span>
+        </div>
+        <div id="effectiveContextBudget" class="context-budget-grid"></div>
+        <div class="context-debugger-tabs" role="tablist" aria-label="Effective Context report views">
+          <button type="button" class="active" data-effective-view="prompt">✓ Prompt</button>
+          <button type="button" data-effective-view="candidates">○ Candidates</button>
+          <button type="button" data-effective-view="capabilities">◆ Capabilities</button>
+          <button type="button" data-effective-view="diagnostics">! Diagnostics</button>
+        </div>
+        <div id="effectiveContextResults"></div>
+      </div>
+    </div>
     <!-- Context File Inventory -->
     <div class="clean-panel" style="margin-bottom: 12px;">
       <div class="clean-panel-header">
         <span class="clean-panel-title" id="ctxFilesTitle" data-i18n="ctx.filesTitle">Agent 指令源文件盘点 (4 个文件)</span>
         <span class="clean-panel-sub" id="ctxFilesSub" data-i18n="ctx.filesSub">总计 12,481 Tokens，5,658 Tokens 为冗余/可推断</span>
       </div>
+      <div class="context-table-scroll" tabindex="0" aria-label="Agent instruction source file inventory">
       <table class="table-clean">
         <thead>
           <tr>
@@ -969,6 +1069,7 @@
         <tbody id="contextFilesTableBody">
         </tbody>
       </table>
+      </div>
     </div>
 
     <!-- Wasteful Snippets -->
@@ -996,6 +1097,7 @@
             <button class="pill-filter" data-cat="context">上下文</button>
             <button class="pill-filter" data-cat="repository">仓库</button>
             <button class="pill-filter" data-cat="verification">验证</button>
+            <button class="pill-filter" data-cat="security">安全</button>
             <button class="pill-filter" data-cat="runtime">运行期</button>
           </div>
         </div>
@@ -1152,6 +1254,7 @@
             <div class="mono" style="font-size:14px; font-weight:700;" id="sessCmds">10</div>
           </div>
         </div>
+        <div id="sessRuntimeMeta" class="mono" style="font-size:11px; color:var(--text-secondary); margin:-4px 0 12px 0;"></div>
 
         <!-- Inefficiencies Alert -->
         <div class="clean-card" style="border-color:var(--status-med-border); background:var(--status-med-bg); margin-bottom: 12px;" id="sessIneffBox"></div>
@@ -1187,7 +1290,9 @@
         "hdr.rescan": "重新扫描",
         "hdr.copyAll": "复制 Prompts",
         "ov.c1Title": "AGENT 效能综合评分",
-        "ov.c1Sub": "四维度全量评估，存在回归退化",
+        "ov.c1Sub": "五维度评估（含安全审计）",
+        "ov.cSecTitle": "Agent 安全审计",
+        "ov.cSecSub": "注入 / 密钥 / MCP / Hook",
         "ov.c2Title": "有效信号密度 (Signal)",
         "ov.target": "目标 ≥80%",
         "ov.c2Sub": "潜在精简空间: 5,658 tokens",
@@ -1233,6 +1338,7 @@
         "f.ctx": "上下文",
         "f.repo": "仓库",
         "f.verif": "验证",
+        "f.sec": "安全",
         "f.run": "运行期",
         "insp.copy": "复制 Fix Prompt",
         "insp.rationale": "问题诊断与机理说明",
@@ -1251,7 +1357,7 @@
         "reg.headTitle": "HEAD: feature/auth-refactor (AGENTS.md)",
         "sess.listTitle": "Agent 会话记录",
         "sess.emptyTitle": "未检测到 Agent 会话记录",
-        "sess.emptyDesc": "支持自动解析: <code>.agent/sessions/*.json</code>、<code>.claude/sessions/*.json</code><br>或在启动时指定: <code>agentdoctor web --session &lt;path&gt;</code>",
+        "sess.emptyDesc": "自动解析仓库内 trace 与本仓全局日志 (Codex / Claude / Gemini / OTLP)<br>或在启动时指定: <code>agentdoctor web --session &lt;path&gt;</code>",
         "sess.noSelection": "未选择会话",
         "sess.noTraceDesc": "请载入 Agent 执行日志以分析工具调用频率、耗时与死循环搜索问题",
         "sess.noIneffDesc": "ℹ️ 暂无低效交互警报。载入 Trace 文件后将自动检测重复搜索、重复读取与命令重试。",
@@ -1272,7 +1378,9 @@
         "hdr.rescan": "Rescan",
         "hdr.copyAll": "Copy Prompts",
         "ov.c1Title": "AGENT EFFICIENCY SCORE",
-        "ov.c1Sub": "Evaluated across 4 dimensions with regressions",
+        "ov.c1Sub": "Evaluated across 5 dimensions including security",
+        "ov.cSecTitle": "AGENT SECURITY AUDIT",
+        "ov.cSecSub": "Injection / secrets / MCP / hooks",
         "ov.c2Title": "CONTEXT SIGNAL DENSITY",
         "ov.target": "Target ≥80%",
         "ov.c2Sub": "Potential reduction: 5,658 tokens",
@@ -1318,6 +1426,7 @@
         "f.ctx": "Context",
         "f.repo": "Repo",
         "f.verif": "Verification",
+        "f.sec": "Security",
         "f.run": "Runtime",
         "insp.copy": "Copy Fix Prompt",
         "insp.rationale": "Diagnostic Rationale",
@@ -1336,7 +1445,7 @@
         "reg.headTitle": "HEAD: feature/auth-refactor (AGENTS.md)",
         "sess.listTitle": "Agent Session Traces",
         "sess.emptyTitle": "No Agent Sessions Recorded",
-        "sess.emptyDesc": "Supported traces: <code>.agent/sessions/*.json</code>, <code>.claude/sessions/*.json</code><br>Or specify: <code>agentdoctor web --session &lt;path&gt;</code>",
+        "sess.emptyDesc": "Auto-detects repo traces plus same-repo global logs (Codex / Claude / Gemini / OTLP)<br>Or specify: <code>agentdoctor web --session &lt;path&gt;</code>",
         "sess.noSelection": "No session selected",
         "sess.noTraceDesc": "Load agent execution traces to inspect tool calls, token consumption, and search loops",
         "sess.noIneffDesc": "ℹ️ No inefficiency alerts. Repeated queries, file re-reads, and command loops will appear once traces are loaded.",
@@ -1635,6 +1744,9 @@
     let selectedSessionId = null;
     let activeCategoryFilter = "all";
     let searchQuery = "";
+    let effectiveContextReport = null;
+    let effectiveContextView = "prompt";
+    let effectiveContextLoading = false;
 
     function t(key) {
       return I18N[currentLang][key] || key;
@@ -1645,6 +1757,12 @@
         return appData.scanResult.findings;
       }
       return FINDINGS_DATA;
+    }
+
+    function esc(s) {
+      return String(s ?? "").replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+      }[c]));
     }
 
     function getSessions() {
@@ -1737,6 +1855,7 @@
 
     function getSessionTask(s) {
       if (!s) return "";
+      if (typeof s.taskTitle === "string" && s.taskTitle) return s.taskTitle;
       if (typeof s.task === "object" && s.task !== null) return s.task[currentLang] || s.task.en || "";
       return s.task || (currentLang === "zh" ? "代码诊断与自主修复" : "Code diagnostics & remediation");
     }
@@ -1744,6 +1863,7 @@
     function getSessionDuration(s) {
       if (!s) return "—";
       if (s.duration) return s.duration;
+      if (s.durationUnknown) return "n/a";
       if (typeof s.durationSeconds === "number") {
         const m = Math.floor(s.durationSeconds / 60);
         const sec = s.durationSeconds % 60;
@@ -1755,6 +1875,7 @@
     function getSessionTokens(s) {
       if (!s) return "—";
       if (s.tokensTotal) return s.tokensTotal;
+      if (s.tokensUnknown) return "n/a";
       if (s.tokenUsage && typeof s.tokenUsage.total === "number") {
         return `${Math.round(s.tokenUsage.total / 1000)}k`;
       }
@@ -1776,13 +1897,13 @@
       }
       const items = [];
       if (s.repeatedSearches && s.repeatedSearches.length > 0) {
-        items.push(`⚠️ <strong>${currentLang === "zh" ? "重复搜索" : "Repeated search"}:</strong> ${s.repeatedSearches.map(r => `"${r.query}" (${r.count}x)`).join(", ")}`);
+        items.push(`⚠️ <strong>${currentLang === "zh" ? "重复搜索" : "Repeated search"}:</strong> ${s.repeatedSearches.map(r => `"${esc(r.query)}" (${esc(r.count)}x)`).join(", ")}`);
       }
       if (s.repeatedReads && s.repeatedReads.length > 0) {
-        items.push(`⚠️ <strong>${currentLang === "zh" ? "超大文件重复读取" : "Repeated file read"}:</strong> ${s.repeatedReads.map(r => `${r.file} (${r.count}x)`).join(", ")}`);
+        items.push(`⚠️ <strong>${currentLang === "zh" ? "超大文件重复读取" : "Repeated file read"}:</strong> ${s.repeatedReads.map(r => `${esc(r.file)} (${esc(r.count)}x)`).join(", ")}`);
       }
       if (s.repeatedFailures && s.repeatedFailures.length > 0) {
-        items.push(`⚠️ <strong>${currentLang === "zh" ? "重复失败命令" : "Repeated command failures"}:</strong> ${s.repeatedFailures.map(r => `<code>${r.command}</code> (${r.count}x)`).join(", ")}`);
+        items.push(`⚠️ <strong>${currentLang === "zh" ? "重复失败命令" : "Repeated command failures"}:</strong> ${s.repeatedFailures.map(r => `<code>${esc(r.command)}</code> (${esc(r.count)}x)`).join(", ")}`);
       }
       if (items.length === 0) {
         return currentLang === "zh" ? "✓ 未检测到高频重复工具调用或无效遍历" : "✓ No severe repeated tool inefficiencies detected";
@@ -1917,7 +2038,7 @@
 
       const scoreExp = document.getElementById("ovScoreExplanation");
       if (scoreExp) {
-        scoreExp.innerText = appData?.scanResult?.scoreExplanation || (currentLang === "zh" ? "四维度全量评估，存在回归退化" : "Evaluated across 4 dimensions");
+        scoreExp.innerText = appData?.scanResult?.scoreExplanation || (currentLang === "zh" ? "五维度评估（含安全审计）" : "Evaluated across 5 dimensions including security");
       }
 
       // Signal density card
@@ -1967,6 +2088,23 @@
         } else {
           ovVerifSub.innerText = currentLang === "zh" ? "测试、检查与 CI 命令定义一致" : "Verification commands match CI configuration";
         }
+      }
+
+      // Security card
+      const securityScore = appData?.scanResult?.scores?.security?.score ?? 100;
+      const ovSecurityScore = document.getElementById("ovSecurityScore");
+      if (ovSecurityScore) ovSecurityScore.innerText = securityScore;
+      const securityCount = findings.filter(f => f.category === "security").length;
+      const ovSecurityPill = document.getElementById("ovSecurityPill");
+      if (ovSecurityPill) {
+        ovSecurityPill.innerText = String(securityCount);
+        ovSecurityPill.className = `badge-sev ${securityCount > 0 ? "critical" : "pass"} mono`;
+      }
+      const ovSecuritySub = document.getElementById("ovSecuritySub");
+      if (ovSecuritySub) {
+        ovSecuritySub.innerText = currentLang === "zh"
+          ? (securityCount > 0 ? `${securityCount} 项 Agent 安全问题` : "注入 / 密钥 / MCP / Hook")
+          : (securityCount > 0 ? `${securityCount} agent security finding(s)` : "Injection / secrets / MCP / hooks");
       }
 
       // Runtime card
@@ -2129,7 +2267,105 @@
     // ========================================================================
     // CONTEXT TAB
     // ========================================================================
+    function splitContextValues(value) {
+      return String(value || "").split(/[,\n]/).map(item => item.trim()).filter(Boolean);
+    }
+
+    function effectiveStatus(status) {
+      const icon = ["loaded", "selected", "matched", "available"].includes(status) ? "✓" :
+        ["invalid", "disabled"].includes(status) ? "✕" :
+        ["truncated", "overridden"].includes(status) ? "!" : "○";
+      return `<span class="effective-status ${esc(status)}">${icon} ${esc(status)}</span>`;
+    }
+
+    function effectiveItem(item, meta) {
+      return `<div class="effective-item">
+        ${effectiveStatus(item.status)}
+        <div class="effective-item-main">
+          <div class="effective-item-source">${esc(item.source || item.name || "unknown")}${item.line ? `:${item.line}` : ""}</div>
+          <div class="effective-item-reason">${esc(item.reason || item.matchReason || "")}</div>
+        </div>
+        <span class="mono" style="font-size:10px;color:var(--text-muted);">${esc(meta || "")}</span>
+      </div>`;
+    }
+
+    function renderEffectiveContext() {
+      const report = effectiveContextReport;
+      const statusEl = document.getElementById("effectiveContextStatus");
+      if (statusEl && effectiveContextLoading) statusEl.textContent = currentLang === "zh" ? "正在模拟…" : "Simulating…";
+      const budgetEl = document.getElementById("effectiveContextBudget");
+      const resultEl = document.getElementById("effectiveContextResults");
+      document.querySelectorAll("[data-effective-view]").forEach(button => {
+        button.classList.toggle("active", button.dataset.effectiveView === effectiveContextView);
+        button.setAttribute("aria-selected", button.dataset.effectiveView === effectiveContextView ? "true" : "false");
+      });
+      if (!report) {
+        if (budgetEl) budgetEl.innerHTML = "";
+        if (resultEl) resultEl.innerHTML = `<div class="effective-prompt">${effectiveContextLoading ? "…" : "选择查询条件后运行模拟。"}</div>`;
+        return;
+      }
+      if (statusEl && !effectiveContextLoading) statusEl.textContent = `${report.profile.name} · ${report.prompt.length} prompt sources · deterministic`;
+      const budget = report.budget;
+      if (budgetEl) budgetEl.innerHTML = `
+        <div class="context-budget-item"><span>Prompt</span><strong>${budget.promptTokens.toLocaleString()} tk</strong></div>
+        <div class="context-budget-item"><span>Candidates</span><strong>${budget.candidateTokens.toLocaleString()} tk</strong></div>
+        <div class="context-budget-item"><span>Raw bytes</span><strong>${budget.promptBytes.toLocaleString()}</strong></div>
+        <div class="context-budget-item"><span>Window</span><strong>${budget.contextWindowTokens == null ? "unknown" : `${budget.usagePercent}%`}</strong></div>`;
+      if (!resultEl) return;
+      if (effectiveContextView === "prompt") {
+        const chain = report.prompt.map(item => effectiveItem(item, `${item.scope} · ${item.estimatedTokens} tk`)).join("");
+        const relations = report.relationships.length ? `<div class="section-title" style="margin-top:12px;">Provable relationships (${report.relationships.length})</div><div class="effective-list">${report.relationships.map(rel => effectiveItem({ status: rel.type, source: `${rel.from} → ${rel.to}`, reason: rel.reason }, rel.certainty)).join("")}</div>` : "";
+        resultEl.innerHTML = `<div class="section-title">Loading chain (${report.prompt.length})</div><div class="effective-list">${chain || '<div class="effective-prompt">No prompt instructions loaded.</div>'}</div>${relations}<div class="section-title" style="margin-top:12px;">Final prompt</div><pre class="effective-prompt">${esc(report.finalInstructions || "(empty)")}</pre>`;
+      } else if (effectiveContextView === "candidates") {
+        resultEl.innerHTML = `<div class="effective-list">${report.candidates.map(item => effectiveItem(item, `${item.kind} · ${item.estimatedTokens} tk`)).join("") || '<div class="effective-prompt">No candidates.</div>'}</div>`;
+      } else if (effectiveContextView === "capabilities") {
+        resultEl.innerHTML = `<div class="effective-list">${report.capabilities.map(item => effectiveItem(item, item.kind)).join("") || '<div class="effective-prompt">No capabilities discovered.</div>'}</div>`;
+      } else {
+        resultEl.innerHTML = `<div class="effective-list">${report.diagnostics.map(item => effectiveItem({ status: item.severity, source: item.code, reason: `${item.message}${item.source ? ` · ${item.source}` : ""}` }, item.severity)).join("") || '<div class="effective-prompt">✓ No diagnostics.</div>'}</div>`;
+      }
+    }
+
+    async function runEffectiveContext() {
+      if (effectiveContextLoading) return;
+      const runButton = document.getElementById("effectiveContextRun");
+      const hookParts = document.getElementById("effectiveHook").value.split("/").map(v => v.trim());
+      const windowValue = document.getElementById("effectiveWindow").value;
+      const body = {
+        agent: document.getElementById("effectiveAgent").value,
+        cwd: document.getElementById("effectiveCwd").value.trim() || undefined,
+        targetPaths: splitContextValues(document.getElementById("effectivePaths").value),
+        task: document.getElementById("effectiveTask").value,
+        rules: splitContextValues(document.getElementById("effectiveRules").value),
+        skills: splitContextValues(document.getElementById("effectiveSkills").value),
+        subagent: document.getElementById("effectiveSubagent").value.trim() || undefined,
+        hookEvent: hookParts[0] || undefined,
+        toolName: hookParts[1] || undefined,
+        profile: document.getElementById("effectiveProfile").value.trim() || undefined,
+        includeGlobal: document.getElementById("effectiveGlobal").checked,
+        allowExternalImports: document.getElementById("effectiveExternal").checked,
+        contextWindowTokens: windowValue ? Number(windowValue) : undefined
+      };
+      effectiveContextLoading = true;
+      if (runButton) runButton.disabled = true;
+      renderEffectiveContext();
+      try {
+        const response = await fetch("/api/effective-context", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+        effectiveContextReport = data;
+      } catch (error) {
+        effectiveContextReport = null;
+        const statusEl = document.getElementById("effectiveContextStatus");
+        if (statusEl) statusEl.textContent = `✕ ${error.message || String(error)}`;
+      } finally {
+        effectiveContextLoading = false;
+        if (runButton) runButton.disabled = false;
+        renderEffectiveContext();
+      }
+    }
+
     function renderContext() {
+      renderEffectiveContext();
       const files = getContextFiles();
       const density = appData?.scanResult?.contextSignalDensity;
       const totalTokens = density ? density.totalTokens : 12481;
@@ -2358,7 +2594,7 @@
       }
 
       // Update Filter counts
-      const counts = { all: findings.length, context: 0, repository: 0, verification: 0, runtime: 0 };
+      const counts = { all: findings.length, context: 0, repository: 0, verification: 0, security: 0, runtime: 0 };
       findings.forEach(f => {
         if (counts[f.category] !== undefined) counts[f.category]++;
       });
@@ -2370,6 +2606,7 @@
         if (cat === "context") btn.innerText = `${t("f.ctx")} (${counts.context})`;
         if (cat === "repository") btn.innerText = `${t("f.repo")} (${counts.repository})`;
         if (cat === "verification") btn.innerText = `${t("f.verif")} (${counts.verification})`;
+        if (cat === "security") btn.innerText = `${t("f.sec")} (${counts.security})`;
         if (cat === "runtime") btn.innerText = `${t("f.run")} (${counts.runtime})`;
       });
 
@@ -2617,6 +2854,9 @@
         const sessCmdsEl = document.getElementById("sessCmds");
         if (sessCmdsEl) sessCmdsEl.innerText = "0";
 
+        const runtimeMetaEl = document.getElementById("sessRuntimeMeta");
+        if (runtimeMetaEl) runtimeMetaEl.innerHTML = "";
+
         const ineffBox = document.getElementById("sessIneffBox");
         if (ineffBox) ineffBox.innerHTML = t("sess.noIneffDesc");
 
@@ -2652,13 +2892,13 @@
 
           row.innerHTML = `
             <div class="finding-row-top">
-              <strong class="mono">${s.agentName || "Agent"}</strong>
-              <span class="mono" style="color:var(--status-pass);">${score}</span>
+              <strong class="mono">${esc(s.agentName || "Agent")}</strong>
+              <span class="mono" style="color:var(--status-pass);">${esc(score)}</span>
             </div>
-            <div style="font-size:11px; color:var(--text-secondary); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${task}</div>
+            <div style="font-size:11px; color:var(--text-secondary); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(task)}</div>
             <div class="finding-row-meta">
-              <span>${dur}</span>
-              <span>${tk} tk</span>
+              <span>${esc(dur)}</span>
+              <span>${esc(tk)} tk</span>
             </div>
           `;
           list.appendChild(row);
@@ -2672,7 +2912,14 @@
       if (agentBadge) agentBadge.innerText = (activeSess.agentName || "AGENT").toUpperCase();
 
       const sessIdEl = document.getElementById("sessId");
-      if (sessIdEl) sessIdEl.innerText = activeSess.id;
+      if (sessIdEl) {
+        let idText = activeSess.id;
+        if (activeSess.model) idText += ` · ${activeSess.model}`;
+        if (activeSess.gitCommit) idText += ` @ ${String(activeSess.gitCommit).slice(0, 8)}${activeSess.gitDirty ? "*" : ""}`;
+        if (activeSess.prNumber !== undefined && activeSess.prNumber !== null) idText += ` · PR #${activeSess.prNumber}`;
+        if (activeSess.redactedFields > 0) idText += ` · redacted ${activeSess.redactedFields}`;
+        sessIdEl.innerText = idText;
+      }
 
       const sessTaskEl = document.getElementById("sessTask");
       if (sessTaskEl) sessTaskEl.innerText = getSessionTask(activeSess);
@@ -2691,6 +2938,20 @@
 
       const sessCmdsEl = document.getElementById("sessCmds");
       if (sessCmdsEl) sessCmdsEl.innerText = activeSess.commandsExecuted ?? activeSess.cmds ?? 0;
+
+      const runtimeMetaEl = document.getElementById("sessRuntimeMeta");
+      if (runtimeMetaEl) {
+        const meta = [];
+        if (activeSess.contextTokens !== undefined) meta.push(`context ${esc(activeSess.contextTokens)} tk`);
+        if (activeSess.contextWindowTokens !== undefined) meta.push(`window ${esc(activeSess.contextWindowTokens)} tk`);
+        if (activeSess.approvalsCount > 0) meta.push(`approvals ${esc(activeSess.approvalsCount)}`);
+        if (activeSess.retriesCount > 0) meta.push(`retries ${esc(activeSess.retriesCount)}`);
+        if (activeSess.restoresCount > 0) meta.push(`restores ${esc(activeSess.restoresCount)}`);
+        if (activeSess.failureReasons && activeSess.failureReasons.length > 0) {
+          meta.push(`failure: ${esc(activeSess.failureReasons[0].reason)}`);
+        }
+        runtimeMetaEl.innerHTML = meta.join(" · ");
+      }
 
       const ineffBox = document.getElementById("sessIneffBox");
       if (ineffBox) ineffBox.innerHTML = getSessionIneff(activeSess);
@@ -2716,10 +2977,10 @@
             const isErr = event.status === "failed" || event.status === "err";
             d.style.background = isErr ? "var(--status-crit-bg)" : "var(--bg-canvas)";
             d.style.borderRadius = "var(--radius-sm)";
-            const time = event.timeOffset || event.time || "00:00";
-            const tool = event.tool ? `[${event.tool}] ` : "";
+            const time = esc(event.timeOffset || event.time || "00:00");
+            const tool = event.tool ? `[${esc(event.tool)}] ` : "";
             d.innerHTML = `
-              <span><span style="color:var(--text-muted);">${time}</span> ${tool}${event.action}</span>
+              <span><span style="color:var(--text-muted);">${time}</span> ${tool}${esc(event.action)}</span>
               <span style="color:${isErr ? "var(--status-crit)" : "var(--status-pass)"}; font-weight:600;">${isErr ? "FAILED" : "OK"}</span>
             `;
             tContainer.appendChild(d);
@@ -2803,6 +3064,14 @@
     const copyBatchBtn = document.getElementById("btnCopyBatch");
     if (copyBatchBtn) copyBatchBtn.onclick = handleCopyBatch;
 
+    const effectiveContextRun = document.getElementById("effectiveContextRun");
+    if (effectiveContextRun) effectiveContextRun.onclick = runEffectiveContext;
+    const effectiveContextForm = document.getElementById("effectiveContextForm");
+    if (effectiveContextForm) effectiveContextForm.onsubmit = event => { event.preventDefault(); runEffectiveContext(); };
+    document.querySelectorAll("[data-effective-view]").forEach(button => {
+      button.onclick = () => { effectiveContextView = button.dataset.effectiveView; renderEffectiveContext(); };
+    });
+
     window.addEventListener("keydown", (e) => {
       if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
       if (e.key === "1") switchTab("tab-overview");
@@ -2831,6 +3100,7 @@
     setLang("zh");
     setTheme("dark");
     renderAll();
+    if (window.location.protocol.startsWith("http")) runEffectiveContext();
   </script>
 </body>
 </html>

@@ -6,6 +6,8 @@ export interface WebCommandOptions {
   baseline?: string;
   session?: string;
   open?: boolean;
+  includeGlobal?: boolean;
+  allowSensitive?: boolean;
 }
 
 export async function runWebCommand(options: WebCommandOptions = {}): Promise<WebServerInstance> {
@@ -17,6 +19,8 @@ export async function runWebCommand(options: WebCommandOptions = {}): Promise<We
     cwd: options.cwd,
     baseline: options.baseline,
     sessionPath: options.session,
+    includeGlobal: options.includeGlobal,
+    allowSensitive: options.allowSensitive,
     openBrowser: options.open !== false,
     onListening: (url) => {
       console.log(`\n  \x1b[36m\x1b[1m⚡ AgentDoctor DevTools Web UI\x1b[0m`);

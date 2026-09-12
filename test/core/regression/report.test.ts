@@ -23,9 +23,10 @@ function makeScan(score: number): ScanResult {
     },
     overallScore: score,
     scores: {
-      context: { score, weight: 0.467, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
-      repository: { score, weight: 0.267, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
-      verification: { score, weight: 0.267, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
+      context: { score, weight: 0.4, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
+      repository: { score, weight: 0.2, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
+      verification: { score, weight: 0.2, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
+      security: { score, weight: 0.2, findingsCount: { critical: 0, high: 0, medium: 0, low: 0 } },
       runtime: null,
     },
     contextSignalDensity: {

@@ -2,6 +2,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import fg from "fast-glob";
 import { Finding, ProjectProfile } from "../../core/types.js";
+import { AGENT_INSTRUCTION_GLOBS, globAgentFilesSync } from "../context/agentFiles.js";
 
 const GENERATED_DIRS = ["generated", "dist", "build", "openapi-generated", ".next", "out", "target"];
 
@@ -146,25 +147,7 @@ export async function analyzeRepository(
   )).sort((a, b) => a.localeCompare(b));
 
   if (existingGeneratedDirs.length > 0) {
-    const instructionFiles = fg.sync(
-      ["**/AGENTS.md", "**/CLAUDE.md", "**/.cursorrules", "**/.cursor/rules/**/*.md", "**/.cursor/rules/**/*.mdc", ".cursor/rules/**/*.md", ".cursor/rules/**/*.mdc"],
-      {
-        cwd: repoRoot,
-        dot: true,
-        onlyFiles: true,
-        ignore: [
-          "**/node_modules/**",
-          "**/.git/**",
-          "**/dist/**",
-          "**/build/**",
-          "**/target/**",
-          "**/out/**",
-          "**/generated/**",
-          "**/vendor/**",
-          "**/.next/**",
-        ],
-      }
-    );
+    const instructionFiles = globAgentFilesSync(repoRoot, AGENT_INSTRUCTION_GLOBS);
     let mentionsGeneratedWarning = false;
     for (const inst of instructionFiles) {
       const instPath = path.join(repoRoot, inst);

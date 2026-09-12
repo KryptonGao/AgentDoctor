@@ -53,7 +53,7 @@ describe("Web UI Server & Payload", () => {
     expect(dataRes.status).toBe(200);
     expect(dataRes.headers.get("content-type")).toContain("application/json");
     const data = await dataRes.json();
-    expect(data.repositoryName).toBe("AgentDock");
+    expect(data.repositoryName).toBe("AgentDoctor");
     expect(typeof data.scanResult.overallScore).toBe("number");
     expect(data.scanResult.contextSignalDensity).toBeDefined();
     expect(Array.isArray(data.contextFiles)).toBe(true);
@@ -63,11 +63,45 @@ describe("Web UI Server & Payload", () => {
     const rescanRes = await fetch(`${instance.url}/api/rescan`, { method: "POST" });
     expect(rescanRes.status).toBe(200);
     const freshData = await rescanRes.json();
-    expect(freshData.repositoryName).toBe("AgentDock");
+    expect(freshData.repositoryName).toBe("AgentDoctor");
     expect(typeof freshData.scanResult.overallScore).toBe("number");
     expect(freshData.scanResult.metadata.scanDurationMs).toBeGreaterThanOrEqual(0);
 
-    // 4. Verify 404 for unknown route
+    // 4. Verify Effective Context simulation and request validation
+    const contextRes = await fetch(`${instance.url}/api/effective-context`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ agent: "codex", targetPaths: ["src/index.ts"], includeGlobal: false }),
+    });
+    expect(contextRes.status).toBe(200);
+    const context = await contextRes.json();
+    expect(context.schemaVersion).toBe(1);
+    expect(context.profile.id).toBe("codex");
+    expect(Array.isArray(context.prompt)).toBe(true);
+    expect(context.budget.unit).toBe("estimated_tokens");
+
+    const invalidAgentRes = await fetch(`${instance.url}/api/effective-context`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ agent: "not-an-agent" }),
+    });
+    expect(invalidAgentRes.status).toBe(400);
+
+    const outsideRes = await fetch(`${instance.url}/api/effective-context`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ agent: "codex", cwd: "../../outside" }),
+    });
+    expect(outsideRes.status).toBe(400);
+
+    const tooLargeRes = await fetch(`${instance.url}/api/effective-context`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ agent: "codex", task: "x".repeat(257 * 1024) }),
+    });
+    expect(tooLargeRes.status).toBe(413);
+
+    // 5. Verify 404 for unknown route
     const notFoundRes = await fetch(`${instance.url}/unknown-route-12345`);
     expect(notFoundRes.status).toBe(404);
   });

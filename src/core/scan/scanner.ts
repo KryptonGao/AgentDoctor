@@ -6,9 +6,11 @@ import { analyzeContext } from "../../analyzers/context/contextAnalyzer.js";
 import { analyzeRepository } from "../../analyzers/repository/repoAnalyzer.js";
 import { analyzeVerification } from "../../analyzers/verification/verificationAnalyzer.js";
 import { analyzeRuntimeSessions } from "../../analyzers/runtime/runtimeAnalyzer.js";
+import { analyzeSecurity } from "../../analyzers/security/securityAnalyzer.js";
 import { calculateEfficiencyScore } from "../score/calculator.js";
 import { aggregateFindings } from "../findings/aggregator.js";
 import { generateFixPrompt } from "../prompt/promptGenerator.js";
+import { buildInstructionBootstrap } from "../fix/bootstrap.js";
 
 export interface ScanOptions {
   cwd?: string;
@@ -17,6 +19,9 @@ export interface ScanOptions {
   includeRuntime?: boolean;
   gitHistoryRoot?: string;
   gitRef?: string;
+  includeGlobal?: boolean;
+  allowSensitive?: boolean;
+  maxGlobalSessions?: number;
 }
 
 export async function scanRepository(options: ScanOptions = {}): Promise<ScanResult> {
@@ -45,7 +50,15 @@ export async function scanRepository(options: ScanOptions = {}): Promise<ScanRes
   // 5. Runtime Analyzer
   const runtimeResult = options.includeRuntime === false
     ? { findings: [] as Finding[], sessions: [] }
-    : await analyzeRuntimeSessions(repoRoot, options.sessionPath);
+    : await analyzeRuntimeSessions(repoRoot, options.sessionPath, {
+      includeGlobal: options.includeGlobal,
+      allowSensitive: options.allowSensitive,
+      maxGlobalSessions: options.maxGlobalSessions,
+    });
+
+  // 6. Security Analyzer (static agent-config / instruction audit)
+  const securityResult = await analyzeSecurity(repoRoot);
+  const bootstrap = buildInstructionBootstrap(repoRoot, projectProfile, verifResult.verificationStatus);
 
   // Combine raw findings
   const allFindings: Finding[] = [
@@ -53,6 +66,8 @@ export async function scanRepository(options: ScanOptions = {}): Promise<ScanRes
     ...repoResult.findings,
     ...verifResult.findings,
     ...runtimeResult.findings,
+    ...securityResult.findings,
+    ...bootstrap.findings,
   ];
 
   // Group / aggregate findings
@@ -72,6 +87,7 @@ export async function scanRepository(options: ScanOptions = {}): Promise<ScanRes
   const allFixes: Fix[] = [
     ...contextResult.fixes,
     ...verifResult.fixes,
+    ...bootstrap.fixes,
   ];
 
   const uniqueFixes = [...new Map(allFixes.map((fix) => [fix.id, fix])).values()]
@@ -104,7 +120,7 @@ export async function scanRepository(options: ScanOptions = {}): Promise<ScanRes
     availableFixes: uniqueFixes,
     metadata: {
       schemaVersion: SCAN_SCHEMA_VERSION,
-      scannedFilesCount: contextResult.scannedFiles.length + repoResult.metrics.totalFiles,
+      scannedFilesCount: contextResult.scannedFiles.length + repoResult.metrics.totalFiles + securityResult.scannedFiles.length,
       scanDurationMs: Math.max(0, Date.now() - startedAt),
       hasRuntimeData,
       aiEnabled: options.enableAi || false,

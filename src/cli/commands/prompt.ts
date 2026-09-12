@@ -9,6 +9,8 @@ export interface PromptCommandOptions {
   session?: string;
   copy?: boolean;
   all?: boolean;
+  includeGlobal?: boolean;
+  allowSensitive?: boolean;
 }
 
 function findFindingById(findings: Finding[], targetId: string): Finding | undefined {
@@ -46,6 +48,8 @@ export async function runPromptCommand(findingId?: string, options: PromptComman
   const result = await scanRepository({
     cwd: options.cwd,
     sessionPath: options.session,
+    includeGlobal: options.includeGlobal,
+    allowSensitive: options.allowSensitive,
   });
 
   if (options.all) {

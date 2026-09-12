@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Box, useInput, useApp, Text } from "ink";
 import { ScanResult, Finding } from "../core/types.js";
-import { scanRepository } from "../core/scan/scanner.js";
+import { scanRepository, ScanOptions } from "../core/scan/scanner.js";
+import { AGENT_PROFILE_IDS, AgentProfileId, EffectiveContextQuery, EffectiveContextReport } from "../analyzers/context/effectiveTypes.js";
+import { simulateEffectiveContext } from "../analyzers/context/effectiveContext.js";
 import { applyFix, applySafeFixes } from "../core/fix/fixEngine.js";
 import { copyToClipboard } from "../shared/clipboard.js";
 import { generateFixPrompt, generateAllFixPrompts } from "../core/prompt/promptGenerator.js";
@@ -12,16 +14,20 @@ import { OverviewView } from "./views/OverviewView.js";
 import { ContextView } from "./views/ContextView.js";
 import { RepositoryView } from "./views/RepositoryView.js";
 import { VerificationView } from "./views/VerificationView.js";
+import { SecurityView } from "./views/SecurityView.js";
 import { SessionsView } from "./views/SessionsView.js";
 import { FixesView } from "./views/FixesView.js";
 
 interface AppProps {
   initialResult: ScanResult;
+  initialEffectiveContext: EffectiveContextReport;
+  scanOptions: ScanOptions;
+  contextQuery: EffectiveContextQuery;
 }
 
-type TabType = "overview" | "context" | "repository" | "verification" | "sessions" | "fixes";
+type TabType = "overview" | "context" | "repository" | "verification" | "security" | "sessions" | "fixes";
 
-const TAB_ORDER: TabType[] = ["overview", "context", "repository", "verification", "sessions", "fixes"];
+const TAB_ORDER: TabType[] = ["overview", "context", "repository", "verification", "security", "sessions", "fixes"];
 
 function getActiveFinding(
   tab: TabType,
@@ -44,6 +50,10 @@ function getActiveFinding(
   if (tab === "verification") {
     const verifFindings = result.findings.filter((f) => f.category === "verification");
     return verifFindings[selectedIndex] || verifFindings[0];
+  }
+  if (tab === "security") {
+    const securityFindings = result.findings.filter((f) => f.category === "security");
+    return securityFindings[selectedIndex] || securityFindings[0];
   }
   if (tab === "fixes") {
     const fix = result.availableFixes[selectedFixIndex];
@@ -68,7 +78,9 @@ function getActiveFinding(
   return undefined;
 }
 
-export const App: React.FC<AppProps> = ({ initialResult }) => {
+const CONTEXT_AGENTS: AgentProfileId[] = [...AGENT_PROFILE_IDS];
+
+export const App: React.FC<AppProps> = ({ initialResult, initialEffectiveContext, scanOptions, contextQuery }) => {
   const { exit } = useApp();
   const [result, setResult] = useState<ScanResult>(initialResult);
   const [activeTab, setActiveTab] = useState<TabType>("overview");
@@ -77,6 +89,7 @@ export const App: React.FC<AppProps> = ({ initialResult }) => {
   const [selectedSessionIndex, setSelectedSessionIndex] = useState(0);
   const [statusMessage, setStatusMessage] = useState<string | undefined>();
   const [isScanning, setIsScanning] = useState(false);
+  const [effectiveContext, setEffectiveContext] = useState(initialEffectiveContext);
   const [previewModalFinding, setPreviewModalFinding] = useState<Finding | null>(null);
   const [previewScrollOffset, setPreviewScrollOffset] = useState(0);
 
@@ -84,11 +97,32 @@ export const App: React.FC<AppProps> = ({ initialResult }) => {
     setIsScanning(true);
     setStatusMessage("Rescanning repository...");
     try {
-      const fresh = await scanRepository();
+      const currentQuery = { ...contextQuery, agent: effectiveContext.profile.id };
+      const [fresh, freshContext] = await Promise.all([
+        scanRepository(scanOptions),
+        simulateEffectiveContext(currentQuery),
+      ]);
       setResult(fresh);
+      setEffectiveContext(freshContext);
       setStatusMessage(`Rescan complete! Efficiency Score: ${fresh.overallScore}/100`);
     } catch (err: any) {
       setStatusMessage(`Rescan error: ${err.message || String(err)}`);
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const cycleContextAgent = async (direction: -1 | 1) => {
+    const current = CONTEXT_AGENTS.indexOf(effectiveContext.profile.id);
+    const agent = CONTEXT_AGENTS[(current + direction + CONTEXT_AGENTS.length) % CONTEXT_AGENTS.length];
+    setIsScanning(true);
+    setStatusMessage(`Simulating ${agent} effective context...`);
+    try {
+      const report = await simulateEffectiveContext({ ...contextQuery, agent });
+      setEffectiveContext(report);
+      setStatusMessage(`Effective Context: ${report.profile.name} · ${report.budget.promptTokens} estimated tokens`);
+    } catch (err: any) {
+      setStatusMessage(`Context simulation error: ${err.message || String(err)}`);
     } finally {
       setIsScanning(false);
     }
@@ -166,8 +200,9 @@ export const App: React.FC<AppProps> = ({ initialResult }) => {
     if (input === "2") { setActiveTab("context"); setSelectedIndex(0); return; }
     if (input === "3") { setActiveTab("repository"); setSelectedIndex(0); return; }
     if (input === "4") { setActiveTab("verification"); setSelectedIndex(0); return; }
-    if (input === "5") { setActiveTab("sessions"); return; }
-    if (input === "6" || input === "f") { setActiveTab("fixes"); return; }
+    if (input === "5") { setActiveTab("security"); setSelectedIndex(0); return; }
+    if (input === "6") { setActiveTab("sessions"); return; }
+    if (input === "7" || input === "f") { setActiveTab("fixes"); return; }
 
     // Tab key cycling
     if (key.tab) {
@@ -181,6 +216,16 @@ export const App: React.FC<AppProps> = ({ initialResult }) => {
     // Rescan key
     if (input === "r") {
       doRescan();
+      return;
+    }
+
+    if (activeTab === "context" && input === "[") {
+      cycleContextAgent(-1);
+      return;
+    }
+
+    if (activeTab === "context" && input === "]") {
+      cycleContextAgent(1);
       return;
     }
 
@@ -269,13 +314,16 @@ export const App: React.FC<AppProps> = ({ initialResult }) => {
             <OverviewView result={result} selectedIndex={selectedIndex} />
           )}
           {activeTab === "context" && (
-            <ContextView result={result} selectedIndex={selectedIndex} />
+            <ContextView result={result} report={effectiveContext} selectedIndex={selectedIndex} />
           )}
           {activeTab === "repository" && (
             <RepositoryView result={result} selectedIndex={selectedIndex} />
           )}
           {activeTab === "verification" && (
             <VerificationView result={result} selectedIndex={selectedIndex} />
+          )}
+          {activeTab === "security" && (
+            <SecurityView result={result} selectedIndex={selectedIndex} />
           )}
           {activeTab === "sessions" && (
             <SessionsView

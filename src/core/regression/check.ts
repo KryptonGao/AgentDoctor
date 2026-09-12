@@ -25,6 +25,9 @@ export interface CheckOptions {
   failOn?: string | FindingSeverity;
   baseline?: string;
   session?: string;
+  includeGlobal?: boolean;
+  allowSensitive?: boolean;
+  maxGlobalSessions?: number;
 }
 
 export class CheckConfigurationError extends Error {
@@ -76,6 +79,9 @@ export async function evaluateCheck(options: CheckOptions = {}): Promise<CheckRe
     sessionPath: options.session,
     // Runtime traces are ephemeral and are not part of a committed baseline.
     includeRuntime: !baselineRef,
+    includeGlobal: options.includeGlobal,
+    allowSensitive: options.allowSensitive,
+    maxGlobalSessions: options.maxGlobalSessions,
   });
 
   let baseline: ScanResult | null = null;

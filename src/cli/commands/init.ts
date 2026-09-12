@@ -2,40 +2,51 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import pc from "picocolors";
 import { getGitRoot } from "../../shared/git.js";
+import { detectProjectProfile } from "../../core/project/profile.js";
+import { analyzeVerification } from "../../analyzers/verification/verificationAnalyzer.js";
+import { generateAgentsMarkdown } from "../../core/fix/agentsMarkdown.js";
+import { applyFixes } from "../../core/fix/fixEngine.js";
+import { buildAgentShimFix } from "../../core/fix/bootstrap.js";
 
-export async function runInitCommand() {
-  const repoRoot = getGitRoot(process.cwd());
+export interface InitCommandOptions {
+  force?: boolean;
+  shims?: boolean;
+  cwd?: string;
+}
+
+export async function runInitCommand(options: InitCommandOptions = {}) {
+  const repoRoot = getGitRoot(options.cwd || process.cwd());
   const targetFile = path.join(repoRoot, "AGENTS.md");
+  const profile = detectProjectProfile(repoRoot);
+  const verification = await analyzeVerification(repoRoot, profile);
+  const markdown = generateAgentsMarkdown({
+    repoRoot,
+    profile,
+    verificationStatus: verification.verificationStatus,
+    repositoryName: path.basename(repoRoot),
+  });
 
-  if (fs.existsSync(targetFile)) {
-    console.log(pc.yellow(`\nAGENTS.md already exists at ${targetFile}.\n`));
-    return;
+  if (fs.existsSync(targetFile) && !options.force) {
+    console.log(pc.yellow(`\nAGENTS.md already exists at ${targetFile}. Use --force to regenerate from the live project profile.\n`));
+  } else {
+    fs.writeFileSync(targetFile, markdown, "utf-8");
+    console.log(pc.green(`\n✓ Wrote AGENTS.md from repository structure at ${targetFile}\n`));
   }
 
-  // Detect project properties
-  let packageManager = "npm";
-  if (fs.existsSync(path.join(repoRoot, "pnpm-lock.yaml"))) packageManager = "pnpm";
-  else if (fs.existsSync(path.join(repoRoot, "yarn.lock"))) packageManager = "yarn";
-  else if (fs.existsSync(path.join(repoRoot, "bun.lockb"))) packageManager = "bun";
-
-  const template = `# AGENTS.md
-
-## Repository Overview
-Concise architecture overview for AI Coding Agents.
-
-## Critical Commands
-- Install: \`${packageManager} install\`
-- Build: \`${packageManager} run build\`
-- Test: \`${packageManager} test\`
-- Typecheck: \`${packageManager} run typecheck\`
-- Lint: \`${packageManager} run lint\`
-
-## Architecture & Conventions
-- Source code is encapsulated in \`src/\`.
-- Never manually edit generated files in \`dist/\` or \`build/\`.
-- Follow strict typing and modular architecture.
-`;
-
-  fs.writeFileSync(targetFile, template, "utf-8");
-  console.log(pc.green(`\n✓ Created standardized high-signal AGENTS.md at ${targetFile}\n`));
+  if (options.shims) {
+    const shimFix = buildAgentShimFix(repoRoot);
+    if (!shimFix) {
+      console.log(pc.dim("All agent shim files already exist.\n"));
+      return;
+    }
+    const result = applyFixes([shimFix], { repoRoot, journal: true });
+    if (result.failed.length > 0) {
+      console.log(pc.red(`✕ Failed to write shims: ${result.failed[0].error}\n`));
+      return;
+    }
+    for (const change of shimFix.changes || []) {
+      console.log(pc.green(`  ✓ ${path.relative(repoRoot, change.path)}`));
+    }
+    console.log("");
+  }
 }

@@ -197,17 +197,33 @@ describe("Context Analyzer", () => {
     expect(result.findings[0].evidence[0].file).toBe("packages/api/AGENTS.md");
   });
 
-  it("discovers Cursor and Copilot instructions while excluding generated trees", async () => {
+  it("discovers Cursor, Copilot, Gemini, Windsurf, Cline, Aider, OpenCode, and Roo instructions while excluding generated trees", async () => {
     fs.mkdirSync(path.join(tmpDir, ".cursor", "rules"), { recursive: true });
     fs.mkdirSync(path.join(tmpDir, ".github"), { recursive: true });
+    fs.mkdirSync(path.join(tmpDir, ".windsurf", "rules"), { recursive: true });
+    fs.mkdirSync(path.join(tmpDir, ".clinerules"), { recursive: true });
+    fs.mkdirSync(path.join(tmpDir, ".roo", "rules"), { recursive: true });
+    fs.mkdirSync(path.join(tmpDir, ".opencode", "agents"), { recursive: true });
     fs.mkdirSync(path.join(tmpDir, "generated"), { recursive: true });
     fs.writeFileSync(path.join(tmpDir, ".cursor", "rules", "repo.mdc"), "Use the source tree.\n");
     fs.writeFileSync(path.join(tmpDir, ".github", "copilot-instructions.md"), "Run the focused tests.\n");
+    fs.writeFileSync(path.join(tmpDir, "GEMINI.md"), "Use Gemini conventions.\n");
+    fs.writeFileSync(path.join(tmpDir, ".windsurf", "rules", "style.md"), "Prefer small diffs.\n");
+    fs.writeFileSync(path.join(tmpDir, ".clinerules", "project.md"), "Stay in src/.\n");
+    fs.writeFileSync(path.join(tmpDir, "CONVENTIONS.md"), "Aider conventions.\n");
+    fs.writeFileSync(path.join(tmpDir, ".opencode", "agents", "review.md"), "Review carefully.\n");
+    fs.writeFileSync(path.join(tmpDir, ".roo", "rules", "base.md"), "Roo shared rules.\n");
     fs.writeFileSync(path.join(tmpDir, "generated", "AGENTS.md"), "Write clean code.\n");
 
     expect((await findContextFiles(tmpDir)).map((file) => file.relativePath)).toEqual([
+      ".clinerules/project.md",
       ".cursor/rules/repo.mdc",
       ".github/copilot-instructions.md",
+      ".opencode/agents/review.md",
+      ".roo/rules/base.md",
+      ".windsurf/rules/style.md",
+      "CONVENTIONS.md",
+      "GEMINI.md",
     ]);
   });
 });

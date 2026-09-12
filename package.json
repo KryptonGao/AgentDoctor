@@ -1,6 +1,6 @@
 {
   "name": "@gaochenkai/agentdoctor",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "DevTools and efficiency diagnostics for AI Coding Agents",
   "type": "module",
   "bin": {
@@ -47,13 +47,16 @@
     "diff": "^5.2.0",
     "fast-glob": "^3.3.2",
     "ink": "^5.0.1",
+    "micromatch": "^4.0.8",
     "picocolors": "^1.1.1",
     "react": "^18.3.1",
+    "smol-toml": "^1.8.0",
     "yaml": "^2.4.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/diff": "^5.2.1",
+    "@types/micromatch": "^4.0.10",
     "@types/node": "^20.14.0",
     "@types/react": "^18.3.3",
     "tsup": "^8.0.2",

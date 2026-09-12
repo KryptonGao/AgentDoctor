@@ -1,8 +1,9 @@
-export type FindingCategory = "context" | "repository" | "verification" | "runtime";
+export type FindingCategory = "context" | "repository" | "verification" | "runtime" | "security";
 export type FindingSeverity = "critical" | "high" | "medium" | "low";
 
 export const SCAN_SCHEMA_VERSION = 1 as const;
 export const CHECK_SCHEMA_VERSION = 1 as const;
+export const AUDIT_SCHEMA_VERSION = 1 as const;
 
 export type RegressionKind = "new-finding" | "verification" | "context-bloat";
 
@@ -41,15 +42,30 @@ export interface Impact {
   reliability?: number;
 }
 
+export type FileChangeKind = "create" | "update" | "delete";
+
+export interface FileChange {
+  path: string;
+  kind: FileChangeKind;
+  /** Substring replaced on update. Ignored when `replaceFile` is true. */
+  oldText?: string;
+  newText?: string;
+  /** Replace or create the entire file with `newText`. */
+  replaceFile?: boolean;
+}
+
 export interface Fix {
   id: string;
   title: string;
   description: string;
   isSafe: boolean;
+  /** Primary path (absolute or repo-relative). Prefer `changes` for multi-file fixes. */
   file: string;
   oldText: string;
   newText: string;
   diff?: string;
+  /** Atomic file operations for this fix. When omitted, `file`/`oldText`/`newText` are used. */
+  changes?: FileChange[];
 }
 
 export interface FixPromptContext {
@@ -142,6 +158,19 @@ export interface BaselineComparison {
   };
 }
 
+export interface AuditResult {
+  schemaVersion: typeof AUDIT_SCHEMA_VERSION;
+  repositoryName: string;
+  repositoryRoot: string;
+  branch: string;
+  timestamp: string;
+  score: number;
+  findings: Finding[];
+  passed: boolean;
+  failures: string[];
+  exitCode: 0 | 1;
+}
+
 export interface CheckResult {
   schemaVersion: typeof CHECK_SCHEMA_VERSION;
   result: ScanResult;
@@ -163,7 +192,7 @@ export interface SessionTimelineEvent {
 
 export interface SessionMetrics {
   id: string;
-  agentName: "Codex" | "Claude Code" | "OpenCode" | "Cursor" | "Other";
+  agentName: "Codex" | "Claude Code" | "OpenCode" | "Cursor" | "Gemini CLI" | "Other";
   date: string;
   efficiencyScore: number;
   durationSeconds: number;
@@ -183,6 +212,48 @@ export interface SessionMetrics {
   repeatedReads: { file: string; count: number }[];
   repeatedSearches: { query: string; count: number }[];
   repeatedFailures: { command: string; count: number }[];
+  /** Provenance: which native log produced this session. */
+  sourcePath?: string;
+  nativeId?: string;
+  model?: string;
+  /** Working directory recorded by the native session, when available. */
+  sessionCwd?: string;
+  /** Precise session bounds when the native trace exposes timestamps. */
+  startedAtMs?: number;
+  endedAtMs?: number;
+  /** Git/task/PR linkage (best-effort, local-first). */
+  gitBranch?: string;
+  gitCommit?: string;
+  gitDirty?: boolean;
+  gitMessage?: string;
+  prNumber?: number;
+  prTitle?: string;
+  prState?: string;
+  taskTitle?: string;
+  /** Enriched runtime signals. */
+  cacheTokens?: { read?: number; creation?: number };
+  /** Observed context/input size and configured model context window. */
+  contextTokens?: number;
+  contextWindowTokens?: number;
+  approvalsCount?: number;
+  retriesCount?: number;
+  restoresCount?: number;
+  failureReasons?: { action: string; reason: string }[];
+  /** Data-quality + privacy markers. Never fabricate tokens/duration. */
+  redactedFields?: number;
+  durationUnknown?: boolean;
+  tokensUnknown?: boolean;
+}
+
+export interface RuntimeScanOptions {
+  /** Explicit --session file (auto-detected format). */
+  sessionPath?: string;
+  /** Scan global native log dirs for sessions matching this repo. Default true. */
+  includeGlobal?: boolean;
+  /** Keep secrets verbatim. Default false (redact). */
+  allowSensitive?: boolean;
+  /** Cap global sessions parsed per repo (mtime desc). Default 20. */
+  maxGlobalSessions?: number;
 }
 
 export interface ScanResult {
@@ -198,6 +269,7 @@ export interface ScanResult {
     context: CategoryScore;
     repository: CategoryScore;
     verification: CategoryScore;
+    security: CategoryScore;
     runtime: CategoryScore | null;
   };
   contextSignalDensity: ContextSignalDensity;

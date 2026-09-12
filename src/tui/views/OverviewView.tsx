@@ -40,6 +40,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({ result, selectedInde
           <ProgressBar label="Context Health" score={scores.context.score} />
           <ProgressBar label="Repository Readiness" score={scores.repository.score} />
           <ProgressBar label="Verification Loop" score={scores.verification.score} />
+          <ProgressBar label="Security Audit" score={scores.security.score} />
           {scores.runtime ? (
             <ProgressBar label="Runtime Efficiency" score={scores.runtime.score} />
           ) : (

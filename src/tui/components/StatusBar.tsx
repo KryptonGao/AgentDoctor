@@ -15,7 +15,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({ statusMessage }) => {
       )}
       <Box borderStyle="single" borderColor="gray" paddingX={1} justifyContent="space-between">
         <Text dimColor>
-          <Text bold color="cyan">1-6/Tab</Text> Views │{" "}
+          <Text bold color="cyan">1-7/Tab</Text> Views │{" "}
           <Text bold color="cyan">↑↓/jk</Text> Navigate │{" "}
           <Text bold color="cyan">Enter/p</Text> Prompt │{" "}
           <Text bold color="cyan">P</Text> Copy All │{" "}

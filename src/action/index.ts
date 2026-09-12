@@ -1,6 +1,9 @@
 import * as fs from "node:fs";
+import * as path from "node:path";
 import { evaluateCheck } from "../core/regression/check.js";
 import { formatAgentDoctorMarkdown } from "../core/regression/report.js";
+import { scanResultToSarif } from "../core/report/sarif.js";
+import { formatGitHubAnnotations } from "../core/report/githubAnnotations.js";
 
 interface GitHubEvent {
   pull_request?: {
@@ -87,6 +90,15 @@ async function main(): Promise<void> {
   writeOutput("regression-count", String(evaluation.comparison?.regressions.length || 0));
   writeOutput("passed", String(evaluation.passed));
   writeOutput("report", markdown);
+
+  const workspace = process.env.GITHUB_WORKSPACE || process.cwd();
+  const sarifInput = process.env.AGENTDOCTOR_SARIF?.trim();
+  const sarifPath = path.resolve(workspace, sarifInput || "agentdoctor.sarif");
+  fs.writeFileSync(sarifPath, `${JSON.stringify(scanResultToSarif(evaluation.result), null, 2)}\n`, "utf-8");
+  writeOutput("sarif-path", sarifPath);
+  for (const line of formatGitHubAnnotations(evaluation.result)) {
+    console.log(line);
+  }
 
   const issueNumber = event.pull_request?.number;
   const token = process.env.AGENTDOCTOR_GITHUB_TOKEN?.trim();
